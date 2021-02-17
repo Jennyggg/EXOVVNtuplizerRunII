@@ -5,7 +5,7 @@ config = dict()
 #--------- general ----------#
 
 #--------- Set Just one to true ----------#
-config["RUNONMC"] = False
+config["RUNONMC"] = True
 #-----------------------------------------#
 #config["USEHAMMER"] = (True and config["RUNONMC"])
 config["USEHAMMER"] = False
@@ -45,12 +45,12 @@ config["DOVERTICES"] = True
 config["DOMISSINGET"] = False
 
 config["DOJPSIMU"] = False
-config["DOJPSITAU"] = True
+config["DOJPSITAU"] = False
 config["DOBSTAUTAU"] = False
 config["DOBSTAUTAUFH"] = False
 config["DOBSTAUTAUFH_mr"] = False # mass regression
 config["DOBSDSTARTAUNU"] = False
-
+config["DOINSTANTON"] = True
 config["DOGENHIST"] = (True and config["RUNONMC"]);
 
 config["DNNFILE_OLD"] = "data/DNN/BcJPsi/DUMMY"

@@ -38,7 +38,8 @@
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
 //#include "DataFormats/PatCandidates/interface/TriggerEvent.h"
-
+#include "RecoJets/JetProducers/plugins/VirtualJetProducer.h"
+#include "RecoJets/JetProducers/plugins/FastjetJetProducer.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrack.h"             
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"

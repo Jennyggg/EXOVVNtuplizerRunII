@@ -31,7 +31,7 @@
 
 #include "TTree.h"
 #include "TLorentzVector.h"
-
+#include "Math/GenVector/LorentzVector.h"
 /*here we declare the input and output variables*/
 
 class NtupleBranches {
@@ -848,6 +848,22 @@ public:
   ////////////////////////
 
 
+  int                               Instanton_N_Trk_total;
+  std::vector<int>                  Instanton_N_Trk;
+  int                               Instanton_N_Trk_Displaced_total;
+  std::vector<int>                  Instanton_N_Trk_Displaced;
+//  int                               Instanton_N_PFJet_total;
+  std::vector<int>                  Instanton_N_TrackJet;
+  int                               Instanton_N_TrackJet_total;
+//  std::vector<bool>                 Jet_isPFJet;
+//  std::vector<bool>                 Jet_isCaloJet;
+//  std::vector<bool>                 Jet_isJPTJet;
+//  std::vector<bool>                 Jet_isBasicJet;
+  std::vector<float>                Instanton_Trk_mass;
+  std::vector<std::vector<TLorentzVector>>                TrackJet_P4;
+  std::vector<float>                Instanton_Trk_spherocity;
+  std::vector<float>                Instanton_Trk_broaden;
+  std::vector<float>                Instanton_Trk_thrust;
 
 //  std::vector<int  >                BsTauTau_nCandidates ;
 //
@@ -1374,10 +1390,14 @@ public:
 
   /*--------------------------PV infos--------------------------*/
   int                               PV_N		     ;
+  int                               PV_N_good        ;
   bool                              PV_filter		 ;
+  std::vector<bool>                 PV_isgood        ;
   std::vector<float>                PV_chi2          ;
   std::vector<float>                PV_ndof          ;
   std::vector<float>                PV_rho           ;
+  std::vector<float>                PV_x             ;
+  std::vector<float>                PV_y             ;
   std::vector<float>                PV_z             ;
   std::vector<float>                BeamSpot_x0;
   std::vector<float>                BeamSpot_y0;

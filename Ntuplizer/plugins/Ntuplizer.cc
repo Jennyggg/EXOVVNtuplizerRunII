@@ -7,6 +7,7 @@
 #include "../interface/VerticesNtuplizer.h"
 #include "../interface/JpsiMuNtuplizer.h"
 #include "../interface/JpsiTauNtuplizer.h"
+#include "../interface/InstantonNtuplizer.h"
 //#include "../interface/BsTauTauNtuplizer.h"
 //#include "../interface/BsTauTauFHNtuplizer.h"
 //#include "../interface/BsTauTauFHNtuplizer_mr.h"
@@ -53,7 +54,7 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
 //	metCovToken_	      	    (consumes<math::Error<2>::type>(edm::InputTag("METSignificance","METCovariance"))),
 
 //	jetForMetCorrToken_   	    (consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jetsForMetCorr"))),
-
+        jetInputToken_         (consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jetsForMetCorr"))),
 	triggerToken_	      	    (consumes<edm::TriggerResults>(iConfig.getParameter<edm::InputTag>("HLT"))),
 	triggerObjects_	      	    (consumes<pat::TriggerObjectStandAloneCollection>(iConfig.getParameter<edm::InputTag>("triggerobjects")))
 //	triggerPrescales_     	    (consumes<pat::PackedTriggerPrescales>(iConfig.getParameter<edm::InputTag>("triggerprescales"))),
@@ -84,6 +85,7 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
   runFlags["doMissingEt"] = iConfig.getParameter<bool>("doMissingEt");
   runFlags["doJpsiMu"] = iConfig.getParameter<bool>("doJpsiMu");
   runFlags["doJpsiTau"] = iConfig.getParameter<bool>("doJpsiTau");
+  runFlags["doInstanton"] = iConfig.getParameter<bool>("doInstanton");
   //  runFlags["doBsTauTau"] = iConfig.getParameter<bool>("doBsTauTau");
   //  runFlags["doBsTauTauFH"] = iConfig.getParameter<bool>("doBsTauTauFH");
   //  runFlags["doBsTauTauFH_mr"] = iConfig.getParameter<bool>("doBsTauTauFH_mr");
@@ -234,6 +236,23 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
 						   runValues,
 						   runStrings,
 						   nBranches_ );
+  }
+
+  if (runFlags["doInstanton"]) {
+    std::cout<<"\n\n --->GETTING INSIDE doInstanton<---\n\n"<<std::endl;
+    nTuplizers_["Instanton"] = new InstantonNtuplizer( muonToken_   ,
+                                                   vtxToken_   ,
+                                                   beamToken_ ,
+                                                   packedpfcandidatesToken_,
+                                                   triggerToken_,
+                                                   triggerObjects_,
+                                                   genparticleToken_,
+                                                   packedgenparticleToken_,
+                                                   jetInputToken_,
+                                                   runFlags,
+                                                   runValues,
+                                                   runStrings,
+                                                   nBranches_ );
   }
 
 //  if (runFlags["doBsTauTau"]) {

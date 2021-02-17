@@ -182,10 +182,14 @@ void NtupleBranches::branch( std::map< std::string, bool >& runFlags ){
   if (runFlags["doVertices"]) {  
     /*--------------------------PV infos--------------------------*/
     tree_->Branch("PV_N"     , &PV_N      );
+    tree_->Branch("PV_N_good"     , &PV_N_good      );
     tree_->Branch("PV_filter", &PV_filter );
+    tree_->Branch("PV_isgood"     , &PV_isgood      );
     tree_->Branch("PV_chi2"  , &PV_chi2   );
     tree_->Branch("PV_ndof"  , &PV_ndof   );
     tree_->Branch("PV_rho"   , &PV_rho    );
+    tree_->Branch("PV_x"     , &PV_x      );
+    tree_->Branch("PV_y"     , &PV_y      );
     tree_->Branch("PV_z"     , &PV_z      );
     tree_->Branch("BeamSpot_x0" , &BeamSpot_x0     );
     tree_->Branch("BeamSpot_y0" , &BeamSpot_y0     );
@@ -832,7 +836,19 @@ void NtupleBranches::branch( std::map< std::string, bool >& runFlags ){
 
   }
 
-
+  if (runFlags["doInstanton"]){
+    tree_->Branch("Instanton_N_Trk_total",&Instanton_N_Trk_total);
+    tree_->Branch("Instanton_N_Trk",&Instanton_N_Trk);
+    tree_->Branch("Instanton_N_Trk_Displaced_total",&Instanton_N_Trk_Displaced_total);
+    tree_->Branch("Instanton_N_Trk_Displaced",&Instanton_N_Trk_Displaced);
+    tree_->Branch("Instanton_N_TrackJet_total",&Instanton_N_TrackJet_total);
+    tree_->Branch("Instanton_N_TrackJet",&Instanton_N_TrackJet);
+    tree_->Branch("TrackJet_P4",&TrackJet_P4);
+    tree_->Branch("Instanton_Trk_mass",&Instanton_Trk_mass);
+    tree_->Branch("Instanton_Trk_spherocity",&Instanton_Trk_spherocity);
+    tree_->Branch("Instanton_Trk_broaden",&Instanton_Trk_broaden);
+    tree_->Branch("Instanton_Trk_thrust",&Instanton_Trk_thrust);
+  }
 
 //  if (runFlags["doBsTauTau"]){
 //    tree_->Branch("IsBsTauTau", &IsBsTauTau );
@@ -1481,11 +1497,15 @@ void NtupleBranches::reset( void ){
 
   /*--------------------------PV infos--------------------------*/
   PV_N = 0;
+  PV_N_good=0;
   PV_filter = true;
+  PV_isgood.clear();
   PV_chi2.clear();
   PV_ndof.clear();
   PV_rho.clear();
   PV_z.clear();
+  PV_x.clear();
+  PV_y.clear();
   BeamSpot_x0.clear();
   BeamSpot_y0.clear();
   BeamSpot_z0.clear();
@@ -2078,6 +2098,18 @@ void NtupleBranches::reset( void ){
 //  JpsiTau_hammer_ebe_d2_up.clear();
 //  JpsiTau_hammer_ebe_d2_down.clear();
 
+
+  Instanton_N_Trk_total=0;
+  Instanton_N_Trk_Displaced_total=0;
+  Instanton_N_TrackJet_total=0;
+  Instanton_N_Trk.clear();
+  Instanton_N_Trk_Displaced.clear();
+  Instanton_N_TrackJet.clear();
+  Instanton_Trk_mass.clear();
+  TrackJet_P4.clear();
+  Instanton_Trk_spherocity.clear();
+  Instanton_Trk_broaden.clear();
+  Instanton_Trk_thrust.clear();
 
   /////////////////
 

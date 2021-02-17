@@ -14,8 +14,16 @@ process = cms.Process("Ntuple")
 process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.Geometry.GeometryRecoDB_cff')
 
+
+#process.load("TrackingTools/TransientTrack/TransientTrackBuilder_cfi")
+#process.load("Configuration.Geometry.GeometryIdeal_cff")
+#process.load("Configuration.StandardSequences.MagneticField_cff")
+#process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.TFileService = cms.Service("TFileService",
-                                    fileName = cms.string('flatTuple.root')
+#                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple.root')
+#                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/debug.root')
+#                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPHMC/debug.root')
+                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/debug.root')
                                    )
 
 #from EXOVVNtuplizerRunII.Ntuplizer.ntuplizerOptions_data_cfi import config
@@ -26,8 +34,7 @@ from EXOVVNtuplizerRunII.Ntuplizer.ntuplizerOptions_generic_cfi import config
 #config["FSIGCUT"] = 3
 #config["VPROBCUT"] = 0.1
 #config["DNNCUT"] = 0.2
-
-				   
+config["RUNONMC"]=True
 ####### Config parser ##########
 
 import FWCore.ParameterSet.VarParsing as VarParsing
@@ -47,10 +54,7 @@ options.register( 'runUpToEarlyF',
                   "false")# https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideAboutPythonConfigFile
 
 ####
-
-
-
-options.maxEvents = 2000
+options.maxEvents = 100
 #options.maxEvents = -1
 
 #data file
@@ -61,8 +65,14 @@ options.maxEvents = 2000
 #options.inputFiles = '/store/mc/RunIIAutumn18MiniAOD/BcToJPsiMuNu_TuneCP5_13TeV-bcvegpy2-pythia8-evtgen/MINIAODSIM/102X_upgrade2018_realistic_v15-v3/100000/78A9DF86-EAC5-D242-8E7B-171AFD012CC7.root'
 
 #options.inputFiles = '/store/mc/RunIIAutumn18MiniAOD/OniaAndX_ToMuMu_MuFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8-evtgen/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/00000/01325465-A815-E24E-ABB3-DAB8D4880BDE.root'
-
-options.inputFiles = '/store/data/Run2018D/Charmonium/MINIAOD/12Nov2019_UL2018-v1/280000/D7FD376D-30CD-AA48-8D03-E0220043BBDE.root'
+#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/005650EB-AA60-D34C-8100-95959C4B352D.root'
+#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/013404B1-9437-A740-9C7A-F3EBE718EFC2.root'
+options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/0132101A-3696-6D48-A7AC-2B6B1D2E6139.root'
+#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPHMC/0F2BA15C-2CB8-E24C-B58C-AA59AAFA2B07.root'
+#options.inputFiles = '/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15_ext1-v1/110000/02CCAE3F-A631-3D4D-B5A6-6B5B81B4E210.root'
+#options.inputFiles = '/store/data/Run2018C/ParkingBPH1/MINIAOD/05May2019-v1/100000/005650EB-AA60-D34C-8100-95959C4B352D.root'
+#options.inputFiles = '/store/data/Run2018D/Charmonium/MINIAOD/12Nov2019_UL2018-v1/280000/D7FD376D-30CD-AA48-8D03-E0220043BBDE.root'
+#options.inputFiles = '/store/data/Run2018C/ParkingBPH1/MINIAOD/05May2019-v1/100000/005650EB-AA60-D34C-8100-95959C4B352D.root'
 #options.inputFiles = '/store/data/Run2017F/Charmonium/MINIAOD/09Aug2019_UL2017-v1/20000/00BACB48-9B0F-8F48-A68B-2F08A3E9E681.root'
 #options.inputFiles = '/store/data/Run2016B/Charmonium/MINIAOD/21Feb2020_ver2_UL2016_HIPM-v1/240000/0333D5C7-28C0-7641-994A-ADE29A1EBAAD.root'
 #options.inputFiles = '/store/data/Run2016B/Charmonium/MINIAOD/21Feb2020_ver2_UL2016_HIPM-v1/240000/00251310-7FD5-BE47-B127-8CFC5B8DFE6E.root'
@@ -149,10 +159,19 @@ fatjet_ptmin = 100.0
 from RecoJets.Configuration.RecoPFJets_cff import *
 from RecoJets.JetProducers.AnomalousCellParameters_cfi import *
 from RecoJets.JetProducers.PFJetParameters_cfi import *
-
+from RecoJets.JetProducers.TrackJetParameters_cfi import *
 from PhysicsTools.PatAlgos.tools.helpers import *
-pattask = getPatAlgosToolsTask(process)
-                                                                                                          
+from RecoJets.JetProducers.ak4TrackJets_cfi import *
+from RecoJets.Configuration.RecoJets_cff import *
+from RecoJets.Configuration.JetIDProducers_cff import *
+from RecoJets.Configuration.RecoTrackJets_cff import *
+from RecoJets.Configuration.RecoJetAssociations_cff import *
+from RecoJets.Configuration.RecoJPTJets_cff import *
+#pattask = getPatAlgosToolsTask(process)
+ 
+#process.jetGlobalReco = cms.Sequence(recoJets*recoJetIds*recoTrackJets)
+#process.jetHighLevelReco = cms.Sequence(recoJetAssociations*recoPFJets*recoJPTJets)
+                                                                                                         
 process.chs = cms.EDFilter("CandPtrSelector",
   src = cms.InputTag('packedPFCandidates'),
   cut = cms.string('fromPV')
@@ -161,6 +180,10 @@ process.chs = cms.EDFilter("CandPtrSelector",
 process.ak4PFJetsCHS = ak4PFJetsCHS.clone( src = 'chs' )
 process.ak4PFJetsCHS.doAreaFastjet = True
 
+#process.load("RecoJets.JetProducers.ak4TrackJets_cfi")
+#process.ak4TrackJets = ak4TrackJets.clone()
+
+pattask = getPatAlgosToolsTask(process)
 
 from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
 
@@ -308,6 +331,7 @@ if config["CORRMETONTHEFLY"]:
 
                                                                        
 ################## Ntuplizer ###################
+
 process.ntuplizer = cms.EDAnalyzer("Ntuplizer",
     runOnMC	      = cms.bool(config["RUNONMC"]),
     useDNN	      = cms.bool(config["USEDNN"]),
@@ -324,6 +348,7 @@ process.ntuplizer = cms.EDAnalyzer("Ntuplizer",
     doVertices	      = cms.bool(config["DOVERTICES"]),
     doMissingEt       = cms.bool(config["DOMISSINGET"]),
     doGenHist         = cms.bool(config["DOGENHIST"]),
+    doInstanton       = cms.bool(config["DOINSTANTON"]),
     verbose           = cms.bool(config["VERBOSE"]),
     dzcut             = cms.double(config['DZCUT']),
     fsigcut           = cms.double(config['FSIGCUT']),
@@ -470,6 +495,7 @@ process.p += process.ecalBadCalibReducedMINIAODFilter
 
 
 process.p += process.ntuplizer
+#process.p += process.ak4TrackJets
 process.p.associate(pattask)
 
 print pattask

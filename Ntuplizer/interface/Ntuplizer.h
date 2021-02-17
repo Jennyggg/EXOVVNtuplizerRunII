@@ -12,6 +12,7 @@
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "SimDataFormats/JetMatching/interface/JetFlavourMatching.h"
 #include "SimDataFormats/JetMatching/interface/JetFlavour.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"
 #include "DataFormats/PatCandidates/interface/PackedTriggerPrescales.h"
 #include "../interface/NtupleBranches.h"
@@ -99,7 +100,7 @@ private:
   edm::EDGetTokenT<double> 	    		            metSigToken_		;
   edm::EDGetTokenT<math::Error<2>::type> 	     	    metCovToken_		;
   edm::EDGetTokenT<pat::JetCollection>                      jetForMetCorrToken_ ;
-  
+  edm::EDGetTokenT<pat::JetCollection>                      jetInputToken_ ; 
   edm::EDGetTokenT<edm::TriggerResults>                     triggerToken_       ;
   edm::EDGetTokenT<pat::TriggerObjectStandAloneCollection>  triggerObjects_     ;
   edm::EDGetTokenT<pat::PackedTriggerPrescales>             triggerPrescales_   ;
