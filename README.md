@@ -21,33 +21,13 @@ cd $CMSSW_BASE/src
 export GITUSER=`git config user.github`
 git clone https://github.com/${GITUSER}/EXOVVNtuplizerRunII 
 cd EXOVVNtuplizerRunII
-git remote add UZHCMS https://github.com/UZHCMS/EXOVVNtuplizerRunII
-git fetch UZHCMS
-git checkout -b Development_BcMu_10210_NoLepProducers UZHCMS/BcMu_10210_NoLepProducers
+git remote add Instantonproject https://github.com/Jennyggg/EXOVVNtuplizerRunII
+git fetch Instantonproject
+git checkout -b Instanton Instantonproject/Instanton
 cd $CMSSW_BASE/src
 scram b -j 8
 ```
 
-### setting up Hammer (n/a for now!)
-```
-export PATH=/cvmfs/sft.cern.ch/lcg/contrib/CMake/3.14.2/Linux-x86_64/bin:${PATH}
-export BOOST_ROOT=/cvmfs/sft.cern.ch/lcg/releases/Boost/1.66.0-f50b5/x86_64-centos7-gcc7-opt/
-export HEPMC_DIR=/cvmfs/sft.cern.ch/lcg/external/HepMC/2.06.08/x86_64-slc6-gcc48-opt
-mkdir Hammer
-cd Hammer
-git clone https://gitlab.com/mpapucci/Hammer Hammer-1.0.0-Source-dev
-git checkout development
-mkdir Hammer-1.0.0-dev-build
-cd Hammer-1.0.0-dev-build
-cmake -DCMAKE_INSTALL_PREFIX=../Hammer-1.0.0-dev -DENABLE_TESTS=ON -DWITH_ROOT=OFF -DWITH_EXAMPLES=OFF -DINSTALL_EXTERNAL_DEPENDENCIES=ON -DWITH_PYTHON=OFF -DBUILD_SHARED_LIBS=ON ../Hammer-1.0.0-Source-dev
-make -j24
-make install -j24
-cd $CMSSW_BASE/lib/slc7_amd64_gcc700
-cp ../../src/Hammer/Hammer-1.0.0-dev/lib64/*.so.* ./
-cp ../../src/Hammer/Hammer-1.0.0-dev/lib64/Hammer/*.so.* ./
-cd $CMSSW_BASE/src/Hammer/Hammer-1.0.0-dev-build
-ctest
-```
 
 
 ### running for data and MC
