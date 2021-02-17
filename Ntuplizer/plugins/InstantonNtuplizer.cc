@@ -229,43 +229,32 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
     nBranches_->Instanton_Trk_broaden.push_back(Broaden);
   }
 
-  if(runOnMC_){
+/*  if(runOnMC_){
     cout<<"number of packedgenparticles "<<packedgenParticles_->size()<<", number of genparticles "<<genParticles_->size()<<", number of tracks "<<alltracks_pf.size()<<endl;
-
+    int N_finalgenparticles=0;
+    for(size_t kk=0; kk< packedgenParticles_->size();kk++){
+    if (!(*packedgenParticles_)[kk].isPromptFinalState()||!((*packedgenParticles_)[kk].pdgId()==211||(*packedgenParticles_)[kk].pdgId()==-211)) continue;
+    N_finalgenparticles++;
+    bool matched=false;
     for(size_t ivertex=0; ivertex< alltracks_pf.size(); ivertex++){
       for (size_t ipf=0; ipf< alltracks_pf[ivertex].size(); ipf++){
-      bool matched=false;
-      for(size_t kk=0; kk< packedgenParticles_->size();kk++){
-        if( (*packedgenParticles_)[kk].charge()==alltracks_pf[ivertex][ipf].charge() ){
+        if( (*packedgenParticles_)[kk].pdgId()==alltracks_pf[ivertex][ipf].pdgId() ){
           Float_t dr = reco::deltaR((*packedgenParticles_)[kk].eta(),(*packedgenParticles_)[kk].phi(),
                                      alltracks_pf[ivertex][ipf].eta(),alltracks_pf[ivertex][ipf].phi());
           Float_t ptratio = (*packedgenParticles_)[kk].pt()/alltracks_pf[ivertex][ipf].bestTrack()->pt();
-          if(ptratio > 0.85 && ptratio < 1.15){
-//          if(dr < 0.3){
-            cout<<"ptratio = "<<ptratio<<" , dr= "<<dr<<", eta = "<<(*packedgenParticles_)[kk].eta()<<" "<<alltracks_pf[ivertex][ipf].eta()<<", phi = "<<(*packedgenParticles_)[kk].phi()<<" "<<alltracks_pf[ivertex][ipf].phi()<<endl;
-            matched = true;
+          if(ptratio > 0.85 && ptratio < 1.15 && dr<1.){
           //  break;
           }
         }
       }
-      if(matched) cout<<"matched to genparticle"<<endl;
-      else cout<<"this track unmatched"<<endl;
     }
-    }   
+    if(matched) cout<<"matched to a track"<<endl;
+    else cout<<"this particle unmatched, pdgId "<<(*packedgenParticles_)[kk].pdgId()<<endl;
+    }  
+    cout<<"number of final genparticle " <<N_finalgenparticles<<endl;
 
-/*    for(size_t kk=0; kk< genParticles_->size();kk++){
-      auto it1 = (*genParticles_)[kk].bestTrack();
-      if(it1==nullptr){
-        std::cout << "This is null!!" << std::endl;
-      }
-      else{
-         const math::XYZVector& innerMomentum = it1->innerMomentum();
-         cout<<"inner mom of this genparticle track "<<innerMomentum.x()<<" "<<innerMomentum.y()<<innerMomentum.z()<<endl;
-      }
-    }
-*/
   }
-
+*/
 
 
 

@@ -47,7 +47,6 @@ private:
    edm::Handle< std::vector<pat::PackedGenParticle> >  packedgenParticles_;
    edm::Handle<pat::JetCollection>              jets_           ;
    edm::ESHandle<TransientTrackBuilder> builder;
-//   edm::Handle<ak4TrackJets> TrackJetBuilder;
    const MagneticField                 *fMagneticField;
 
 

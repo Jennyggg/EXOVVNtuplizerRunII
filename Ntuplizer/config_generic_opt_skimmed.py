@@ -22,8 +22,9 @@ process.load('Configuration.Geometry.GeometryRecoDB_cff')
 process.TFileService = cms.Service("TFileService",
 #                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple.root')
 #                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/debug.root')
-#                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPHMC/debug.root')
-                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/debug.root')
+#                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPHMC/flatTuple.root')
+#                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/flatTuple.root')
+                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/flatTuple.root')
                                    )
 
 #from EXOVVNtuplizerRunII.Ntuplizer.ntuplizerOptions_data_cfi import config
@@ -54,8 +55,8 @@ options.register( 'runUpToEarlyF',
                   "false")# https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideAboutPythonConfigFile
 
 ####
-options.maxEvents = 100
-#options.maxEvents = -1
+#options.maxEvents = 100
+options.maxEvents = -1
 
 #data file
 
@@ -67,8 +68,9 @@ options.maxEvents = 100
 #options.inputFiles = '/store/mc/RunIIAutumn18MiniAOD/OniaAndX_ToMuMu_MuFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8-evtgen/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/00000/01325465-A815-E24E-ABB3-DAB8D4880BDE.root'
 #options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/005650EB-AA60-D34C-8100-95959C4B352D.root'
 #options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/013404B1-9437-A740-9C7A-F3EBE718EFC2.root'
-options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/0132101A-3696-6D48-A7AC-2B6B1D2E6139.root'
+#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/8F79C765-3C14-2641-8737-9AD8980241B8.root'
 #options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPHMC/0F2BA15C-2CB8-E24C-B58C-AA59AAFA2B07.root'
+options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/0132101A-3696-6D48-A7AC-2B6B1D2E6139.root'
 #options.inputFiles = '/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15_ext1-v1/110000/02CCAE3F-A631-3D4D-B5A6-6B5B81B4E210.root'
 #options.inputFiles = '/store/data/Run2018C/ParkingBPH1/MINIAOD/05May2019-v1/100000/005650EB-AA60-D34C-8100-95959C4B352D.root'
 #options.inputFiles = '/store/data/Run2018D/Charmonium/MINIAOD/12Nov2019_UL2018-v1/280000/D7FD376D-30CD-AA48-8D03-E0220043BBDE.root'
