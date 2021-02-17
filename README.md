@@ -1,6 +1,6 @@
 # EXOVVNtuplizerRunII
 
-Ntuplizer for searches for heavy resonances decaying to dibosons
+Ntuplizer for searches for QCD Instanton analysis using BPH samples
 
 ## installation instructions
 
