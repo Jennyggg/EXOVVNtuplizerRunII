@@ -20,11 +20,11 @@ process.load('Configuration.Geometry.GeometryRecoDB_cff')
 #process.load("Configuration.StandardSequences.MagneticField_cff")
 #process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.TFileService = cms.Service("TFileService",
-#                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple.root')
-#                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/debug.root')
+#                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_small.root')
+                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/flatTuple_small.root')
 #                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPHMC/flatTuple.root')
 #                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/flatTuple.root')
-                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/flatTuple.root')
+#                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/flatTuple.root')
                                    )
 
 #from EXOVVNtuplizerRunII.Ntuplizer.ntuplizerOptions_data_cfi import config
@@ -35,7 +35,7 @@ from EXOVVNtuplizerRunII.Ntuplizer.ntuplizerOptions_generic_cfi import config
 #config["FSIGCUT"] = 3
 #config["VPROBCUT"] = 0.1
 #config["DNNCUT"] = 0.2
-config["RUNONMC"]=True
+config["RUNONMC"]=False
 ####### Config parser ##########
 
 import FWCore.ParameterSet.VarParsing as VarParsing
@@ -70,7 +70,57 @@ options.maxEvents = -1
 #options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/013404B1-9437-A740-9C7A-F3EBE718EFC2.root'
 #options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/8F79C765-3C14-2641-8737-9AD8980241B8.root'
 #options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPHMC/0F2BA15C-2CB8-E24C-B58C-AA59AAFA2B07.root'
-options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/0132101A-3696-6D48-A7AC-2B6B1D2E6139.root'
+#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/0132101A-3696-6D48-A7AC-2B6B1D2E6139.root'
+#options.inputFiles = ['/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0187FB10-EA3E-ED4F-8340-8931B659E533.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/01C007B5-2B48-3543-A338-22272E441925.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/022E3F41-8CD9-5246-96F6-5BA07B4180AF.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/028BA34E-416C-E94E-B976-5615D158D99A.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/03A6084D-770F-EA40-8500-126262842B17.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/03CBF487-1DAA-2345-BB25-05EB7244867B.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0447AB7C-9EDC-E046-B41D-F68DE3A1EAB0.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/048E57B6-A15E-D645-8731-4A1F1B27786C.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/05030414-6C93-DC46-AD09-68D76E2FB466.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0923C159-3544-3649-9424-694E69CE855F.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0A4F96E2-8DC1-2240-A606-C8027B7DDF0C.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0AAE8C6F-1197-844C-B10D-34DDD4847F3A.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0B14F6F4-5DD5-B04B-A7EF-7D2B80AD33FA.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0B3FE33C-5B87-974B-A80B-2783E45886AD.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0BC38BDB-A396-FF45-A1B9-EFD9DA98D316.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0C14C0CC-8733-2242-91F3-94C55DBAF8DD.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0DF8969A-A985-4648-808D-CD0A1AD7367F.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F441A41-FA10-8A4C-B07D-9EC21B82A5E0.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F544919-1564-2446-81B8-5CF792CAD956.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F882E56-C6E5-6A49-AA40-FAAEB621F675.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/1189C7B3-4874-704C-A485-F4EBDC21784D.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/11BAF64E-7D44-8B49-BAF3-2AD6AB1CEF79.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12208844-ED2A-5A4C-B127-4C0444B899A4.root',
+#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root']
+options.inputFiles = ['/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/013404B1-9437-A740-9C7A-F3EBE718EFC2.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0183EE1D-086E-B540-904D-F3B086500E5F.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/01AEC6FB-B54A-8A4B-8053-02C94620FC9D.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/06266F51-9959-AF4B-9D5E-6D82E10C36D9.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/07CB125B-A423-BD47-861E-F09A78B9EECB.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0861F6F5-8811-3F45-A8A2-D970635E7840.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/08BA9DE0-7264-6A4B-BB7D-24ED3270E32A.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/08D68E7E-CF36-8740-A9E2-D1F413F3C218.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/098EBC6C-4F51-4844-94B3-D6B2E8BB30A1.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0AED8F0A-EBA9-3F41-8B33-0188A63C23D2.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0BE90291-6319-154A-BBCF-78430B539542.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0C329E58-D296-3E4A-86B0-93D9C0E14B12.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0EE98D40-1118-9E4D-87CB-00A295C979B9.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/115B8AE0-E7E5-B44E-BDA8-D5B0C296F44F.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/11D1ADBF-BD16-434B-81F9-583468A26771.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/122810A5-95A6-9C43-8751-0458C8F17E62.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/12CBD5D8-9900-D94C-940A-5DB8A65B5C62.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/1479D0AF-2176-4B47-99F7-F1CD2561C2B6.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/151D4F1C-DF0A-8944-929F-CB21C843A148.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/155A5F55-13B9-3A4E-8C85-9C05E459291C.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/159C2FC7-7129-8947-B757-FB7D7145767A.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/15D079D7-34A9-EF40-9C88-72E73D373F76.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/1623EC71-15FB-FE4E-98DC-34E83A7726C9.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/16AB417A-4C2F-134C-98F5-93AB97252C91.root',
+'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/175D5D85-654B-3042-A3D8-75B8B2606382.root']
 #options.inputFiles = '/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15_ext1-v1/110000/02CCAE3F-A631-3D4D-B5A6-6B5B81B4E210.root'
 #options.inputFiles = '/store/data/Run2018C/ParkingBPH1/MINIAOD/05May2019-v1/100000/005650EB-AA60-D34C-8100-95959C4B352D.root'
 #options.inputFiles = '/store/data/Run2018D/Charmonium/MINIAOD/12Nov2019_UL2018-v1/280000/D7FD376D-30CD-AA48-8D03-E0220043BBDE.root'
