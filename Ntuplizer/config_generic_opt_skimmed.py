@@ -21,7 +21,8 @@ process.load('Configuration.Geometry.GeometryRecoDB_cff')
 #process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.TFileService = cms.Service("TFileService",
 #                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_small.root')
-                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/flatTuple_small.root')
+#                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/flatTuple_small.root')
+                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC2018_NoPU/flatTuple_small.root')
 #                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPHMC/flatTuple.root')
 #                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/flatTuple.root')
 #                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/flatTuple.root')
@@ -35,7 +36,7 @@ from EXOVVNtuplizerRunII.Ntuplizer.ntuplizerOptions_generic_cfi import config
 #config["FSIGCUT"] = 3
 #config["VPROBCUT"] = 0.1
 #config["DNNCUT"] = 0.2
-config["RUNONMC"]=False
+#config["RUNONMC"]=False
 ####### Config parser ##########
 
 import FWCore.ParameterSet.VarParsing as VarParsing
@@ -96,31 +97,57 @@ options.maxEvents = -1
 #'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/11BAF64E-7D44-8B49-BAF3-2AD6AB1CEF79.root',
 #'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12208844-ED2A-5A4C-B127-4C0444B899A4.root',
 #'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root']
-options.inputFiles = ['/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/013404B1-9437-A740-9C7A-F3EBE718EFC2.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0183EE1D-086E-B540-904D-F3B086500E5F.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/01AEC6FB-B54A-8A4B-8053-02C94620FC9D.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/06266F51-9959-AF4B-9D5E-6D82E10C36D9.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/07CB125B-A423-BD47-861E-F09A78B9EECB.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0861F6F5-8811-3F45-A8A2-D970635E7840.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/08BA9DE0-7264-6A4B-BB7D-24ED3270E32A.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/08D68E7E-CF36-8740-A9E2-D1F413F3C218.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/098EBC6C-4F51-4844-94B3-D6B2E8BB30A1.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0AED8F0A-EBA9-3F41-8B33-0188A63C23D2.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0BE90291-6319-154A-BBCF-78430B539542.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0C329E58-D296-3E4A-86B0-93D9C0E14B12.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0EE98D40-1118-9E4D-87CB-00A295C979B9.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/115B8AE0-E7E5-B44E-BDA8-D5B0C296F44F.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/11D1ADBF-BD16-434B-81F9-583468A26771.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/122810A5-95A6-9C43-8751-0458C8F17E62.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/12CBD5D8-9900-D94C-940A-5DB8A65B5C62.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/1479D0AF-2176-4B47-99F7-F1CD2561C2B6.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/151D4F1C-DF0A-8944-929F-CB21C843A148.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/155A5F55-13B9-3A4E-8C85-9C05E459291C.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/159C2FC7-7129-8947-B757-FB7D7145767A.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/15D079D7-34A9-EF40-9C88-72E73D373F76.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/1623EC71-15FB-FE4E-98DC-34E83A7726C9.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/16AB417A-4C2F-134C-98F5-93AB97252C91.root',
-'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/175D5D85-654B-3042-A3D8-75B8B2606382.root']
+#options.inputFiles = ['/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/013404B1-9437-A740-9C7A-F3EBE718EFC2.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0183EE1D-086E-B540-904D-F3B086500E5F.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/01AEC6FB-B54A-8A4B-8053-02C94620FC9D.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/06266F51-9959-AF4B-9D5E-6D82E10C36D9.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/07CB125B-A423-BD47-861E-F09A78B9EECB.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0861F6F5-8811-3F45-A8A2-D970635E7840.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/08BA9DE0-7264-6A4B-BB7D-24ED3270E32A.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/08D68E7E-CF36-8740-A9E2-D1F413F3C218.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/098EBC6C-4F51-4844-94B3-D6B2E8BB30A1.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0AED8F0A-EBA9-3F41-8B33-0188A63C23D2.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0BE90291-6319-154A-BBCF-78430B539542.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0C329E58-D296-3E4A-86B0-93D9C0E14B12.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/0EE98D40-1118-9E4D-87CB-00A295C979B9.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/115B8AE0-E7E5-B44E-BDA8-D5B0C296F44F.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/11D1ADBF-BD16-434B-81F9-583468A26771.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/122810A5-95A6-9C43-8751-0458C8F17E62.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/12CBD5D8-9900-D94C-940A-5DB8A65B5C62.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/1479D0AF-2176-4B47-99F7-F1CD2561C2B6.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/151D4F1C-DF0A-8944-929F-CB21C843A148.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/155A5F55-13B9-3A4E-8C85-9C05E459291C.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/159C2FC7-7129-8947-B757-FB7D7145767A.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/15D079D7-34A9-EF40-9C88-72E73D373F76.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/1623EC71-15FB-FE4E-98DC-34E83A7726C9.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/16AB417A-4C2F-134C-98F5-93AB97252C91.root',
+#'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/175D5D85-654B-3042-A3D8-75B8B2606382.root']
+options.inputFiles = ['/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/00272A55-D6D7-014D-AE1C-BA1B4E6B3539.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/009DC2AA-D956-9C4A-9330-8CB339C5BE82.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/0110ED45-ADFF-5046-989A-6DCB04CD03F0.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/04D0F69A-0B70-7E48-828B-13260A84D403.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/05706613-0162-934D-ADB5-F8C81791BE70.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/08FB6778-BCBF-F847-AAB1-D5776044018F.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/095226B1-E4D5-4846-ABCC-266E6E98A444.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/0973B272-5119-3B4F-AAA9-3C2ED5B87A1A.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/0AEBD36D-19C1-3C4B-8EF7-9948B907CF7A.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/0F9EFCE7-65F4-E947-AA1B-F0F3F4C46F61.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/0FA3BE7B-B900-8342-8B53-FA052DDD6316.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/121F402E-C4FB-F047-9EC4-C676C23A30EE.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/127C693A-7F9B-7B4C-9D3B-1E1E9A975DF0.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/138FBDCF-72E5-9747-BC19-2BA9C55449AB.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/15207932-98B4-8C47-AF34-69FD1A3504F2.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/1597FCBC-5E20-8F4F-B183-7D0BEC0609BE.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/178A7726-6EB9-E64B-8B7B-FE6C5D58BA15.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/1843FF8E-8457-1E4F-AFB5-EF722ABEE0FD.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/18B53E0E-8B87-3346-9C24-98650D0D80B9.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/19E5D491-9A3B-AA4E-883E-FFBAD3957B3D.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/1B035962-E443-CA42-96CE-E3FE39AE65B4.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/1BB4D9A7-133E-CE4A-9874-17609817F271.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/1DD3476F-8734-2B43-B6ED-834B65602030.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/237CCDA6-FB92-D446-A6E4-1E8DBC572E20.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/25582CBF-B836-8E41-A349-EC4309B2F4F4.root',
+'/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat2018_13TeV_pythia8/MINIAODSIM/NoPU_102X_upgrade2018_realistic_v15-v1/270000/26F01674-2D5C-464B-9081-259A3A0C2447.root']
 #options.inputFiles = '/store/mc/RunIIAutumn18MiniAOD/QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15_ext1-v1/110000/02CCAE3F-A631-3D4D-B5A6-6B5B81B4E210.root'
 #options.inputFiles = '/store/data/Run2018C/ParkingBPH1/MINIAOD/05May2019-v1/100000/005650EB-AA60-D34C-8100-95959C4B352D.root'
 #options.inputFiles = '/store/data/Run2018D/Charmonium/MINIAOD/12Nov2019_UL2018-v1/280000/D7FD376D-30CD-AA48-8D03-E0220043BBDE.root'
@@ -338,6 +365,7 @@ else : #Data
      elif ("Run2018B" in  options.RunPeriod): 
        JEC_runDependent_suffix= "B"
        GT="102X_dataRun2_Sep2018ABC_v2"
+#       GT="106X_dataRun2_v28"
      elif ("Run2018C" in  options.RunPeriod): 
        JEC_runDependent_suffix= "C"
        GT="102X_dataRun2_Sep2018ABC_v2"

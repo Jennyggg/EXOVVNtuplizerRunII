@@ -5,7 +5,7 @@ config = dict()
 #--------- general ----------#
 
 #--------- Set Just one to true ----------#
-config["RUNONMC"] = False
+config["RUNONMC"] = True
 #-----------------------------------------#
 #config["USEHAMMER"] = (True and config["RUNONMC"])
 config["USEHAMMER"] = False
