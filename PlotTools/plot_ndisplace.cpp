@@ -1,9 +1,14 @@
-void plot_ndisplace(string filename, string plotname, string legendname, bool isLog = false){
+#include "helper.cpp"
+void plot_ndisplace(string filenames, string plotname, string legendname, bool isLog = false){
   int nbins=20;
   float min=0.;
   float max=20.;
+  std::vector<string> filename;
+  splitstring(filenames, filename);
   TChain *t = new TChain("ntuplizer/tree");
-  t->AddFile(filename.c_str());
+  for(int i=0; i<filename.size(); i++){
+    t->AddFile(filename[i].c_str());
+  }
   TCanvas *c = new TCanvas("c","c",600,400);
   gStyle->SetOptStat(0);
   THStack *hs = new THStack("hs","Distribution of #displaced tracks");

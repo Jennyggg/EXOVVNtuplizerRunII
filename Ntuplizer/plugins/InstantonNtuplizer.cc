@@ -166,25 +166,26 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
         std::cout << "This is null!!" << std::endl;
       }
       N_Trk_total++;
-      int vtxindex=0;
-      for(reco::VertexCollection::const_iterator vtx = vertices_->begin(); vtx != vertices_->end(); ++vtx, ++vtxindex){
-        if(pf.vertexRef()->z()==vtx->position().Z()){
-          N_Trk[vtxindex]++;
-          reco::TransientTrack  _track_ = (*builder).build(pf.pseudoTrack());
-          _track_.setBeamSpot(*beamspot_);
-          GlobalPoint vert(pf.vertexRef()->x(), pf.vertexRef()->y(), pf.vertexRef()->z());
-          TrajectoryStateClosestToPoint  traj = _track_.trajectoryStateClosestToPoint(vert);
-          if(traj.perigeeParameters().transverseImpactParameter() > 0.02){
+//associate the track to a primary vertex 
+     int vtxindex=pf.vertexRef().key();
+//      for(reco::VertexCollection::const_iterator vtx = vertices_->begin(); vtx != vertices_->end(); ++vtx, ++vtxindex){
+//        if(pf.vertexRef()->z()==vtx->position().Z()){
+      N_Trk[vtxindex]++;
+      reco::TransientTrack  _track_ = (*builder).build(pf.pseudoTrack());
+      _track_.setBeamSpot(*beamspot_);
+      GlobalPoint vert(pf.vertexRef()->x(), pf.vertexRef()->y(), pf.vertexRef()->z());
+      TrajectoryStateClosestToPoint  traj = _track_.trajectoryStateClosestToPoint(vert);
+      if(traj.perigeeParameters().transverseImpactParameter() > 0.02){
 //          math::XYZPoint vert(pf.vertexRef()->x(), pf.vertexRef()->y(), pf.vertexRef()->z());
 //          if(pf.dxy(vert)> 0.002){
-            N_Trk_Displaced[vtxindex]++;
-            N_Trk_Displaced_total++;
-          }
-          alltracks[vtxindex].push_back(_track_);
-          alltracks_pf[vtxindex].push_back(pf);
-          break;
-        }
+        N_Trk_Displaced[vtxindex]++;
+        N_Trk_Displaced_total++;
       }
+      alltracks[vtxindex].push_back(_track_);
+      alltracks_pf[vtxindex].push_back(pf);
+//          break;
+//        }
+//      }
     }
   }
 
