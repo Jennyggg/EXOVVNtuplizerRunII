@@ -1,0 +1,1 @@
+[1]+ cmsRun config_generic_opt_skimmed.py RunPeriod="Run2018A" &

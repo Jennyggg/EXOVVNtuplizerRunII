@@ -841,6 +841,8 @@ void NtupleBranches::branch( std::map< std::string, bool >& runFlags ){
     tree_->Branch("Instanton_N_Trk",&Instanton_N_Trk);
     tree_->Branch("Instanton_N_Trk_Displaced_total",&Instanton_N_Trk_Displaced_total);
     tree_->Branch("Instanton_N_Trk_Displaced",&Instanton_N_Trk_Displaced);
+    tree_->Branch("Instanton_N_Trk_goodDisplaced_total",&Instanton_N_Trk_goodDisplaced_total);
+    tree_->Branch("Instanton_N_Trk_goodDisplaced",&Instanton_N_Trk_goodDisplaced);
     tree_->Branch("Instanton_N_TrackJet_total",&Instanton_N_TrackJet_total);
     tree_->Branch("Instanton_N_TrackJet",&Instanton_N_TrackJet);
     tree_->Branch("TrackJet_P4",&TrackJet_P4);
@@ -848,6 +850,8 @@ void NtupleBranches::branch( std::map< std::string, bool >& runFlags ){
     tree_->Branch("Instanton_Trk_spherocity",&Instanton_Trk_spherocity);
     tree_->Branch("Instanton_Trk_broaden",&Instanton_Trk_broaden);
     tree_->Branch("Instanton_Trk_thrust",&Instanton_Trk_thrust);
+    tree_->Branch("Instanton_vtx_N_goodMuon",&Instanton_vtx_N_goodMuon);
+    tree_->Branch("Instanton_vtx_isBPHtrigger",&Instanton_vtx_isBPHtrigger);
   }
 
 //  if (runFlags["doBsTauTau"]){
@@ -2102,15 +2106,18 @@ void NtupleBranches::reset( void ){
   Instanton_N_Trk_total=0;
   Instanton_N_Trk_Displaced_total=0;
   Instanton_N_TrackJet_total=0;
+  Instanton_N_Trk_goodDisplaced_total=0;
   Instanton_N_Trk.clear();
   Instanton_N_Trk_Displaced.clear();
+  Instanton_N_Trk_goodDisplaced.clear();
   Instanton_N_TrackJet.clear();
   Instanton_Trk_mass.clear();
   TrackJet_P4.clear();
   Instanton_Trk_spherocity.clear();
   Instanton_Trk_broaden.clear();
   Instanton_Trk_thrust.clear();
-
+  Instanton_vtx_N_goodMuon.clear();
+  Instanton_vtx_isBPHtrigger.clear();
   /////////////////
 
 

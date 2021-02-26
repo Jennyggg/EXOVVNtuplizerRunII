@@ -852,6 +852,9 @@ public:
   std::vector<int>                  Instanton_N_Trk;
   int                               Instanton_N_Trk_Displaced_total;
   std::vector<int>                  Instanton_N_Trk_Displaced;
+  int                               Instanton_N_Trk_goodDisplaced_total; //with d0/errord0 > 5
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced; //
+
 //  int                               Instanton_N_PFJet_total;
   std::vector<int>                  Instanton_N_TrackJet;
   int                               Instanton_N_TrackJet_total;
@@ -864,6 +867,8 @@ public:
   std::vector<float>                Instanton_Trk_spherocity;
   std::vector<float>                Instanton_Trk_broaden;
   std::vector<float>                Instanton_Trk_thrust;
+  std::vector<int>                  Instanton_vtx_N_goodMuon;
+  std::vector<bool>                 Instanton_vtx_isBPHtrigger;
 
 //  std::vector<int  >                BsTauTau_nCandidates ;
 //
@@ -1376,16 +1381,16 @@ public:
 
 
 
-  /** HLT trigger objects */
-  /* std::vector<float>  		    triggerObject_pt	      ; */
-  /* std::vector<float>  		    triggerObject_eta	      ; */
-  /* std::vector<float>  		    triggerObject_phi	      ; */
-  /* std::vector<float>  		    triggerObject_mass	      ; */
-  /* std::vector<std::string>  		    triggerObject_lastname    ; */
-  /* std::vector< std::vector<float> > triggerObject_filterIDs   ; // as defined in http://cmslxr.fnal.gov/lxr/source/DataFormats/HLTReco/interface/TriggerTypeDefs.h */
-  /* //  std::vector< std::vector<std::string> > triggerObject_filterLabels; */
+  /* HLT trigger objects */
+//   std::vector<float>  		    triggerObject_pt	      ; 
+//   std::vector<float>  		    triggerObject_eta	      ; 
+//   std::vector<float>  		    triggerObject_phi	      ; 
+//   std::vector<float>  		    triggerObject_mass	      ; 
+//   std::vector<std::string>  		    triggerObject_lastname    ; 
+//   std::vector< std::vector<float> > triggerObject_filterIDs   ; // as defined in http://cmslxr.fnal.gov/lxr/source/DataFormats/HLTReco/interface/TriggerTypeDefs.h */
+   //  std::vector< std::vector<std::string> > triggerObject_filterLabels; */
   /* std::map<std::string, std::vector<std::string> > triggerObject_filterLabels; */
-  /* std::vector< std::vector<int> >   triggerObject_firedTrigger; // as defined in plugins/TriggersNtuplizer.cc */
+//   std::vector< std::vector<int> >   triggerObject_firedTrigger; // as defined in plugins/TriggersNtuplizer.cc 
 
 
   /*--------------------------PV infos--------------------------*/

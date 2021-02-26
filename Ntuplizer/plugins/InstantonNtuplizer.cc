@@ -2,6 +2,7 @@
 #include "TMatrixTBase.h"
 #include "TMatrixDSymEigen.h"
 #include "TVector3.h"
+#include "../interface/helper.h"
 
 void calcS_T_B(std::vector<pat::PackedCandidate>& momenta, Float_t& Spherocity,Float_t& Thrust,Float_t& Broaden, TVector3& taxis, int nSeed){
   if (momenta.size()==0) {Spherocity=-1;Thrust=-1;Broaden=-1;return;}
@@ -135,8 +136,9 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   event.getByToken(bsToken_, beamspot_);
   event.getByToken(muonToken_   , muons_    );
   event.getByToken(triggerObjects_  , triggerObjects);
-//  std::vector<pat::Muon> muoncollection;
-//  muoncollection.clear();
+  event.getByToken(HLTtriggersToken_,HLTtriggers_);
+  std::vector<pat::Muon> muoncollection;
+  muoncollection.clear();
 
   event.getByToken( packedpfcandidatesToken_               , packedpfcandidates_      );
   event.getByToken(jetInputToken_      , jets_    );
@@ -147,16 +149,20 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
 // Count number of tracks and displaced tracks (transverse impact paramter > 0.02 cm)
   int N_Trk_total=0;
   int N_Trk_Displaced_total=0;
+  int N_Trk_goodDisplaced_total=0;
   int N_Jet_total=jets_->size();
   std::vector<int> N_Trk(vertices_->size(),0);
   std::vector<int> N_Trk_Displaced(vertices_->size(),0);
+  std::vector<int> N_Trk_goodDisplaced(vertices_->size(),0);
   std::vector<float> Trk_mass(vertices_->size(),0);
   std::vector<int> N_Jet(vertices_->size(),0);
+  std::vector<int> vtx_N_goodMuon(vertices_->size(),0);
+  std::vector<bool> vtx_isBPHtrigger(vertices_->size(),false); 
   std::vector<std::vector<reco::TransientTrack>> alltracks(vertices_->size());
   std::vector<std::vector<pat::PackedCandidate>> alltracks_pf(vertices_->size());
-  for(reco::VertexCollection::const_iterator vtx = vertices_->begin(); vtx != vertices_->end(); ++vtx){
+//  for(reco::VertexCollection::const_iterator vtx = vertices_->begin(); vtx != vertices_->end(); ++vtx){
 //    cout<<"PV "<<vtx->position().X()<<" "<<vtx->position().Y()<<" "<<vtx->position().Z()<<endl;
-  }
+//  }
 
   for( size_t ii = 0; ii < packedpfcandidates_->size(); ++ii ){
     pat::PackedCandidate pf = (*packedpfcandidates_)[ii];
@@ -180,6 +186,10 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
 //          if(pf.dxy(vert)> 0.002){
         N_Trk_Displaced[vtxindex]++;
         N_Trk_Displaced_total++;
+        if(traj.perigeeParameters().transverseImpactParameter()/traj.perigeeError().transverseImpactParameterError()>5.){
+          N_Trk_goodDisplaced[vtxindex]++;
+          N_Trk_goodDisplaced_total++;
+        }     
       }
       alltracks[vtxindex].push_back(_track_);
       alltracks_pf[vtxindex].push_back(pf);
@@ -256,19 +266,89 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
 
   }
 */
+  std::vector<string> FiredTriggers;
+  std::vector<string> FiredBPHTriggers;
+  bool isBPHdata=false;
+  const edm::TriggerNames& trigNames = event.triggerNames(*HLTtriggers_);
+  for (unsigned int i = 0, n = HLTtriggers_->size(); i < n; ++i) {
+    if(HLTtriggers_->accept(i)){
+      FiredTriggers.push_back(trigNames.triggerName(i));
+//    std::cout << "Trigger " << trigNames.triggerName(i) << ": " << (HLTtriggers_->accept(i) ? "PASS" : "fail (or not run)") << std::endl;
+      if(isBPHtrigger(trigNames.triggerName(i))){
+        isBPHdata=true;
+        FiredBPHTriggers.push_back(trigNames.triggerName(i));
+      }
+    }
+  }
 
+  for(size_t imuon = 0; imuon < muons_->size(); ++ imuon){
+    const pat::Muon & muon = (*muons_)[imuon];
 
+    if(muon.pt() < 4) continue;
+    if(TMath::Abs(muon.eta()) > 2.4) continue;
+    if(!(muon.track().isNonnull())) continue;
+/*    for (pat::TriggerObjectStandAlone obj : *triggerObjects) {    
+      obj.unpackPathNames(trigNames);
+      obj.unpackFilterLabels(event, *HLTtriggers_);
+      std::vector<std::string> pathNamesAll  = obj.pathNames(false);
+      if (!pathNamesAll.size()) continue;
+      if(!imuon){
+        bool triggermuon=false;
+        for (unsigned h = 0, n = pathNamesAll.size(); h < n; ++h) {
+          if((obj.pdgId()==13||obj.pdgId()==-13)&&isBPHtrigger(pathNamesAll[h])){
+            cout<<"pathname for this obj: "<<pathNamesAll[h]<<endl;
+            triggermuon=true;
+          }
+        }
+        if(triggermuon)
+          cout<<"trigger muon pt = "<<obj.pt()<<",phi = "<<obj.phi()<<", eta = "<<obj.eta()<<endl;
+      }
+    }
+*/
+//    cout<<"muon pt = "<<muon.pt()<<", phi = "<<muon.phi()<<", eta = "<<muon.eta()<<endl;
 
+//assign good muons to vtx
 
+    const reco::TrackRef track_muon = muon.muonBestTrack();
+    reco::TransientTrack transienttrack_muon = (*builder).build(track_muon);
+    double closestIP=999.;
+    int closestvtxindex=-1;
+    for( size_t nn = 0; nn < vertices_->size(); nn++){
+    std::pair<bool,Measurement1D> IP3D = IPTools::absoluteImpactParameter3D(transienttrack_muon,(*vertices_)[nn]);
+      if(IP3D.second.value() < closestIP){
+        closestIP = IP3D.second.value();
+        closestvtxindex = nn;
+      }
+    }
+
+   if(closestvtxindex!=-1)  vtx_N_goodMuon[closestvtxindex]++;
+   else {
+     std::cout<<"Warning: muon vertex unfound"<<std::endl;
+      continue;
+   }
+//label vertice if the muons coming out of it fired the trigger
+    if(!isBPHdata) continue;
+    for(size_t mm=0; mm < FiredBPHTriggers.size(); mm++){
+      if(muon.triggered(FiredBPHTriggers[mm].c_str())){ //cout<<" this muon fired the BPH trigger"<<endl;
+        vtx_isBPHtrigger[closestvtxindex] = true;
+        break;
+      }
+    }
+
+  }
 
   nBranches_->Instanton_N_Trk_total = N_Trk_total;
   nBranches_->Instanton_N_Trk_Displaced_total = N_Trk_Displaced_total;
+  nBranches_->Instanton_N_Trk_goodDisplaced_total = N_Trk_goodDisplaced_total;
   nBranches_->Instanton_N_TrackJet_total = N_Jet_total;
   for( size_t jj = 0; jj < vertices_->size(); ++jj ){
     nBranches_->Instanton_N_Trk.push_back(N_Trk[jj]);
     nBranches_->Instanton_N_Trk_Displaced.push_back(N_Trk_Displaced[jj]);
+    nBranches_->Instanton_N_Trk_goodDisplaced.push_back(N_Trk_goodDisplaced[jj]);
     nBranches_->Instanton_Trk_mass.push_back(Trk_mass[jj]);
     nBranches_->Instanton_N_TrackJet.push_back(N_Jet[jj]);
+    nBranches_->Instanton_vtx_N_goodMuon.push_back(vtx_N_goodMuon[jj]);
+    nBranches_->Instanton_vtx_isBPHtrigger.push_back(vtx_isBPHtrigger[jj]);
   }
   return true;
 }

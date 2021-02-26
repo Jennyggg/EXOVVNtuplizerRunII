@@ -548,3 +548,84 @@ bool helper::basicPFcut(pat::PackedCandidate pf){
 
 }
 
+
+bool isBPHtrigger(string name){
+// Run2018B+C
+  if(name=="HLT_Mu12_IP6_part0_v2") return true;
+  if(name=="HLT_Mu12_IP6_part1_v2") return true;
+  if(name=="HLT_Mu12_IP6_part2_v2") return true;
+  if(name=="HLT_Mu12_IP6_part3_v2") return true;
+  if(name=="HLT_Mu12_IP6_part4_v2") return true;
+  if(name=="HLT_Mu12_IP6_part5_v2") return true;
+// Run2018A
+  if(name=="HLT_Mu10p5_IP3p5_part0_v1") return true;
+  if(name=="HLT_Mu10p5_IP3p5_part1_v1") return true;
+  if(name=="HLT_Mu10p5_IP3p5_part2_v1") return true;
+  if(name=="HLT_Mu10p5_IP3p5_part3_v1") return true;
+  if(name=="HLT_Mu10p5_IP3p5_part4_v1") return true;
+  if(name=="HLT_Mu10p5_IP3p5_part5_v1") return true;
+  if(name=="HLT_Mu9_IP6_part0_v1") return true;
+  if(name=="HLT_Mu9_IP6_part1_v1") return true;
+  if(name=="HLT_Mu9_IP6_part2_v1") return true;
+  if(name=="HLT_Mu9_IP6_part3_v1") return true;
+  if(name=="HLT_Mu9_IP6_part4_v1") return true;
+  if(name=="HLT_Mu9_IP6_part5_v1") return true;
+  if(name=="HLT_Mu9_IP6_part0_v2") return true;
+  if(name=="HLT_Mu9_IP6_part1_v2") return true;
+  if(name=="HLT_Mu9_IP6_part2_v2") return true;
+  if(name=="HLT_Mu9_IP6_part3_v2") return true;
+  if(name=="HLT_Mu9_IP6_part4_v2") return true;
+  if(name=="HLT_Mu9_IP6_part5_v2") return true;
+// Run2018B+C
+  if(name=="HLT_Mu9_IP6_part0_v3") return true;
+  if(name=="HLT_Mu9_IP6_part1_v3") return true;
+  if(name=="HLT_Mu9_IP6_part2_v3") return true;
+  if(name=="HLT_Mu9_IP6_part3_v3") return true;
+  if(name=="HLT_Mu9_IP6_part4_v3") return true;
+  if(name=="HLT_Mu9_IP6_part5_v3") return true;
+  if(name=="HLT_Mu9_IP5_part0_v2") return true;
+  if(name=="HLT_Mu9_IP5_part1_v2") return true;
+  if(name=="HLT_Mu9_IP5_part2_v2") return true;
+  if(name=="HLT_Mu9_IP5_part3_v2") return true;
+  if(name=="HLT_Mu9_IP5_part4_v2") return true;
+  if(name=="HLT_Mu9_IP5_part5_v2") return true;
+// ??
+  if(name=="HLT_Mu8_IP6_part3_v2") return true;
+  if(name=="HLT_Mu8_IP5_part3_v2") return true;
+// Run2018A
+  if(name=="HLT_Mu8_IP3_part0_v1") return true;
+  if(name=="HLT_Mu8_IP3_part1_v1") return true;
+  if(name=="HLT_Mu8_IP3_part2_v1") return true;
+  if(name=="HLT_Mu8_IP3_part3_v1") return true;
+  if(name=="HLT_Mu8_IP3_part4_v1") return true;
+  if(name=="HLT_Mu8_IP3_part5_v1") return true;
+  if(name=="HLT_Mu8_IP3_part0_v2") return true;
+  if(name=="HLT_Mu8_IP3_part1_v2") return true;
+  if(name=="HLT_Mu8_IP3_part2_v2") return true;
+  if(name=="HLT_Mu8_IP3_part3_v2") return true;
+  if(name=="HLT_Mu8_IP3_part4_v2") return true;
+  if(name=="HLT_Mu8_IP3_part5_v2") return true;
+// Run2018B
+  if(name=="HLT_Mu8_IP3_part0_v3") return true;
+  if(name=="HLT_Mu8_IP3_part1_v3") return true;
+  if(name=="HLT_Mu8_IP3_part2_v3") return true;
+  if(name=="HLT_Mu8_IP3_part3_v3") return true;
+  if(name=="HLT_Mu8_IP3_part4_v3") return true;
+  if(name=="HLT_Mu8_IP3_part5_v3") return true;
+// Run2018A
+  if(name=="HLT_Mu8p5_IP3p5_part0_v1") return true;
+  if(name=="HLT_Mu8p5_IP3p5_part1_v1") return true;
+  if(name=="HLT_Mu8p5_IP3p5_part2_v1") return true;
+  if(name=="HLT_Mu8p5_IP3p5_part3_v1") return true;
+  if(name=="HLT_Mu8p5_IP3p5_part4_v1") return true;
+  if(name=="HLT_Mu8p5_IP3p5_part5_v1") return true;
+// Run2018B
+  if(name=="HLT_Mu7_IP4_part0_v2") return true;
+  if(name=="HLT_Mu7_IP4_part1_v2") return true;
+  if(name=="HLT_Mu7_IP4_part2_v2") return true;
+  if(name=="HLT_Mu7_IP4_part3_v2") return true;
+  if(name=="HLT_Mu7_IP4_part4_v2") return true;
+  if(name=="HLT_Mu7_IP4_part5_v2") return true;
+  return false;
+
+}

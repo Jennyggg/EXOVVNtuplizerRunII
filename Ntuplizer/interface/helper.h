@@ -227,3 +227,6 @@ class helper{
 
 
 #endif
+
+
+  bool isBPHtrigger(string name);
