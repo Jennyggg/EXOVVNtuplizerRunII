@@ -18,11 +18,23 @@ void plot_thrust_compare(string filenames_1,string filenames_2, string plotname,
   gStyle->SetOptStat(0);
   THStack *hs_1 = new THStack("hs_1","Distribution of Thrust");
   THStack *hs_2 = new THStack("hs_2","Distribution of Thrust");
+
+  TPad *pad1 = new TPad("pad1","pad1",0,0.33,1,1);
+  TPad *pad2 = new TPad("pad2","pad2",0,0,1,0.33);
+  pad1->SetBottomMargin(0.00001);
+  pad1->SetBorderMode(0);
+
   if(isLog){
-    c->SetLogy();
+    pad1->SetLogy();
 //    hs_1->SetMinimum(0.1);
 //    hs_2->SetMinimum(0.1);
   }
+  pad2->SetTopMargin(0.00001);
+  pad2->SetBottomMargin(0.2);
+  pad2->SetBorderMode(0);
+  pad1->Draw();
+  pad2->Draw();
+  pad1->cd();
   TH1F *hist1 = new TH1F("hist1","Distribution of Thrust",nbins,min,max);
   TH1F *hist2 = new TH1F("hist2","Distribution of Thrust",nbins,min,max);
   t_1->Draw("Instanton_Trk_thrust>>hist1","Instanton_Trk_mass>20&&Instanton_Trk_mass<=40"); //total
@@ -67,6 +79,41 @@ void plot_thrust_compare(string filenames_1,string filenames_2, string plotname,
   legend->AddEntry(hist2,legendname_2.c_str(),"lep");
   legend->SetFillStyle(0);
   legend->Draw();
+
+  pad2->cd();
+  TH1F *hist_ratio = new TH1F("hist_ratio","",nbins,min,max);
+  hist_ratio->SetMarkerStyle(21);
+  hist_ratio->SetMarkerColor(kBlack);
+  hist_ratio->GetXaxis()->SetTitle("Thrust");
+  hist_ratio->GetYaxis()->SetTitle((legendname_2+"/"+legendname_1).c_str());
+  hist_ratio->GetXaxis()->SetLabelSize(.06);
+  hist_ratio->GetYaxis()->SetLabelSize(.06);
+  hist_ratio->GetXaxis()->SetTitleSize(.08);
+  hist_ratio->GetYaxis()->SetTitleSize(.08);
+  hist_ratio->GetYaxis()->SetTitleOffset(.55);
+   for (Int_t i=0;i<nbins;i++) {
+     Double_t diff;
+     Double_t diff_e;
+     if (hist1->GetBinContent(i)){
+       diff = hist2->GetBinContent(i)/hist1->GetBinContent(i);
+       diff_e = diff*sqrt(pow(hist1->GetBinError(i)/hist1->GetBinContent(i),2)+pow(hist2->GetBinError(i)/hist2->GetBinContent(i),2));
+     }
+     else{
+       diff = 0; diff_e = 0;
+     }
+     hist_ratio->SetBinContent(i,diff);
+     hist_ratio->SetBinError(i,diff_e);
+   }
+  hist_ratio->Draw("ep");
+  hist_ratio->SetMinimum(0);
+
+  hist_ratio->SetMaximum(std::max(2.,hist_ratio->GetMaximum()+hist_ratio->GetBinError(hist_ratio->GetMaximumBin())+0.05));
+  TLine *line = new TLine(min,1,max,1);
+  line->SetLineColor(kRed);
+  line->Draw("SAME");
+  pad2->Update();
+  pad1->Update();
+  c->Update();
 
   c->SaveAs((plotname+".png").c_str());
   c->SaveAs((plotname+".pdf").c_str());
