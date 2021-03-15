@@ -850,12 +850,53 @@ public:
 
   int                               Instanton_N_Trk_total;
   std::vector<int>                  Instanton_N_Trk;
+  std::vector<int>                  Instanton_N_Trk_highPurity;
+  std::vector<int>                  Instanton_N_Trk_highPurity_pt05;
+  std::vector<int>                  Instanton_N_Trk_highPurity_pt08;
+  std::vector<int>                  Instanton_N_Trk_highPurity_pt1;
+  std::vector<int>                  Instanton_N_Trk_PVAssociationQuality0;
+  std::vector<int>                  Instanton_N_Trk_PVAssociationQuality1;
+  std::vector<int>                  Instanton_N_Trk_PVAssociationQuality4;
+  std::vector<int>                  Instanton_N_Trk_PVAssociationQuality5;
+  std::vector<int>                  Instanton_N_Trk_PVAssociationQuality6;
+  std::vector<int>                  Instanton_N_Trk_PVAssociationQuality7;
+  std::vector<int>                  Instanton_N_Trk_PVAssociationQualityLeq4_highPurity;
+  std::vector<int>                  Instanton_N_Trk_PVAssociationQualityLeq4_highPurity_pt05;
+  std::vector<int>                  Instanton_N_Trk_PVAssociationQualityLeq4_highPurity_pt08;
+  std::vector<int>                  Instanton_N_Trk_PVAssociationQualityLeq4_highPurity_pt1;
   int                               Instanton_N_Trk_Displaced_total;
   std::vector<int>                  Instanton_N_Trk_Displaced;
+  std::vector<int>                  Instanton_N_Trk_Displaced_highPurity;
+  std::vector<int>                  Instanton_N_Trk_Displaced_highPurity_pt05;
+  std::vector<int>                  Instanton_N_Trk_Displaced_highPurity_pt08;
+  std::vector<int>                  Instanton_N_Trk_Displaced_highPurity_pt1;
+  std::vector<int>                  Instanton_N_Trk_Displaced_PVAssociationQuality0;
+  std::vector<int>                  Instanton_N_Trk_Displaced_PVAssociationQuality1;
+  std::vector<int>                  Instanton_N_Trk_Displaced_PVAssociationQuality4;
+  std::vector<int>                  Instanton_N_Trk_Displaced_PVAssociationQuality5;
+  std::vector<int>                  Instanton_N_Trk_Displaced_PVAssociationQuality6;
+  std::vector<int>                  Instanton_N_Trk_Displaced_PVAssociationQuality7;
+  std::vector<int>                  Instanton_N_Trk_Displaced_PVAssociationQualityLeq4_highPurity;
+  std::vector<int>                  Instanton_N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt05;
+  std::vector<int>                  Instanton_N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt08;
+  std::vector<int>                  Instanton_N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt1;
   int                               Instanton_N_Trk_goodDisplaced_total; //with d0/errord0 > 5
-  std::vector<int>                  Instanton_N_Trk_goodDisplaced; //
-
-//  int                               Instanton_N_PFJet_total;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_highPurity;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_highPurity_pt05;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_highPurity_pt08;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_highPurity_pt1;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQuality0;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQuality1;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQuality4;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQuality5;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQuality6;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQuality7;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt05;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt08;
+  std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1;
+  int                               Instanton_N_PFJet_total;
   std::vector<int>                  Instanton_N_TrackJet;
   int                               Instanton_N_TrackJet_total;
 //  std::vector<bool>                 Jet_isPFJet;
@@ -868,7 +909,11 @@ public:
   std::vector<float>                Instanton_Trk_broaden;
   std::vector<float>                Instanton_Trk_thrust;
   std::vector<int>                  Instanton_vtx_N_goodMuon;
-  std::vector<bool>                 Instanton_vtx_isBPHtrigger;
+  std::vector<int>                  Instanton_vtx_N_goodPFMuon;
+  std::vector<bool>                 Instanton_vtx_isBPHtrigger_fromMuon;
+  std::vector<bool>                 Instanton_vtx_isBPHtrigger_fromPFMuon;
+  std::vector<float>                Instanton_vtx_goodMuonIP;//impact parameter to the closest muon (pt > 4 GeV) in cm
+  std::vector<float>                Instanton_vtx_goodPFMuon_PVDistance; //closest distance of this PV to the PV associated with muons (pt>4GeV)
 
 //  std::vector<int  >                BsTauTau_nCandidates ;
 //
@@ -1396,6 +1441,8 @@ public:
   /*--------------------------PV infos--------------------------*/
   int                               PV_N		     ;
   int                               PV_N_good        ;
+  int                               PV_N_good_hasgoodMuon   ;
+  int                               PV_N_good_hasgoodPFMuon ; 
   bool                              PV_filter		 ;
   std::vector<bool>                 PV_isgood        ;
   std::vector<float>                PV_chi2          ;
