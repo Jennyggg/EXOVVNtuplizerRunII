@@ -887,11 +887,19 @@ void NtupleBranches::branch( std::map< std::string, bool >& runFlags ){
     tree_->Branch("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1",&Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1);
     tree_->Branch("Instanton_N_TrackJet_total",&Instanton_N_TrackJet_total);
     tree_->Branch("Instanton_N_TrackJet",&Instanton_N_TrackJet);
+    tree_->Branch("Instanton_N_TrackJet_TrkCut_total",&Instanton_N_TrackJet_TrkCut_total);
+    tree_->Branch("Instanton_N_TrackJet_TrkCut",&Instanton_N_TrackJet_TrkCut);
     tree_->Branch("TrackJet_P4",&TrackJet_P4);
+    tree_->Branch("TrackJet_TrkCut_P4",&TrackJet_TrkCut_P4);
     tree_->Branch("Instanton_Trk_mass",&Instanton_Trk_mass);
+    tree_->Branch("Instanton_Trk_TrkCut_mass",&Instanton_Trk_TrkCut_mass);
+    tree_->Branch("Instanton_Trk_TrkCut_pt",&Instanton_Trk_TrkCut_pt);
     tree_->Branch("Instanton_Trk_spherocity",&Instanton_Trk_spherocity);
     tree_->Branch("Instanton_Trk_broaden",&Instanton_Trk_broaden);
     tree_->Branch("Instanton_Trk_thrust",&Instanton_Trk_thrust);
+    tree_->Branch("Instanton_Trk_TrkCut_spherocity",&Instanton_Trk_TrkCut_spherocity);
+    tree_->Branch("Instanton_Trk_TrkCut_broaden",&Instanton_Trk_TrkCut_broaden);
+    tree_->Branch("Instanton_Trk_TrkCut_thrust",&Instanton_Trk_TrkCut_thrust);
     tree_->Branch("Instanton_vtx_N_goodMuon",&Instanton_vtx_N_goodMuon);
     tree_->Branch("Instanton_vtx_N_goodPFMuon",&Instanton_vtx_N_goodPFMuon);
     tree_->Branch("Instanton_vtx_isBPHtrigger_fromMuon",&Instanton_vtx_isBPHtrigger_fromMuon);
@@ -900,6 +908,10 @@ void NtupleBranches::branch( std::map< std::string, bool >& runFlags ){
     tree_->Branch("Instanton_vtx_goodPFMuon_PVDistance",&Instanton_vtx_goodPFMuon_PVDistance);
     tree_->Branch("PV_N_good_hasgoodMuon",&PV_N_good_hasgoodMuon);
     tree_->Branch("PV_N_good_hasgoodPFMuon",&PV_N_good_hasgoodPFMuon);
+    if(!runFlags["runOnMC"]){
+      tree_->Branch("Instan_Lumi_per_bunch_mean",&Instan_Lumi_per_bunch_mean);
+      tree_->Branch("Instan_Lumi_per_bunch_RMS",&Instan_Lumi_per_bunch_RMS);
+    }
   }
 
 //  if (runFlags["doBsTauTau"]){
@@ -2154,6 +2166,7 @@ void NtupleBranches::reset( void ){
   Instanton_N_Trk_total=0;
   Instanton_N_Trk_Displaced_total=0;
   Instanton_N_TrackJet_total=0;
+  Instanton_N_TrackJet_TrkCut_total=0;
   Instanton_N_Trk_goodDisplaced_total=0;
   Instanton_N_Trk.clear();
   Instanton_N_Trk_highPurity.clear();
@@ -2201,11 +2214,18 @@ void NtupleBranches::reset( void ){
   Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt08.clear();
   Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1.clear();
   Instanton_N_TrackJet.clear();
+  Instanton_N_TrackJet_TrkCut.clear();
   Instanton_Trk_mass.clear();
+  Instanton_Trk_TrkCut_mass.clear();
+  Instanton_Trk_TrkCut_pt.clear();
   TrackJet_P4.clear();
+  TrackJet_TrkCut_P4.clear();
   Instanton_Trk_spherocity.clear();
   Instanton_Trk_broaden.clear();
   Instanton_Trk_thrust.clear();
+  Instanton_Trk_TrkCut_spherocity.clear();
+  Instanton_Trk_TrkCut_broaden.clear();
+  Instanton_Trk_TrkCut_thrust.clear();
   Instanton_vtx_N_goodMuon.clear();
   Instanton_vtx_N_goodPFMuon.clear();
   Instanton_vtx_isBPHtrigger_fromMuon.clear();
@@ -2214,6 +2234,8 @@ void NtupleBranches::reset( void ){
   Instanton_vtx_goodPFMuon_PVDistance.clear();
   PV_N_good_hasgoodMuon=0;
   PV_N_good_hasgoodPFMuon=0;
+  Instan_Lumi_per_bunch_mean=0.;
+  Instan_Lumi_per_bunch_RMS=0.;
   /////////////////
 
 

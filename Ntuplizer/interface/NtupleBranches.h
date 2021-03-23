@@ -899,22 +899,31 @@ public:
   int                               Instanton_N_PFJet_total;
   std::vector<int>                  Instanton_N_TrackJet;
   int                               Instanton_N_TrackJet_total;
+  std::vector<int>                  Instanton_N_TrackJet_TrkCut;//Cut on tracks with high purity and PVAssociationQuality >=4
+  int                               Instanton_N_TrackJet_TrkCut_total;
 //  std::vector<bool>                 Jet_isPFJet;
 //  std::vector<bool>                 Jet_isCaloJet;
 //  std::vector<bool>                 Jet_isJPTJet;
 //  std::vector<bool>                 Jet_isBasicJet;
   std::vector<float>                Instanton_Trk_mass;
+  std::vector<float>                Instanton_Trk_TrkCut_mass;
+  std::vector<float>                Instanton_Trk_TrkCut_pt;
   std::vector<std::vector<TLorentzVector>>                TrackJet_P4;
+  std::vector<std::vector<TLorentzVector>>                TrackJet_TrkCut_P4;
   std::vector<float>                Instanton_Trk_spherocity;
   std::vector<float>                Instanton_Trk_broaden;
   std::vector<float>                Instanton_Trk_thrust;
+  std::vector<float>                Instanton_Trk_TrkCut_spherocity;
+  std::vector<float>                Instanton_Trk_TrkCut_broaden;
+  std::vector<float>                Instanton_Trk_TrkCut_thrust;
   std::vector<int>                  Instanton_vtx_N_goodMuon;
   std::vector<int>                  Instanton_vtx_N_goodPFMuon;
   std::vector<bool>                 Instanton_vtx_isBPHtrigger_fromMuon;
   std::vector<bool>                 Instanton_vtx_isBPHtrigger_fromPFMuon;
   std::vector<float>                Instanton_vtx_goodMuonIP;//impact parameter to the closest muon (pt > 4 GeV) in cm
   std::vector<float>                Instanton_vtx_goodPFMuon_PVDistance; //closest distance of this PV to the PV associated with muons (pt>4GeV)
-
+  float                             Instan_Lumi_per_bunch_mean; //in \mu b^-1/Hz
+  float                             Instan_Lumi_per_bunch_RMS;
 //  std::vector<int  >                BsTauTau_nCandidates ;
 //
 //  std::vector<float>                BsTauTau_mu1_pt      ;

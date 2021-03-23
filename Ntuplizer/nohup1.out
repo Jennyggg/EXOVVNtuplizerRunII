@@ -1,6 +1,19 @@
  process source filenames cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        'root://xrootd-cms.infn.it//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0187FB10-EA3E-ED4F-8340-8931B659E533.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/01C007B5-2B48-3543-A338-22272E441925.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/028BA34E-416C-E94E-B976-5615D158D99A.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/03A6084D-770F-EA40-8500-126262842B17.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0447AB7C-9EDC-E046-B41D-F68DE3A1EAB0.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0923C159-3544-3649-9424-694E69CE855F.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0B14F6F4-5DD5-B04B-A7EF-7D2B80AD33FA.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0BC38BDB-A396-FF45-A1B9-EFD9DA98D316.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F441A41-FA10-8A4C-B07D-9EC21B82A5E0.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F544919-1564-2446-81B8-5CF792CAD956.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F882E56-C6E5-6A49-AA40-FAAEB621F675.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/11BAF64E-7D44-8B49-BAF3-2AD6AB1CEF79.root', 
+        '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root', 
         '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12C659FD-D961-6640-9C3D-48CD12A0D033.root', 
         '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/16216319-7A5E-774C-AAE5-5E36ED1E724E.root', 
         '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/17214445-47CE-B740-837B-01F1CEF607F7.root', 
@@ -48,67 +61,193 @@ doing corrections  to met on the fly %s False
 102X_dataRun2_Sep2018ABC_v2
 ****************************************************************************************************
 
-%MSG-i ThreadStreamSetup:  (NoModuleName) 10-Mar-2021 13:09:15 CET pre-events
+%MSG-i ThreadStreamSetup:  (NoModuleName) 23-Mar-2021 10:35:29 CET pre-events
 setting # threads 2
 setting # streams 2
 %MSG
-%MSG-i Geometry:  (NoModuleName) CSCGeometryESModule() 10-Mar-2021 13:09:20 CET  pre-events
+%MSG-i Geometry:  (NoModuleName) CSCGeometryESModule() 23-Mar-2021 10:35:32 CET  pre-events
 Label '' looking for alignment labels ''.
 %MSG
-%MSG-i Geometry:  (NoModuleName) CSCGeometryESModule() 10-Mar-2021 13:09:20 CET  pre-events
+%MSG-i Geometry:  (NoModuleName) CSCGeometryESModule() 23-Mar-2021 10:35:32 CET  pre-events
 Label 'idealForDigi' IGNORING alignment labels 'fakeForIdeal'.
 %MSG
 Finds tag HCAL : 1
 Finds tag ZDC : 1
 Finds tag CASTOR : 1
 Finds tag EcalEndcap : 1
-%MSG-i HCAL:  (NoModuleName) 10-Mar-2021 13:09:20 CET pre-events
+%MSG-i HCAL:  (NoModuleName) 23-Mar-2021 10:35:32 CET pre-events
 CaloTowerTopologyEP::CaloTowerTopologyEP
 %MSG
-%MSG-i Geometry:  (NoModuleName) DTGeometryESModule() 10-Mar-2021 13:09:20 CET  pre-events
+%MSG-i Geometry:  (NoModuleName) DTGeometryESModule() 23-Mar-2021 10:35:32 CET  pre-events
 Label '' looking for alignment labels ''.
 %MSG
-%MSG-i Geometry:  (NoModuleName) DTGeometryESModule() 10-Mar-2021 13:09:20 CET  pre-events
+%MSG-i Geometry:  (NoModuleName) DTGeometryESModule() 23-Mar-2021 10:35:32 CET  pre-events
 Label 'idealForDigi' IGNORING alignment labels 'fakeForIdeal'.
 %MSG
-%MSG-i Alignments:  (NoModuleName) FakeAlignmentProducer()  10-Mar-2021 13:09:20 CET pre-events
+%MSG-i Alignments:  (NoModuleName) FakeAlignmentProducer()  23-Mar-2021 10:35:32 CET pre-events
 Providing data with label 'fakeForIdeal'.
 %MSG
-%MSG-i SiPixelQualityESProducer::SiPixelQualityESProducer:  (NoModuleName)  10-Mar-2021 13:09:20 CET pre-events
+%MSG-i SiPixelQualityESProducer::SiPixelQualityESProducer:  (NoModuleName)  23-Mar-2021 10:35:33 CET pre-events
 
 %MSG
-%MSG-i SiStripBackPlaneCorrectionDepESProducer:  (NoModuleName)  10-Mar-2021 13:09:21 CET pre-events
+%MSG-i SiStripBackPlaneCorrectionDepESProducer:  (NoModuleName)  23-Mar-2021 10:35:33 CET pre-events
 ctor
 %MSG
-%MSG-i SiStripLorentzAngleDepESProducer:  (NoModuleName)  10-Mar-2021 13:09:21 CET pre-events
+%MSG-i SiStripLorentzAngleDepESProducer:  (NoModuleName)  23-Mar-2021 10:35:33 CET pre-events
 ctor
 %MSG
-%MSG-i SiStripQualityESProducer:  (NoModuleName) 10-Mar-2021 13:09:21 CET  pre-events
+%MSG-i SiStripQualityESProducer:  (NoModuleName) 23-Mar-2021 10:35:33 CET  pre-events
 ctor
 %MSG
-%MSG-i SiStripQualityESProducer:  (NoModuleName) 10-Mar-2021 13:09:21 CET  pre-events
+%MSG-i SiStripQualityESProducer:  (NoModuleName) 23-Mar-2021 10:35:33 CET  pre-events
 [SiStripQualityESProducer::ctor] Going to get data from record SiStripDetVOffRcd with tag 
 %MSG
-%MSG-i SiStripQualityESProducer:  (NoModuleName) 10-Mar-2021 13:09:21 CET  pre-events
+%MSG-i SiStripQualityESProducer:  (NoModuleName) 23-Mar-2021 10:35:33 CET  pre-events
 [SiStripQualityESProducer::ctor] Going to get data from record SiStripDetCablingRcd with tag 
 %MSG
-%MSG-i SiStripQualityESProducer:  (NoModuleName) 10-Mar-2021 13:09:21 CET  pre-events
+%MSG-i SiStripQualityESProducer:  (NoModuleName) 23-Mar-2021 10:35:33 CET  pre-events
 [SiStripQualityESProducer::ctor] Going to get data from record SiStripBadChannelRcd with tag 
 %MSG
-%MSG-i Geometry:  (NoModuleName) TrackerDigiGeometryESModule()  10-Mar-2021 13:09:21 CET pre-events
+%MSG-i Geometry:  (NoModuleName) TrackerDigiGeometryESModule()  23-Mar-2021 10:35:33 CET pre-events
 Label 'idealForDigi' IGNORING alignment labels 'fakeForIdeal'.
 %MSG
-%MSG-i Geometry:  (NoModuleName) TrackerDigiGeometryESModule()  10-Mar-2021 13:09:21 CET pre-events
+%MSG-i Geometry:  (NoModuleName) TrackerDigiGeometryESModule()  23-Mar-2021 10:35:33 CET pre-events
 Label '' looking for alignment labels ''.
 %MSG
-%MSG-i TRACKER:  (NoModuleName) 10-Mar-2021 13:09:21 CET pre-events
+%MSG-i TRACKER:  (NoModuleName) 23-Mar-2021 10:35:33 CET pre-events
 TrackerTopologyEP::TrackerTopologyEP
 %MSG
-%MSG-i HCAL:  (NoModuleName) 10-Mar-2021 13:09:21 CET pre-events
+%MSG-i HCAL:  (NoModuleName) 23-Mar-2021 10:35:34 CET pre-events
 HcalHardcodeCalibrations::HcalHardcodeCalibrations->...
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0187FB10-EA3E-ED4F-8340-8931B659E533.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0187FB10-EA3E-ED4F-8340-8931B659E533.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/01C007B5-2B48-3543-A338-22272E441925.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/01C007B5-2B48-3543-A338-22272E441925.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/028BA34E-416C-E94E-B976-5615D158D99A.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/028BA34E-416C-E94E-B976-5615D158D99A.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/03A6084D-770F-EA40-8500-126262842B17.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/03A6084D-770F-EA40-8500-126262842B17.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0447AB7C-9EDC-E046-B41D-F68DE3A1EAB0.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0447AB7C-9EDC-E046-B41D-F68DE3A1EAB0.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0923C159-3544-3649-9424-694E69CE855F.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0923C159-3544-3649-9424-694E69CE855F.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0B14F6F4-5DD5-B04B-A7EF-7D2B80AD33FA.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0B14F6F4-5DD5-B04B-A7EF-7D2B80AD33FA.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0BC38BDB-A396-FF45-A1B9-EFD9DA98D316.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0BC38BDB-A396-FF45-A1B9-EFD9DA98D316.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F441A41-FA10-8A4C-B07D-9EC21B82A5E0.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F441A41-FA10-8A4C-B07D-9EC21B82A5E0.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F544919-1564-2446-81B8-5CF792CAD956.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F544919-1564-2446-81B8-5CF792CAD956.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F882E56-C6E5-6A49-AA40-FAAEB621F675.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F882E56-C6E5-6A49-AA40-FAAEB621F675.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/11BAF64E-7D44-8B49-BAF3-2AD6AB1CEF79.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/11BAF64E-7D44-8B49-BAF3-2AD6AB1CEF79.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
+Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root' because:
+An exception of category 'FileStageInError' occurred while
+   [0] Calling DCacheStorageMaker::stagein()
+Exception Message:
+Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root', error was: "No such file or directory" (dc_errno=30)
+
+%MSG
+Failed open file in the dCache.
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12C659FD-D961-6640-9C3D-48CD12A0D033.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -117,7 +256,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/16216319-7A5E-774C-AAE5-5E36ED1E724E.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -126,7 +265,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/17214445-47CE-B740-837B-01F1CEF607F7.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -135,7 +274,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/19F53134-F58E-584F-9471-C290C95F55C1.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -144,7 +283,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/1D796FDD-1879-3441-BB24-C0A61C33B5D7.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -153,7 +292,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/1EEBDB7D-3C35-1045-8271-B48535954774.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -162,7 +301,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/22A2D0DA-3725-954A-8A3E-F3286E8CC5D7.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -171,7 +310,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/27098DE0-F01F-EF46-AB9C-E97521F1E994.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -180,7 +319,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/272E571D-8FC9-4D44-B714-801092498538.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -189,7 +328,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/2B59D9F7-F59A-9F45-A6C8-992D2D0D0F58.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -198,7 +337,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/2BDFA849-34F8-7743-A34F-2737ABB00642.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -207,7 +346,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/2BF4D891-7203-CD4A-8E27-FE5174C18D72.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -216,7 +355,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/2D654358-78BB-CC47-9BDB-B06F7A921AA4.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -225,7 +364,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/2E04833B-1907-D042-AFDB-6C90C998D4CD.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -234,7 +373,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/30D0485A-0BC6-AA45-8248-7F511B0BAA40.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -243,7 +382,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/324CFB6F-04C5-CA43-8FC4-7D71865ACC74.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -252,7 +391,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/32CCB237-4000-0A40-BA5F-7944298C512E.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -261,7 +400,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/33C6D0EF-F07A-9140-AC0D-5BEB78BB5620.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -270,7 +409,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/34C995F1-FA2A-C941-A149-6B63A5194E2A.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -279,7 +418,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/357B8A1D-6B20-3846-9FB1-ECD2C0E70281.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -288,7 +427,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/36FCFFBA-9557-CE4C-95A5-A3A3A3B11A85.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -297,7 +436,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/386D8AA5-CD18-D047-9609-AE40C008F3A8.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -306,7 +445,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/3D6A89D1-76A4-454B-B01B-D2E5D40BAF7B.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -315,7 +454,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/3F1DC056-C085-FA4F-A6CA-9C343A5791BA.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -324,7 +463,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/46B00DD1-0FF1-134D-8AD2-0AD045BE3159.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -333,7 +472,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/489A28C0-68F3-6A41-AC4D-2AAF77FC21AD.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -342,7 +481,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/489C65AD-415E-E840-A912-E11E54ECCADB.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -351,7 +490,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/4ABD886C-978A-8A46-BFA5-9F8FD5DD615F.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -360,7 +499,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/4B49014B-C005-584B-A0E0-0EC01E8A7851.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -369,7 +508,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/4C3F6DD5-1AD3-0444-80F8-830DBA773403.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -378,7 +517,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/4CBC3552-C55C-424A-904C-EB464F080B89.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -387,7 +526,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/502CD439-6A19-1C44-8DBA-75BD6ACCDF3E.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -396,7 +535,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/50889893-7D46-9241-881B-6D8AAFD16328.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -405,7 +544,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/510A8701-EA1F-E24F-B457-276166E72D04.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -414,7 +553,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/51BA0779-C792-A945-A05E-82DC0B436CD8.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -423,7 +562,7 @@ Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Ru
 
 %MSG
 Failed open file in the dCache.
-%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  10-Mar-2021 13:09:24 CET pre-events
+%MSG-w StorageFactory::stagein():  PoolSource:source@sourceConstruction  23-Mar-2021 10:35:35 CET pre-events
 Failed to stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/523C89FE-9BCB-4A4F-B127-F81DC6571EB2.root' because:
 An exception of category 'FileStageInError' occurred while
    [0] Calling DCacheStorageMaker::stagein()
@@ -431,28 +570,283 @@ Exception Message:
 Cannot stage in file 'dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/523C89FE-9BCB-4A4F-B127-F81DC6571EB2.root', error was: "No such file or directory" (dc_errno=30)
 
 %MSG
-10-Mar-2021 13:09:24 CET  Initiating request to open file root://xrootd-cms.infn.it//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root
-[2021-03-10 13:12:25.176138 +0100][Error  ][XRootD            ] [se3.itep.ru:1094] Unable to get the response to request kXR_open (file: /store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root, mode: 0660, flags: kXR_open_read kXR_async kXR_retstat )
-%MSG-w XrdAdaptorInternal:  file_open 10-Mar-2021 13:12:25 CET pre-events
-Failed to open file at URL root://se3.itep.ru:1094//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root.
+23-Mar-2021 10:35:35 CET  Initiating request to open file dcap://t3se01.psi.ch/pnfs/psi.ch/cms/trivcat/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root
+Failed open file in the dCache.
+23-Mar-2021 10:35:35 CET  Initiating request to open file root://xrootd-cms.infn.it//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root
+Changing exclude list for URL root://144.206.151.153:33123//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root?org.dcache.uuid=42b72d8c-da59-461e-b000-4118ecae64ba&org.dcache.xrootd.client=jinw.38151@t3ui03.psi.ch to se3.itep.ru
+%MSG-i XrdAdaptorInternal:  file_open 23-Mar-2021 10:35:38 CET pre-events
+Xrootd server at 144.206.151.153:33123 did not provide a sitename.  Monitoring may be incomplete.
 %MSG
-[2021-03-10 13:15:25.195910 +0100][Error  ][XRootD            ] [se3.itep.ru:1094] Unable to get the response to request kXR_open (file: /store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root?tried=, mode: 0660, flags: kXR_open_read kXR_async kXR_retstat )
-%MSG-w XrdAdaptorInternal:  file_open 10-Mar-2021 13:15:25 CET pre-events
-Failed to open file at URL root://se3.itep.ru:1094//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root?tried=.
+%MSG-i XrdAdaptorInternal:  file_open 23-Mar-2021 10:35:38 CET pre-events
+Reading from new server 144.206.151.153:33123 at site itep.ru
 %MSG
------ Begin Fatal Exception 10-Mar-2021 13:15:25 CET-----------------------
-An exception of category 'FileOpenError' occurred while
-   [0] Constructing the EventProcessor
-   [1] Constructing input source of type PoolSource
-   [2] Calling RootInputFileSequence::initTheFile()
-   [3] Calling StorageFactory::open()
-   [4] Calling XrdFile::open()
-Exception Message:
-Failed to open the file 'root://xrootd-cms.infn.it//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root'
-   Additional Info:
-      [a] Input file root://xrootd-cms.infn.it//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root could not be opened.
-      [b] XrdCl::File::Open(name='root://xrootd-cms.infn.it//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root', flags=0x10, permissions=0660) => error '[ERROR] Operation expired' (errno=0, code=206). No additional data servers were found.
-      [c] Last URL tried: root://se3.itep.ru:1094//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root?tried=
-      [d] Problematic data server: se3.itep.ru:1094
-      [e] Disabled source: se3.itep.ru:1094
------ End Fatal Exception -------------------------------------------------
+%MSG-w XrdAdaptor:  file_open 23-Mar-2021 10:35:38 CET pre-events
+Data is served from itep.ru instead of original site infn.it
+%MSG
+%MSG-i XrdFileInfo:  file_open 23-Mar-2021 10:35:38 CET pre-events
+Opened root://xrootd-cms.infn.it//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root
+%MSG
+%MSG-i XrdFileInfo:  file_open 23-Mar-2021 10:35:38 CET pre-events
+Active sources: 144.206.151.153:33123, 
+%MSG
+Reading from 144.206.151.153:33123, quality 260
+Finished timer after 59
+Finished timer after 59
+Reading from 144.206.151.153:33123, quality 59
+Finished timer after 241
+23-Mar-2021 10:35:39 CET  Successfully opened file root://xrootd-cms.infn.it//store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root
+Time since last check 822; last check 4101183; now 4101184; next check 4101188
+Reading from 144.206.151.153:33123, quality 119
+Time since last check 1494; last check 4101183; now 4101185; next check 4101188
+Finished timer after 59
+Time since last check 1554; last check 4101183; now 4101185; next check 4101188
+Time since last check 1675; last check 4101183; now 4101185; next check 4101188
+Finished timer after 59
+Time since last check 2263; last check 4101183; now 4101185; next check 4101188
+Finished timer after 59
+Reading from 144.206.151.153:33123, quality 122
+Finished timer after 59
+[1] Time for readv: 118 (sub-readv requests: 1)
+Ntuplizer: dnn_old file: data/DNN/BcJPsi/DUMMY
+Ntuplizer: dnn_perPF file: data/DNN/BcJPsi/TAU/DUMMY
+Ntuplizer: dnn_perEVT file: data/DNN/BcJPsi/TAU_class/DUMMY
+Ntuplizer: (dzcut, fsigcut, vprobcut, dnn cut, tau_charge) = 0.12 3 0.1 -1 1
+useHammer0
+
+
+ --->GETTING INSIDE doInstanton<---
+
+
+%MSG-i EventSetupDependency:  AfterModConstruction 23-Mar-2021 10:35:47 CET  pre-events
+The EventSetup record SiStripGainRcd depends on at least one Record 
+ (SiStripApvGain3Rcd) which is not present in the job.
+ This may lead to an exception begin thrown during event processing.
+ If no exception occurs during the job than it is usually safe to ignore this message.
+%MSG
+%MSG-i EventSetupDependency:  AfterModConstruction 23-Mar-2021 10:35:47 CET  pre-events
+The EventSetup record HcalRespCorrsRcd depends on at least one Record 
+ (HBHEDarkeningRecord) which is not present in the job.
+ This may lead to an exception begin thrown during event processing.
+ If no exception occurs during the job than it is usually safe to ignore this message.
+%MSG
+%MSG-i EventSetupDependency:  AfterModConstruction 23-Mar-2021 10:35:47 CET  pre-events
+The EventSetup record SiStripQualityRcd depends on at least one Record 
+ (SiStripDCSStatusRcd, SiStripBadModuleFedErrRcd) which is not present in the job.
+ This may lead to an exception begin thrown during event processing.
+ If no exception occurs during the job than it is usually safe to ignore this message.
+%MSG
+%MSG-i EventSetupDependency:  AfterModConstruction 23-Mar-2021 10:35:47 CET  pre-events
+The EventSetup record CaloGeometryRecord depends on at least one Record 
+ (HGCalGeometryRecord, FastTimeGeometryRecord) which is not present in the job.
+ This may lead to an exception begin thrown during event processing.
+ If no exception occurs during the job than it is usually safe to ignore this message.
+%MSG
+%MSG-i EventSetupDependency:  AfterModConstruction 23-Mar-2021 10:35:47 CET  pre-events
+The EventSetup record CastorGeometryRecord depends on at least one Record 
+ (CastorAlignmentRcd, CastorAlignmentErrorRcd, CastorAlignmentErrorExtendedRcd) which is not present in the job.
+ This may lead to an exception begin thrown during event processing.
+ If no exception occurs during the job than it is usually safe to ignore this message.
+%MSG
+Time since last check 4230; last check 4101188; now 4101192; next check 4101193
+Reading from 144.206.151.153:33123, quality 100
+[2] Time for readv: 59 (sub-readv requests: 1)
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:35:48 CET BeforeEvents
+Getting data for record "DTMtimeRcd" to be consumed by run: 316569 lumi: 0 event: 0, timestamp: 6557233184776880640; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:35:48 CET BeforeEvents
+Processing record "DTMtimeRcd" and label "" for run: 316569 lumi: 0 event: 0, timestamp: 6557233184776880640; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:35:48 CET BeforeEvents
+Validity coming from IOV sequence for record "DTMtimeRcd" and label "": (303832, 317278) for time (type: runnumber) 316569; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:35:48 CET BeforeEvents
+Getting data for record "DTTtrigRcd" to be consumed by run: 316569 lumi: 0 event: 0, timestamp: 6557233184776880640; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:35:48 CET BeforeEvents
+Validity coming from IOV sequence for record "DTTtrigRcd" and label "cosmics": (309246, 18446744073709551615) for time (type: runnumber) 316569; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-w XrdAdaptor:  (NoModuleName) 23-Mar-2021 10:35:53 CET pre-events
+Data is now served from itep.ru, T2_BR_SPRACE instead of previous itep.ru
+%MSG
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:36:15 CET BeforeEvents
+Validity coming from IOV sequence for record "PCastorRcd" and label "": (221421, 18446744073709551615) for time (type: runnumber) 316569; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:36:15 CET BeforeEvents
+Validity coming from IOV sequence for record "HeavyIonRcd" and label "HFhits": (181502, 18446744073709551615) for time (type: runnumber) 316569; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:36:15 CET BeforeEvents
+Validity coming from IOV sequence for record "HcalPFCorrsRcd" and label "": (309055, 18446744073709551615) for time (type: runnumber) 316569; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i HCAL:  AfterSource 23-Mar-2021 10:36:15 CET BeforeEvents
+HcalHardcodeCalibrations::setIntervalFor-> key: HcalGainWidthsRcd time: run: 316569 lumi: 0 event: 0/6557233184776880640
+%MSG
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:36:15 CET BeforeEvents
+Getting data for record "HcalPedestalWidthsRcd" to be consumed by run: 316569 lumi: 0 event: 0, timestamp: 6557233184776880640; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:36:15 CET BeforeEvents
+Validity coming from IOV sequence for record "GBRWrapperRcd" and label "gedelectron_EBUncertainty_offline_v1": (1, 18446744073709551615) for time (type: runnumber) 316569; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i :  AfterSource 23-Mar-2021 10:36:15 CET BeforeEvents
+No configuration entry found for event run: 316569 lumi: 0 event: 0, no optical functions will be available.
+%MSG
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:36:16 CET BeforeEvents
+Validity coming from IOV sequence for record "GBRDWrapperRcd" and label "gedelectron_EBCorrection_50ns": (1, 18446744073709551615) for time (type: runnumber) 316569; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  AfterSource 23-Mar-2021 10:36:16 CET BeforeEvents
+Getting data for record "DTAlignmentErrorExtendedRcd" to be consumed by run: 316569 lumi: 0 event: 0, timestamp: 6557233184776880640; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CTPPSBeamParametersESSource:  AfterSource 23-Mar-2021 10:36:16 CET  BeforeEvents
+>> CTPPSBeamParametersESSource::setIntervalFor(CTPPSBeamParametersRcd)
+    run=316569, event=0
+%MSG
+Original request size 5 (930 bytes) split into requests size 5 (930 bytes) and 0 (0 bytes)
+Time since last check 32635; last check 4101188; now 4101221; next check 4101193
+Source 0 quality 99, source 1 quality 260
+Reading from 144.206.151.153:33123, quality 99
+%MSG-i :  PostStreamBeginRun 23-Mar-2021 10:36:16 CET PostStreamBeginRun
+No configuration entry found for event run: 316569 lumi: 1251 event: 0, no optical functions will be available.
+%MSG
+%MSG-i CondDBESSource:  PostStreamBeginRun 23-Mar-2021 10:36:16 CET  PostStreamBeginRun
+Getting data for record "SiPixelQualityFromDbRcd" to be consumed by run: 316569 lumi: 1251 event: 0, timestamp: 6557233184776880640; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  PostStreamBeginRun 23-Mar-2021 10:36:16 CET  PostStreamBeginRun
+Processing record "SiPixelQualityFromDbRcd" and label "" for run: 316569 lumi: 1251 event: 0, timestamp: 6557233184776880640; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  PostStreamBeginRun 23-Mar-2021 10:36:16 CET  PostStreamBeginRun
+Validity coming from IOV sequence for record "SiPixelQualityFromDbRcd" and label "": (1359653501928672, 1359653501928684) for time (type: lumiid) 1359653501928675; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  PostStreamBeginRun 23-Mar-2021 10:36:16 CET  PostStreamBeginRun
+Getting data for record "BeamSpotObjectsRcd" to be consumed by run: 316569 lumi: 1251 event: 0, timestamp: 6557233184776880640; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  PostStreamBeginRun 23-Mar-2021 10:36:16 CET  PostStreamBeginRun
+Getting data for record "DTKeyedConfigContainerRcd" to be consumed by run: 316569 lumi: 1251 event: 0, timestamp: 6557233184776880640; from CondDBESSource::setIntervalFor
+%MSG
+Original request size 89 (2840736 bytes) split into requests size 73 (2496691 bytes) and 24 (344045 bytes)
+Time since last check 32723; last check 4101188; now 4101221; next check 4101336
+Reading from 144.206.151.153:33123, quality 98
+[4] Time for readv: 1572 (sub-readv requests: 1)
+%MSG-w XrdAdaptor:  source 23-Mar-2021 10:36:18 CET PreSource
+Data is now served from itep.ru instead of previous itep.ru, T2_BR_SPRACE
+%MSG
+Reading from 144.206.151.153:33123, quality 115
+Begin processing the 1st record. Run 316569, Event 1709795769, LumiSection 1251 on stream 1 at 23-Mar-2021 10:36:18.486 CET
+Building HCAL reconstruction geometry
+Detector=4, subset=1, index=8, size=56
+Detector=4, subset=2, index=9, size=56
+Detector=4, subset=3, index=10, size=56
+Building ZDC reconstruction geometry
+Detector=5, subset=2, index=16, size=56
+Building CASTOR reconstruction geometry
+Building EcalEndcap reconstruction geometry
+Detector=3, subset=3, index=3, size=56
+%MSG-i HCAL:  EcalBadCalibFilter:ecalBadCalibReducedMINIAODFilter  23-Mar-2021 10:36:19 CET Run: 316569 Event: 1709803809
+CaloTowerTopologyEP::produce(const HcalRecNumberingRecord& iRecord)
+%MSG
+%MSG-i TrackerTopologyEP:  Ntuplizer:ntuplizer 23-Mar-2021 10:36:22 CET  Run: 316569 Event: 1709803809
+TrackerTopologyEP::produce(const TrackerTopologyRcd& iRecord)
+%MSG
+%MSG-i Alignment:  Ntuplizer:ntuplizer GeometryAligner::applyAlignments()  23-Mar-2021 10:36:22 CET Run: 316569 Event: 1709803809
+Starting to apply alignments.
+%MSG
+%MSG-i Alignment:  Ntuplizer:ntuplizer GeometryAligner::applyAlignments()  23-Mar-2021 10:36:22 CET Run: 316569 Event: 1709803809
+Finished to apply 20292 alignments with 17004 non-zero APE.
+%MSG
+%MSG-i Alignment:  Ntuplizer:ntuplizer  GeometryAligner::attachSurfaceDeformations() 23-Mar-2021 10:36:22 CET  Run: 316569 Event: 1709803809
+Starting to attach surface deformations.
+%MSG
+%MSG-i Alignment:  Ntuplizer:ntuplizer  GeometryAligner::attachSurfaceDeformations() 23-Mar-2021 10:36:22 CET  Run: 316569 Event: 1709803809
+Finished to attach 17004 surface deformations.
+%MSG
+%MSG-i GeometryGlobalTrackingGeometryBuilder:  Ntuplizer:ntuplizer  23-Mar-2021 10:36:22 CET Run: 316569 Event: 1709803809
+No MTDDigiGeometryRecord is available.
+%MSG
+%MSG-i Alignment:  Ntuplizer:ntuplizer GeometryAligner::applyAlignments()  23-Mar-2021 10:36:22 CET Run: 316569 Event: 1709803809
+Starting to apply alignments.
+%MSG
+%MSG-i Alignment:  Ntuplizer:ntuplizer GeometryAligner::applyAlignments()  23-Mar-2021 10:36:23 CET Run: 316569 Event: 1709803809
+Starting to apply alignments.
+%MSG
+%MSG-i GeometryGlobalTrackingGeometryBuilder:  Ntuplizer:ntuplizer  23-Mar-2021 10:36:23 CET Run: 316569 Event: 1709803809
+No GEM geometry is available.
+%MSG
+%MSG-i GeometryGlobalTrackingGeometryBuilder:  Ntuplizer:ntuplizer  23-Mar-2021 10:36:23 CET Run: 316569 Event: 1709803809
+No ME0 geometry is available.
+%MSG
+%MSG-i MagneticField:  Ntuplizer:ntuplizer 23-Mar-2021 10:36:23 CET  Run: 316569 Event: 1709803809
+Current :18164 (from RunInfo DB); using map configuration with label: 3.8T
+%MSG
+%MSG-i MagneticField:  Ntuplizer:ntuplizer 23-Mar-2021 10:36:23 CET  Run: 316569 Event: 1709803809
+Version: grid_160812_3_8t geometryVersion: 160812 slaveFieldVersion: OAE_1103l_071212
+%MSG
+%MSG-i DDCompactViewImpl:  Ntuplizer:ntuplizer 23-Mar-2021 10:36:30 CET  Run: 316569 Event: 1709803809
+DDD transient representation has been destructed.
+%MSG
+Time since last check 47065; last check 4101188; now 4101235; next check 4101336
+Reading from 144.206.151.153:33123, quality 118
+[7] Time for readv: 1315 (sub-readv requests: 1)
+Reading from 144.206.151.153:33123, quality 144
+[9] Time for readv: 240 (sub-readv requests: 1)
+%MSG-i EcalBadCalibFilter:  EcalBadCalibFilter:ecalBadCalibReducedMINIAODFilter  23-Mar-2021 10:36:33 CET Run: 316569 Event: 1710297472
+DetId=872423218
+%MSG
+%MSG-i EcalBadCalibFilter:  EcalBadCalibFilter:ecalBadCalibReducedMINIAODFilter  23-Mar-2021 10:36:33 CET Run: 316569 Event: 1710297472
+ix=62 iy=50 iz=-1
+%MSG
+%MSG-i EcalBadCalibFilter:  EcalBadCalibFilter:ecalBadCalibReducedMINIAODFilter  23-Mar-2021 10:36:33 CET Run: 316569 Event: 1710297472
+Et=0 thresh=50
+%MSG
+%MSG-i EcalBadCalibFilter:  EcalBadCalibFilter:ecalBadCalibReducedMINIAODFilter  23-Mar-2021 10:36:33 CET Run: 316569 Event: 1710297472
+ix=62 iy=47 iz=-1
+%MSG
+%MSG-i EcalBadCalibFilter:  EcalBadCalibFilter:ecalBadCalibReducedMINIAODFilter  23-Mar-2021 10:36:33 CET Run: 316569 Event: 1710520984
+Et=0.00696922 thresh=50
+%MSG
+%MSG-i EcalBadCalibFilter:  EcalBadCalibFilter:ecalBadCalibReducedMINIAODFilter  23-Mar-2021 10:36:34 CET Run: 316569 Event: 1710936984
+ix=39 iy=50 iz=-1
+%MSG
+%MSG-i EcalBadCalibFilter:  EcalBadCalibFilter:ecalBadCalibReducedMINIAODFilter  23-Mar-2021 10:36:37 CET Run: 316569 Event: 1710875924
+Et=13.0441 thresh=50
+%MSG
+Time since last check 53717; last check 4101188; now 4101242; next check 4101336
+Reading from 144.206.151.153:33123, quality 152
+[10] Time for readv: 835 (sub-readv requests: 1)
+Reading from 144.206.151.153:33123, quality 165
+Begin processing the 1001st record. Run 316569, Event 1710793201, LumiSection 1251 on stream 0 at 23-Mar-2021 10:36:41.269 CET
+[12] Time for readv: 834 (sub-readv requests: 1)
+Begin processing the 2001st record. Run 316569, Event 1711015460, LumiSection 1251 on stream 0 at 23-Mar-2021 10:36:48.136 CET
+%MSG-i EcalBadCalibFilter:  EcalBadCalibFilter:ecalBadCalibReducedMINIAODFilter  23-Mar-2021 10:36:49 CET Run: 316569 Event: 1709900905
+ix=39 iy=49 iz=-1
+%MSG
+Reading from 144.206.151.153:33123, quality 1051
+Finished timer after 9570
+Begin processing the 3001st record. Run 316569, Event 1709725853, LumiSection 1251 on stream 0 at 23-Mar-2021 10:37:06.376 CET
+%MSG-i EcalBadCalibFilter:  EcalBadCalibFilter:ecalBadCalibReducedMINIAODFilter  23-Mar-2021 10:37:21 CET Run: 316569 Event: 1709857879
+Et=0.30645 thresh=50
+%MSG
+Begin processing the 4001st record. Run 316569, Event 1710024434, LumiSection 1251 on stream 0 at 23-Mar-2021 10:37:22.117 CET
+Begin processing the 5001st record. Run 316569, Event 1710434402, LumiSection 1251 on stream 0 at 23-Mar-2021 10:37:34.359 CET
+[20] Time for readv: 5743 (sub-readv requests: 1)
+Begin processing the 6001st record. Run 316569, Event 1710737212, LumiSection 1251 on stream 0 at 23-Mar-2021 10:37:57.150 CET
+%MSG-i EcalBadCalibFilter:  EcalBadCalibFilter:ecalBadCalibReducedMINIAODFilter  23-Mar-2021 10:38:03 CET Run: 316569 Event: 1710011111
+ix=52 iy=63 iz=-1
+%MSG
+Begin processing the 7001st record. Run 316569, Event 1709733506, LumiSection 1251 on stream 0 at 23-Mar-2021 10:38:06.220 CET
+Begin processing the 8001st record. Run 316569, Event 1710074317, LumiSection 1251 on stream 0 at 23-Mar-2021 10:38:14.716 CET
+%MSG-i CondDBESSource:  PostGlobalEndLumi 23-Mar-2021 10:38:14 CET  PostGlobalEndLumi
+Getting data for record "LHCInfoRcd" to be consumed by run: 316569 lumi: 1252 event: 0, timestamp: 6557233236316308736; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  PostGlobalEndLumi 23-Mar-2021 10:38:14 CET  PostGlobalEndLumi
+Processing record "LHCInfoRcd" and label "" for run: 316569 lumi: 1252 event: 0, timestamp: 6557233236316308736; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  PostGlobalEndLumi 23-Mar-2021 10:38:14 CET  PostGlobalEndLumi
+Validity coming from IOV sequence for record "LHCInfoRcd" and label "": (6557233215108032680, 6557233314202689487) for time (type: timestamp) 6557233236316308736; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i :  PostGlobalEndLumi 23-Mar-2021 10:38:14 CET PostGlobalEndLumi
+No configuration entry found for event run: 316569 lumi: 1252 event: 0, no optical functions will be available.
+%MSG
+%MSG-i CondDBESSource:  PostGlobalEndLumi 23-Mar-2021 10:38:14 CET  PostGlobalEndLumi
+Getting data for record "BeamSpotObjectsRcd" to be consumed by run: 316569 lumi: 1252 event: 0, timestamp: 6557233236316308736; from CondDBESSource::setIntervalFor
+%MSG
+%MSG-i CondDBESSource:  PostGlobalEndLumi 23-Mar-2021 10:38:14 CET  PostGlobalEndLumi
+Getting data for record "DTKeyedConfigContainerRcd" to be consumed by run: 316569 lumi: 1252 event: 0, timestamp: 6557233236316308736; from CondDBESSource::setIntervalFor
+%MSG

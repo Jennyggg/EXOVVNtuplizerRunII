@@ -85,8 +85,17 @@
 
 #include "FWCore/ParameterSet/interface/FileInPath.h"
 #include "PhysicsTools/TensorFlow/interface/TensorFlow.h"
-
-
+#include "EventFilter/Utilities/interface/reader.h"
+#include "EventFilter/Utilities/interface/value.h"
+#include "EventFilter/Utilities/interface/writer.h"
+#include "EventFilter/Utilities/interface/json.h"
+#include "EventFilter/Utilities/interface/forwards.h"
+#include "EventFilter/Utilities/interface/features.h"
+#include "EventFilter/Utilities/interface/config.h"
+#include "EventFilter/Utilities/interface/config_json.h"
+#include "EventFilter/Utilities/interface/autolink.h"
+#include "EventFilter/Utilities/interface/crc32c.h"
+#include "EventFilter/Utilities/interface/json_batchallocator.h"
 #include <tuple>
 #include <sstream>
 #include <iostream>

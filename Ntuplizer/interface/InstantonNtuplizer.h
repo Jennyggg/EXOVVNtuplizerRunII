@@ -22,6 +22,7 @@ public:
                        std::map< std::string, bool >& runFlags,
                        std::map< std::string, double >& runValues,
                        std::map< std::string, std::string >& runStrings,
+                       Json::Value& instan_lumi,
                        NtupleBranches* nBranches );
   ~InstantonNtuplizer(void);
   bool fillBranches( edm::Event const & event, const edm::EventSetup& iSetup );
@@ -58,6 +59,6 @@ private:
    helper aux;
    float chi = 0.;
    float ndf = 0.;
-
+   Json::Value instan_lumi_;
 };
 #endif

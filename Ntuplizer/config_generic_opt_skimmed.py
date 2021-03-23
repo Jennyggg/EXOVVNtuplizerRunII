@@ -23,7 +23,10 @@ process.TFileService = cms.Service("TFileService",
 
 #                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/dubug.root')
 #                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_run315974_v1.root')
-                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_run316569_1_v1.root')
+#                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/flatTuple_run316569_v4.root')
+#                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/debug.root')
+                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_run316569_v4.root')
+#                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/flatTuple_update.root')
 #                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_small2_trig.root')
 #                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_small2_addmore.root')
 #                                     fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/flatTuple_small_addmore.root')
@@ -84,6 +87,7 @@ options.maxEvents = -1
 #'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/Run2018A_23.root',
 #'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/Run2018A_24.root',
 #'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/Run2018A_25.root']
+#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/005650EB-AA60-D34C-8100-95959C4B352D.root'
 #options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/013404B1-9437-A740-9C7A-F3EBE718EFC2.root'
 #options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/8F79C765-3C14-2641-8737-9AD8980241B8.root'
 #options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPHMC/0F2BA15C-2CB8-E24C-B58C-AA59AAFA2B07.root'
@@ -214,21 +218,20 @@ options.maxEvents = -1
 #'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/DECD80A8-6154-4145-BF63-B87AD0CDCA0A.root',
 #'/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/E04CA87E-FC8E-8D45-95D3-BFA8AE0C2276.root']
 #run 316569 BPH(first 50 files)
-#options.inputFiles = ['/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0187FB10-EA3E-ED4F-8340-8931B659E533.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/01C007B5-2B48-3543-A338-22272E441925.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/028BA34E-416C-E94E-B976-5615D158D99A.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/03A6084D-770F-EA40-8500-126262842B17.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0447AB7C-9EDC-E046-B41D-F68DE3A1EAB0.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0923C159-3544-3649-9424-694E69CE855F.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0B14F6F4-5DD5-B04B-A7EF-7D2B80AD33FA.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0BC38BDB-A396-FF45-A1B9-EFD9DA98D316.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F441A41-FA10-8A4C-B07D-9EC21B82A5E0.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F544919-1564-2446-81B8-5CF792CAD956.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F882E56-C6E5-6A49-AA40-FAAEB621F675.root',
-#'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/11BAF64E-7D44-8B49-BAF3-2AD6AB1CEF79.root',
-#]
-options.inputFiles = ['/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root',
+options.inputFiles = ['/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0187FB10-EA3E-ED4F-8340-8931B659E533.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/01C007B5-2B48-3543-A338-22272E441925.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/028BA34E-416C-E94E-B976-5615D158D99A.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/03A6084D-770F-EA40-8500-126262842B17.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0447AB7C-9EDC-E046-B41D-F68DE3A1EAB0.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0923C159-3544-3649-9424-694E69CE855F.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0B14F6F4-5DD5-B04B-A7EF-7D2B80AD33FA.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0BC38BDB-A396-FF45-A1B9-EFD9DA98D316.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F441A41-FA10-8A4C-B07D-9EC21B82A5E0.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F544919-1564-2446-81B8-5CF792CAD956.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0F882E56-C6E5-6A49-AA40-FAAEB621F675.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/11BAF64E-7D44-8B49-BAF3-2AD6AB1CEF79.root',
+'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12280ABA-1297-EA4A-8C59-C429FB0693A9.root',
 '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/12C659FD-D961-6640-9C3D-48CD12A0D033.root',
 '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/16216319-7A5E-774C-AAE5-5E36ED1E724E.root',
 '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/17214445-47CE-B740-837B-01F1CEF607F7.root',
@@ -265,7 +268,12 @@ options.inputFiles = ['/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/000
 '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/510A8701-EA1F-E24F-B457-276166E72D04.root',
 '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/51BA0779-C792-A945-A05E-82DC0B436CD8.root',
 '/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/523C89FE-9BCB-4A4F-B127-F81DC6571EB2.root']
-
+#options.inputFiles = ['/store/mc/RunIIAutumn18MiniAOD/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v2/270000/74909027-AEC8-7B4A-AC35-158FEF524C4D.root',
+#'/store/mc/RunIIAutumn18MiniAOD/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v2/270000/7F2E33A2-7F62-AE48-BAB7-BC1607D4C11C.root',
+#'/store/mc/RunIIAutumn18MiniAOD/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v2/270000/8F79C765-3C14-2641-8737-9AD8980241B8.root',
+#'/store/mc/RunIIAutumn18MiniAOD/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v2/270000/AADC4195-E370-F84E-88A6-4A5C8A960AD8.root',
+#'/store/mc/RunIIAutumn18MiniAOD/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v2/270000/F4CF1E05-E0BE-DB44-ADD8-7D1FE3EAC4EC.root',
+#'/store/mc/RunIIAutumn18MiniAOD/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v2/270000/F69132D4-BAE7-8B49-BA36-E4AD11670FD0.root']
 #options.inputFiles = ['/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0109D8A3-FF62-6245-9745-675EE9FD6243.root',
 #'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/0187FB10-EA3E-ED4F-8340-8931B659E533.root',
 #'/store/data/Run2018A/ParkingBPH1/MINIAOD/05May2019-v1/00000/01C007B5-2B48-3543-A338-22272E441925.root',

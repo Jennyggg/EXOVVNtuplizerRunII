@@ -240,6 +240,15 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
 
   if (runFlags["doInstanton"]) {
     std::cout<<"\n\n --->GETTING INSIDE doInstanton<---\n\n"<<std::endl;
+    Json::Value instan_lumi;
+    std::filebuf fb;
+    if (fb.open ("/work/jinw/CMSSW_11_1_0/src/EXOVVNtuplizerRunII/Ntuplizer/JSON/pileup_latest.txt",std::ios::in)){
+      std::istream is(&fb);
+      is>>instan_lumi;
+      fb.close();
+    }
+    else cout<<"file open failed"<<endl;
+//    cout<<instan_lumi<<endl;
     nTuplizers_["Instanton"] = new InstantonNtuplizer( muonToken_   ,
                                                    vtxToken_   ,
                                                    beamToken_ ,
@@ -252,7 +261,8 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
                                                    runFlags,
                                                    runValues,
                                                    runStrings,
-                                                   nBranches_ );
+                                                   instan_lumi,
+                                                   nBranches_);
   }
 
 //  if (runFlags["doBsTauTau"]) {
