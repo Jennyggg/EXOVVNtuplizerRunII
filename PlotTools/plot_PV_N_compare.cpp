@@ -38,8 +38,9 @@ void plot_PV_N_compare(string filenames_1,string filenames_2, string plotname, s
   TH1F *hist1 = new TH1F("hist1","Distribution of PV_N_good",nbins,min,max);
   TH1F *hist2 = new TH1F("hist2","Distribution of PV_N_good",nbins,min,max);
 
+  t_1->Draw("(PV_N_good)>>hist1","PV_N_good>0");
 // t_1->Draw("(PV_N_good)>>hist1","EVENT_run==316569&&EVENT_lumiBlock<600&&PV_N_good>0");
- t_1->Draw("(PV_N_good)>>hist1","EVENT_lumiBlock>=60&&EVENT_lumiBlock<65&&EVENT_run==315974&&PV_N_good>0");
+// t_1->Draw("(PV_N_good)>>hist1","EVENT_lumiBlock>=550&&EVENT_lumiBlock<600&&EVENT_run==316569&&PV_N_good>0");
 // t_1->Draw("(PV_N_good)>>hist1","PV_N_good>0");
 //  t_1->Draw("(PV_N)>>hist1","EVENT_run==316569&&EVENT_lumiBlock<600&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");//to compare the behavior of different luminosities
 //  t_1->Draw("(Instanton_N_Trk_goodDisplaced_PVAssociationQuality4+Instanton_N_Trk_goodDisplaced_PVAssociationQuality5+Instanton_N_Trk_goodDisplaced_PVAssociationQuality6+Instanton_N_Trk_goodDisplaced_PVAssociationQuality7)>>hist1","PV_Iso>0.4&&EVENT_run==316569&&EVENT_lumiBlock<600&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
@@ -53,9 +54,9 @@ void plot_PV_N_compare(string filenames_1,string filenames_2, string plotname, s
 //  t_1->Draw("Instanton_N_Trk_Displaced>>hist1","Instanton_Trk_mass>20&&Instanton_Trk_mass<=40&&Instanton_N_Trk>20&&(Instanton_Trk_mass/Instanton_N_Trk)<1.5&&Instanton_N_TrackJet==0&&Instanton_Trk_thrust>0.3&&Instanton_N_Trk_Displaced<4"); //CRB
 
 
-//  t_2->Draw("(PV_N_good)>>hist2","PV_N_good>0");
+  t_2->Draw("(PV_N_good)>>hist2","PV_N_good>0");
 //  t_2->Draw("(PV_N_good)>>hist2","EVENT_run==316569&&EVENT_lumiBlock>1300&&PV_N_good>0");
-  t_2->Draw("(PV_N_good)>>hist2","EVENT_lumiBlock>=60&&EVENT_lumiBlock<65&&EVENT_run==315974&&PV_N_good>0");
+//  t_2->Draw("(PV_N_good-1.25)>>hist2","EVENT_lumiBlock>=550&&EVENT_lumiBlock<600&&EVENT_run==316569&&PV_N_good>0");
 //  t_2->Draw("(PV_N)>>hist2","EVENT_run==316569&&EVENT_lumiBlock>1300&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
 //  t_2->Draw("(Instanton_N_Trk_goodDisplaced_PVAssociationQuality4+Instanton_N_Trk_goodDisplaced_PVAssociationQuality5+Instanton_N_Trk_goodDisplaced_PVAssociationQuality6+Instanton_N_Trk_goodDisplaced_PVAssociationQuality7)>>hist2","EVENT_run==316569&&EVENT_lumiBlock>1300&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
 //  t_2->Draw("(Instanton_N_Trk_goodDisplaced)>>hist2","!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");

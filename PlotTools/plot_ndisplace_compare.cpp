@@ -40,7 +40,11 @@ void plot_ndisplace_compare(string filenames_1,string filenames_2, string plotna
   TH1F *hist1 = new TH1F("hist1","Distribution of #displaced tracks",nbins,min,max);
   TH1F *hist2 = new TH1F("hist2","Distribution of #displaced tracks",nbins,min,max);
 
-  t_1->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist1","Instanton_vtx_goodMuonIP>2&&EVENT_run==316569&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
+//  t_1->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist1","Instanton_vtx_goodMuonIP>2&&!Instanton_vtx_N_goodMuon&&PV_isgood");
+//  t_1->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist1","(PV_N_good)==15&&Instanton_vtx_goodMuonIP>2&&!Instanton_vtx_N_goodMuon&&PV_isgood");
+//  t_1->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist1","(PV_N_good)==20&&Instanton_vtx_goodMuonIP>2&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
+  t_1->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist1","Instanton_Trk_TrkCut_mass>20&&Instanton_Trk_TrkCut_mass<=40&&(PV_N_good)==30&&Instanton_vtx_goodMuonIP>2&&EVENT_lumiBlock>=550&&EVENT_lumiBlock<600&&EVENT_run==316569&&!Instanton_vtx_N_goodMuon&&PV_isgood");
+//  t_1->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist1","Instanton_vtx_goodMuonIP>2&&EVENT_run==316569&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
 //  t_1->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist1","EVENT_lumiBlock>=550&&EVENT_lumiBlock<600&&EVENT_run==316569&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
 //  t_1->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist1","Instanton_vtx_goodMuonIP>2&&EVENT_lumiBlock>=1490&&EVENT_lumiBlock<1507&&EVENT_run==316569&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
 //  t_1->Draw("Instanton_N_Trk_goodDisplaced_highPurity>>hist1","Instanton_vtx_goodMuonIP>2&&EVENT_lumiBlock>=25&&EVENT_lumiBlock<65&&EVENT_run==315974&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
@@ -59,7 +63,12 @@ void plot_ndisplace_compare(string filenames_1,string filenames_2, string plotna
 //  t_1->Draw("Instanton_N_Trk_Displaced>>hist1","Instanton_Trk_mass>20&&Instanton_Trk_mass<=40&&Instanton_N_Trk>20&&(Instanton_Trk_mass/Instanton_N_Trk)<1.5&&Instanton_N_TrackJet==0&&Instanton_Trk_thrust>0.3&&Instanton_N_Trk_Displaced<4"); //CRB
 
 
-  t_2->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist2","Instanton_vtx_goodMuonIP>2&&EVENT_run==316569&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
+//    t_2->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist2","Instanton_vtx_goodMuonIP>2&&!Instanton_vtx_N_goodMuon&&PV_isgood");
+
+//    t_2->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist2","(PV_N_good)==15&&Instanton_vtx_goodMuonIP>2&&!Instanton_vtx_N_goodMuon&&PV_isgood");
+//    t_2->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist2","(PV_N_good)==20&&Instanton_vtx_goodMuonIP>2&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
+//    t_2->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist2","(PV_N_good)==20&&Instanton_vtx_goodMuonIP>2&&EVENT_run==315974&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
+  t_2->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist2","Instanton_Trk_TrkCut_mass>20&&Instanton_Trk_TrkCut_mass<=40&&(PV_N_good)==30&&Instanton_vtx_goodMuonIP>2&&EVENT_lumiBlock>=550&&EVENT_lumiBlock<600&&EVENT_run==316569&&!Instanton_vtx_N_goodMuon&&PV_isgood");
 //  t_2->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist2","EVENT_lumiBlock>=550&&EVENT_lumiBlock<600&&EVENT_run==316569&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
 //  t_2->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist2","Instanton_vtx_goodMuonIP>2&&EVENT_lumiBlock>=1490&&EVENT_lumiBlock<1507&&EVENT_run==316569&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
 //  t_2->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist2","EVENT_lumiBlock>=25&&EVENT_lumiBlock<65&&EVENT_run==315974&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_Trk_mass>20&&Instanton_Trk_mass<=40");
@@ -100,9 +109,16 @@ void plot_ndisplace_compare(string filenames_1,string filenames_2, string plotna
   hs_2->Draw("ElpSAME");
   hs_2->GetXaxis()->SetTitle("# Displaced Tracks");
   hs_2->GetYaxis()->SetTitle("Normalized Collisions");
-  TLegend *legend = new TLegend(0.75,0.80,0.90,0.90);
+
+  Double_t chi2_ndof = 0;
+  Double_t p_value = 0;
+  chi2_ndof = hist1->Chi2Test(hist2,"UUNORMCHI2/NDF");
+  p_value = hist1->Chi2Test(hist2,"UUNORM");
+  TLegend *legend = new TLegend(0.70,0.65,0.90,0.90);
   legend->AddEntry(hist1,legendname_1.c_str(),"f");
   legend->AddEntry(hist2,legendname_2.c_str(),"lep");
+  legend->AddEntry((TObject*)0, ("chi2/ndof = "+ std::to_string(chi2_ndof)).c_str(), "");
+  legend->AddEntry((TObject*)0, ("p-value = "+ std::to_string(p_value)).c_str(), "");
   legend->SetFillStyle(0);
   legend->Draw();
 
