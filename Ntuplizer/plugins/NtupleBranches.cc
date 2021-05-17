@@ -914,7 +914,25 @@ void NtupleBranches::branch( std::map< std::string, bool >& runFlags ){
     }
   }
 
-//  if (runFlags["doBsTauTau"]){
+  if (runFlags["doTrack"]&&runFlags["doInstanton"]){
+    tree_->Branch("Trk_px",&Trk_px);
+    tree_->Branch("Trk_py",&Trk_py);
+    tree_->Branch("Trk_pz",&Trk_pz);
+    tree_->Branch("Trk_p0",&Trk_p0);
+    tree_->Branch("Trk_pt",&Trk_pt);
+    tree_->Branch("Trk_mass",&Trk_mass);
+    tree_->Branch("Trk_eta",&Trk_eta);
+    tree_->Branch("Trk_phi",&Trk_phi);
+    tree_->Branch("Trk_PVAssociationQuality",&Trk_PVAssociationQuality);
+    tree_->Branch("Trk_isHighPurity",&Trk_isHighPurity);
+    tree_->Branch("Trk_vx",&Trk_vx);
+    tree_->Branch("Trk_vy",&Trk_vy);
+    tree_->Branch("Trk_vz",&Trk_vz);
+    tree_->Branch("Trk_IP",&Trk_IP);
+    tree_->Branch("Trk_IPsignificance",&Trk_IPsignificance);
+    tree_->Branch("Trk_pdgId",&Trk_pdgId);
+    tree_->Branch("Trk_charge",&Trk_charge);
+  }
 //    tree_->Branch("IsBsTauTau", &IsBsTauTau );
 //
 //    tree_->Branch("BsTauTau_nCandidates", &BsTauTau_nCandidates );
@@ -2237,8 +2255,23 @@ void NtupleBranches::reset( void ){
   Instan_Lumi_per_bunch_mean=0.;
   Instan_Lumi_per_bunch_RMS=0.;
   /////////////////
-
-
+  Trk_px.clear();
+  Trk_py.clear();
+  Trk_pz.clear();
+  Trk_pt.clear();
+  Trk_p0.clear();
+  Trk_mass.clear();
+  Trk_eta.clear();
+  Trk_phi.clear();
+  Trk_PVAssociationQuality.clear();
+  Trk_isHighPurity.clear();
+  Trk_vx.clear();
+  Trk_vy.clear();
+  Trk_vz.clear();
+  Trk_IP.clear();
+  Trk_IPsignificance.clear();
+  Trk_pdgId.clear();
+  Trk_charge.clear();
 //  BsTauTau_nCandidates.clear();
 //
 //  BsTauTau_mu1_pt.clear();

@@ -31,10 +31,9 @@ bool GenEventNtuplizer::fillBranches( edm::Event const & event, const edm::Event
 //    }
 //
 //    if(rflag==false) return;
-  
   event.getByToken(geneventToken_, geneventInfo_);  
-  
   nBranches_->genWeight=geneventInfo_->weight();
+
   nBranches_->qScale=geneventInfo_->qScale();
   nBranches_->PDF_x.push_back((geneventInfo_->pdf()->x).first);
   nBranches_->PDF_x.push_back((geneventInfo_->pdf()->x).second);
@@ -42,7 +41,6 @@ bool GenEventNtuplizer::fillBranches( edm::Event const & event, const edm::Event
   nBranches_->PDF_xPDF.push_back((geneventInfo_->pdf()->xPDF).second);
   nBranches_->PDF_id.push_back((geneventInfo_->pdf()->id).first);
   nBranches_->PDF_id.push_back((geneventInfo_->pdf()->id).second);
-  
 
 
   //gen Parton HT
@@ -53,7 +51,6 @@ bool GenEventNtuplizer::fillBranches( edm::Event const & event, const edm::Event
 
 
   event.getByToken(lheEventProductToken_, lheEventProduct_);
-  
   float lheHt_ = 0.;
   int nLeptons = 0;
   int nParton = 0;
@@ -98,11 +95,9 @@ bool GenEventNtuplizer::fillBranches( edm::Event const & event, const edm::Event
 
     }
     
-    
     // Gen weights for QCD scales and PDF
     //  https://indico.cern.ch/event/459797/contributions/1961581/attachments/1181555/1800214/mcaod-Feb15-2016.pdf
     const LHEEventProduct* Product = lheEventProduct_.product();
-    
     if(Product->weights().size() >= 9) {
         weightFacUp = Product->weights()[1].wgt / Product->originalXWGTUP();
         weightFacDown = Product->weights()[2].wgt / Product->originalXWGTUP();
@@ -125,7 +120,6 @@ bool GenEventNtuplizer::fillBranches( edm::Event const & event, const edm::Event
         pdfRMS = std::sqrt(sq_sum / pdfWeights.size() - mean * mean);
     }
   }
-
 
   // Yuta added 7 Sep : For gen weighting
   if(tlv.size()==2){

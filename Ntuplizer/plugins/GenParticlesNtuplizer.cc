@@ -8,7 +8,7 @@ GenParticlesNtuplizer::GenParticlesNtuplizer( std::vector<edm::EDGetTokenT<reco:
    , doGenHist_( runFlags["doGenHist"]  )
    , verbose_   (runFlags["verbose"])
 {
-
+   if(verbose_) cout<<"[GenParticlesNtuplizer] GenParticles initialized"<<endl;
 }
 
 //===================================================================================================================        

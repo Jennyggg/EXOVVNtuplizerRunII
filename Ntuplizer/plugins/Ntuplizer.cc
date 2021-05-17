@@ -17,6 +17,8 @@
 #include "DataFormats/PatCandidates/interface/PackedTriggerPrescales.h"
 
 #include "FWCore/ParameterSet/interface/FileInPath.h"
+#include <unistd.h>
+#include <limits.h>
 //#include <Math/SMatrix.h>
 
 // #include "DataFormats/METReco/interface/PFMET.h"
@@ -86,6 +88,7 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
   runFlags["doJpsiMu"] = iConfig.getParameter<bool>("doJpsiMu");
   runFlags["doJpsiTau"] = iConfig.getParameter<bool>("doJpsiTau");
   runFlags["doInstanton"] = iConfig.getParameter<bool>("doInstanton");
+  runFlags["doTrack"] = iConfig.getParameter<bool>("doTrack");
   //  runFlags["doBsTauTau"] = iConfig.getParameter<bool>("doBsTauTau");
   //  runFlags["doBsTauTauFH"] = iConfig.getParameter<bool>("doBsTauTauFH");
   //  runFlags["doBsTauTauFH_mr"] = iConfig.getParameter<bool>("doBsTauTauFH_mr");
@@ -97,6 +100,7 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
   runValues["vprobcut"] = iConfig.getParameter<double>("vprobcut");
   runValues["dnncut"] = iConfig.getParameter<double>("dnncut");
   runValues["tau_charge"] = iConfig.getParameter<unsigned int>("tau_charge");
+  runStrings["lumifile"] =iConfig.getParameter<std::string>("lumifile");
 
   runStrings["dnnfile_old"] = iConfig.getParameter<std::string>("dnnfile_old");  
   runStrings["dnnfile_perPF"] = iConfig.getParameter<std::string>("dnnfile_perPF");  
@@ -242,7 +246,20 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
     std::cout<<"\n\n --->GETTING INSIDE doInstanton<---\n\n"<<std::endl;
     Json::Value instan_lumi;
     std::filebuf fb;
-    if (fb.open ("/work/jinw/CMSSW_11_1_0/src/EXOVVNtuplizerRunII/Ntuplizer/JSON/pileup_latest.txt",std::ios::in)){
+//    char cwd[1000];
+//    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+//       printf("Current working dir: %s\n", cwd);
+//    } else {
+//	       perror("getcwd() error");
+//    }
+//    FILE *proc = popen("/bin/ls JSON -al","r");
+//    char buf[1024];
+//    while ( !feof(proc) && fgets(buf,sizeof(buf),proc) )
+//    {
+//       printf("Line read: %s",buf);
+//    }
+//    if (fb.open ("./JSON/pileup_latest.txt",std::ios::in)){
+    if (fb.open (runStrings["lumifile"].c_str(),std::ios::in)){
       std::istream is(&fb);
       is>>instan_lumi;
       fb.close();
@@ -334,7 +351,6 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
     if (runFlags["doGenParticles"]) {
       std::vector<edm::EDGetTokenT<reco::GenParticleCollection>> genpTokens;
       genpTokens.push_back( genparticleToken_ );
-
       nTuplizers_["genParticles"] = new GenParticlesNtuplizer( genpTokens, nBranches_, runFlags );
     }
 
@@ -343,7 +359,6 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
       puTokens.push_back( puinfoToken_ );
       nTuplizers_["PU"] = new PileUpNtuplizer( puTokens, nBranches_, runFlags );
     }
-
     if (runFlags["doGenEvent"]) {
       std::vector<edm::EDGetTokenT< GenEventInfoProduct > > geneTokens;
       geneTokens.push_back( geneventToken_ );
@@ -390,25 +405,25 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   iEvent.getByToken(vtxToken_, vertices);
   if( vertices->empty() ) return; // skip the event if no PV found
   
-  //  std::cout << "check3" << std::endl;
+//    std::cout << "check3" << std::endl;
 
   nBranches_->EVENT_event     = iEvent.id().event();
   nBranches_->EVENT_run       = iEvent.id().run();
   nBranches_->EVENT_lumiBlock = iEvent.id().luminosityBlock();  
 
-  //  std::cout<<" ----------------- before the branches loop"<<std::endl; 
+//    std::cout<<" ----------------- before the branches loop"<<std::endl; 
 
   bool isSave = true;
   for( std::unordered_map<std::string,CandidateNtuplizer*>::iterator it = nTuplizers_.begin(); it != nTuplizers_.end(); ++it ){
 
     isSave = (it->second)->fillBranches( iEvent, iSetup );
-    //    std::cout << "Fill Branchines: " << it->first << ", result = " << isSave << std::endl;
+//        std::cout << "Fill Branchines: " << it->first << ", result = " << isSave << std::endl;
     if(!isSave) break;
   }
 
-  //  std::cout << "isSave =  " << isSave << std::endl;
+//    std::cout << "isSave =  " << isSave << std::endl;
   if(isSave){
-    //    std::cout << "-------------- save -----------" << std::endl;
+  //      std::cout << "-------------- save -----------" << std::endl;
     nBranches_->fillTree();
     nevents++;
   }

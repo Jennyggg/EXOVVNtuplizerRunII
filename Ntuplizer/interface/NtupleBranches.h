@@ -924,6 +924,23 @@ public:
   std::vector<float>                Instanton_vtx_goodPFMuon_PVDistance; //closest distance of this PV to the PV associated with muons (pt>4GeV)
   float                             Instan_Lumi_per_bunch_mean; //in \mu b^-1/Hz
   float                             Instan_Lumi_per_bunch_RMS;
+  std::vector<std::vector<float>>   Trk_px;
+  std::vector<std::vector<float>>   Trk_py;
+  std::vector<std::vector<float>>   Trk_pz;
+  std::vector<std::vector<float>>   Trk_p0;
+  std::vector<std::vector<float>>   Trk_pt;
+  std::vector<std::vector<float>>   Trk_mass;
+  std::vector<std::vector<float>>   Trk_eta;
+  std::vector<std::vector<float>>   Trk_phi;
+  std::vector<std::vector<int>>     Trk_PVAssociationQuality;
+  std::vector<std::vector<int>>    Trk_isHighPurity;
+  std::vector<std::vector<float>>   Trk_vx;
+  std::vector<std::vector<float>>   Trk_vy;
+  std::vector<std::vector<float>>   Trk_vz;
+  std::vector<std::vector<float>>   Trk_IP;
+  std::vector<std::vector<float>>   Trk_IPsignificance;
+  std::vector<std::vector<int>>     Trk_pdgId;
+  std::vector<std::vector<int>>     Trk_charge;
 //  std::vector<int  >                BsTauTau_nCandidates ;
 //
 //  std::vector<float>                BsTauTau_mu1_pt      ;

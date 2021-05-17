@@ -53,7 +53,7 @@ private:
 
    bool runOnMC_;
    bool verbose_;
-
+   bool doTrack_;
 
    bool flag_fill = false;
    helper aux;

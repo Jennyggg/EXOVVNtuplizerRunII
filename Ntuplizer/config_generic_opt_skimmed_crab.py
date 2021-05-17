@@ -1,6 +1,6 @@
-#cmsRun  config_generic_opt_skimmed.py  RunPeriod="Fall17" # for MC
-#cmsRun  config_generic_opt_skimmed.py  RunPeriod="Run2017B" # for Data
-#cmsRun  config_generic_opt_skimmed.py  RunPeriod="Autumn18" # for MC from 2018
+#cmsRun  config_generic_opt_skimmed_crab.py  RunPeriod="Fall17" # for MC
+#cmsRun  config_generic_opt_skimmed_crab.py  RunPeriod="Run2017B" # for Data
+#cmsRun  config_generic_opt_skimmed_crab.py  RunPeriod="Autumn18" # for MC from 2018
 
 
 ###### Process initialization ##########
@@ -25,11 +25,11 @@ from EXOVVNtuplizerRunII.Ntuplizer.ntuplizerOptions_generic_cfi import config
 #config["VPROBCUT"] = VALVPROB
 #config["DNNCUT"] = VALDNN
 
-config["DZCUT"] = 0.25
-config["FSIGCUT"] = 3
-config["VPROBCUT"] = 0.1
-config["DNNCUT"] = 0.1443
-
+#config["DZCUT"] = 0.25
+#config["FSIGCUT"] = 3
+#config["VPROBCUT"] = 0.1
+#config["DNNCUT"] = 0.1443
+#config["JSONFILE"] = 'JSON/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'
 				   
 ####### Config parser ##########
 
@@ -53,8 +53,8 @@ options.register( 'runUpToEarlyF',
 
 
 
-options.maxEvents = 1000
-#options.maxEvents = -1
+#options.maxEvents = 100
+options.maxEvents = -1
 
 #data file
      
@@ -66,8 +66,15 @@ options.maxEvents = 1000
 #options.inputFiles ='/store/user/cgalloni/BJpsiX_MuMu_270819/Autumn18_10_2_9_miniAOD/190827_143312/0005/miniAOD_5000.root'
 #options.inputFiles = '/store/user/cgalloni/BcJpsiTauNu_020519/Fall18_10_2_9-MINIAODSIM_noDuplCheck_020519/190505_141436/0000/miniAOD_99.root'
 #options.inputFiles = '/BcToJPsiTauNu_TuneCP5_13TeV-bcvegpy2-pythia8-evtgen/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM'
-options.inputFiles = '/store/mc/RunIIAutumn18MiniAOD/BcToJPsiTauNu_TuneCP5_13TeV-bcvegpy2-pythia8-evtgen/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/260000/E342DC18-5142-1545-B077-D4405CE0BF05.root'
+#options.inputFiles = '/store/mc/RunIIAutumn18MiniAOD/BcToJPsiTauNu_TuneCP5_13TeV-bcvegpy2-pythia8-evtgen/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/260000/E342DC18-5142-1545-B077-D4405CE0BF05.root'
 #options.inputFiles = 'file:/scratch/ytakahas/E342DC18-5142-1545-B077-D4405CE0BF05.root'
+#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/005650EB-AA60-D34C-8100-95959C4B352D.root'
+#options.inputFiles = 'file:///work/kcormier/instantons/hepmc/CMSSW_10_6_17_patch1/src/run/Instanton_fromHepMC_test_take2_MiniAOD.root'
+options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/lowPU/02197989-FEBA-8F4B-B79B-584EAC870B5A.root'
+
+#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/HardQCD2018/0132101A-3696-6D48-A7AC-2B6B1D2E6139.root'
+#options.inputFiles = '/store/mc/RunIISummer19UL18MiniAODv2/QCD_HT300to500_TuneCP5_PSWeights_13TeV-madgraphMLM-pythia8/MINIAODSIM/106X_upgrade2018_realistic_v16_L1v1-v1/240000/00A2454C-4984-7F43-8C3C-9CF4694CAF89.root'
+#options.inputFiles= '/store/mc/RunIISummer20UL18MiniAOD/bbHToBB_M-125_4FS_yt2_TuneCP5-13TeV-amcatnlo-pythia8/MINIAODSIM/106X_upgrade2018_realistic_v11_L1v1-v2/100000/01D3DCF2-D2D0-4342-9907-19515B7A4258.root'
 
 options.parseArguments()
 
@@ -303,21 +310,34 @@ if config["CORRMETONTHEFLY"]:
 ################## Ntuplizer ###################
 process.ntuplizer = cms.EDAnalyzer("Ntuplizer",
     runOnMC	      = cms.bool(config["RUNONMC"]),
+    runOnInstantonMC  = cms.bool(config["RUNONINSTANTONMC"]),
     useDNN	      = cms.bool(config["USEDNN"]),
+    useHammer         = cms.bool(config["USEHAMMER"]),
     doGenParticles    = cms.bool(config["DOGENPARTICLES"]),
     doGenEvent	      = cms.bool(config["DOGENEVENT"]),
     doPileUp	      = cms.bool(config["DOPILEUP"]),
     doJpsiMu	      = cms.bool(config["DOJPSIMU"]),
     doJpsiTau	      = cms.bool(config["DOJPSITAU"]),
     doBsTauTau	      = cms.bool(config["DOBSTAUTAU"]),
+    doBsTauTauFH      = cms.bool(config["DOBSTAUTAUFH"]),
+    doBsTauTauFH_mr   = cms.bool(config["DOBSTAUTAUFH_mr"]),
+    doBsDstarTauNu    = cms.bool(config["DOBSDSTARTAUNU"]),
     doVertices	      = cms.bool(config["DOVERTICES"]),
     doMissingEt       = cms.bool(config["DOMISSINGET"]),
     doGenHist         = cms.bool(config["DOGENHIST"]),
+    doInstanton       = cms.bool(config["DOINSTANTON"]),
+    doTrack           = cms.bool(config["DOTRACK"]),
+    verbose           = cms.bool(config["VERBOSE"]),
     dzcut             = cms.double(config['DZCUT']),
     fsigcut           = cms.double(config['FSIGCUT']),
     vprobcut          = cms.double(config['VPROBCUT']),
     dnncut            = cms.double(config['DNNCUT']),
-    dnnfile           = cms.string(config['DNNFILE']),                        
+#    dnnfile           = cms.string(config['DNNFILE']),                        
+    tau_charge        = cms.uint32(config['TAU_CHARGE']),
+    lumifile          = cms.string(config['LUMIFILE']),
+    dnnfile_old       = cms.string(config['DNNFILE_OLD']),
+    dnnfile_perPF     = cms.string(config['DNNFILE_PERPF']),
+    dnnfile_perEVT    = cms.string(config['DNNFILE_PEREVT']),
     vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
     beamSpot = cms.InputTag("offlineBeamSpot"),
     taus = cms.InputTag("slimmedTaus"),
@@ -358,9 +378,10 @@ process.ntuplizer = cms.EDAnalyzer("Ntuplizer",
     jetsForMetCorr = cms.InputTag(jetsAK4),
     rho = cms.InputTag("fixedGridRhoFastjetAll"),
     genparticles = cms.InputTag("prunedGenParticles"),
-    gentaus = cms.InputTag("tauGenJets"),
+    packedgenparticles = cms.InputTag("packedGenParticles"),
+#    gentaus = cms.InputTag("tauGenJets"),
     PUInfo = cms.InputTag("slimmedAddPileupInfo"),
-    genEventInfo = cms.InputTag("generator"),
+    genEventInfo = cms.InputTag("source","generator") if (cms.bool(config["RUNONMC"]) and cms.bool(config["RUNONINSTANTONMC"])) else cms.InputTag("generator"),
     externallheProducer = cms.InputTag("externalLHEProducer"),
     HLT = cms.InputTag("TriggerResults","","HLT"),
     triggerobjects = cms.InputTag("slimmedPatTrigger"),
@@ -408,7 +429,7 @@ process.ntuplizer = cms.EDAnalyzer("Ntuplizer",
 
     packedpfcandidates = cms.InputTag('packedPFCandidates'),
     SecondaryVertices = cms.InputTag('slimmedSecondaryVertices'),
-    losttrack = cms.InputTag('lostTracks')
+#    losttrack = cms.InputTag('lostTracks')
 )
 
 process.load('RecoMET.METFilters.ecalBadCalibFilter_cfi')
@@ -447,10 +468,10 @@ process.p = cms.Path()
 
 process.p += process.ecalBadCalibReducedMINIAODFilter
 
-if config["RUNONMC"]:
-  process.load("PhysicsTools.JetMCAlgos.TauGenJets_cfi")
-  process.tauGenJets.GenParticles = cms.InputTag('prunedGenParticles')
-  process.p += process.tauGenJets
+#if config["RUNONMC"]:
+#  process.load("PhysicsTools.JetMCAlgos.TauGenJets_cfi")
+#  process.tauGenJets.GenParticles = cms.InputTag('prunedGenParticles')
+#  process.p += process.tauGenJets
 
 
 process.p += process.ntuplizer

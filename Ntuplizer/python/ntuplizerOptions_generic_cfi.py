@@ -6,6 +6,7 @@ config = dict()
 
 #--------- Set Just one to true ----------#
 config["RUNONMC"] = False
+config["RUNONINSTANTONMC"] = False
 #-----------------------------------------#
 #config["USEHAMMER"] = (True and config["RUNONMC"])
 config["USEHAMMER"] = False
@@ -28,12 +29,17 @@ config["USEJSON"] = not (config["RUNONMC"])
 #config["JSONFILE"] = "JSON/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt" #data 2017
 #config["JSONFILE"] = "JSON/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt" # data 2016
 #config["JSONFILE"] = "JSON/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt" # data 2017UL
-
-config["JSONFILE"] = 'JSON/Cert_2018_Run316569.txt' #choose a specific run in BParking 2018
+config["JSONFILE"] = "JSON/Cert_306896-307082_13TeV_PromptReco_Collisions17_JSON_LowPU.txt" # data 2017LowPU
+#config["JSONFILE"] = "JSON/Cert_2018_Run316199.txt"
+#config["JSONFILE"] = "JSON/Cert_2018_Run316569.txt" #choose a specific run in BParking 2018
+#config["JSONFILE"] = "JSON/Cert_2018_Run316187.txt"
 #config["JSONFILE"] = "JSON/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt" # data 2018
 #config["JSONFILE"] = "JSON/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"
 #config["JSONFILE"] = "JSON/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt"
 #config["JSONFILE"] = "JSON/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"
+#config["LUMIFILE"] = "JSON/pileup_latest.txt"
+config["LUMIFILE"] = "JSON/pileup17_latest.txt"
+
 
 config["USENOHF"] = False
 
@@ -52,7 +58,7 @@ config["DOBSTAUTAU"] = False
 config["DOBSTAUTAUFH"] = False
 config["DOBSTAUTAUFH_mr"] = False # mass regression
 config["DOBSDSTARTAUNU"] = False
-config["DOTRACK"] = True
+config["DOTRACK"] = False
 config["DOGENHIST"] = (True and config["RUNONMC"]);
 
 config["DNNFILE_OLD"] = "data/DNN/BcJPsi/DUMMY"
