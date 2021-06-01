@@ -1,19 +1,20 @@
 #include "helper.cpp"
-void plot_sph_compare(string filenames_1,string filenames_2, string plotname, string legendname_1,string legendname_2,string massregion = "inclu", string insta_lumi = "inclu", bool isLog = false){
+void plot_sph_compare_dataset(string filenames_1,string filenames_2, string plotname, string legendname_1,string legendname_2,string massregion = "inclu", string insta_lumi = "inclu", bool isLog = false){
   int nbins=20;
   float min=0.;
   float max=1.;
   std::vector<string> filename_1, filename_2;
-  splitstring(filenames_1, filename_1);
-  splitstring(filenames_2, filename_2);
-  TChain *t_1 = new TChain("ntuplizer/tree");
-  TChain *t_2 = new TChain("ntuplizer/tree");
-  for(int i=0; i<filename_1.size(); i++){
-    t_1->AddFile(filename_1[i].c_str());
-  }
-  for(int i=0; i<filename_2.size(); i++){
-    t_2->AddFile(filename_2[i].c_str());
-  }
+//  splitstring(filenames_1, filename_1);
+//  splitstring(filenames_2, filename_2);
+  rootfilelist(filenames_1,filename_1);
+  rootfilelist(filenames_2,filename_2);
+  TChain *t = new TChain("ntuplizer/tree");
+//  for(int i=0; i<filename_1.size(); i++){
+//    t_1->AddFile(filename_1[i].c_str());
+//  }
+//  for(int i=0; i<filename_2.size(); i++){
+//    t_2->AddFile(filename_2[i].c_str());
+//  }
   TCanvas *c = new TCanvas("c","c",600,600);
   gStyle->SetOptStat(0);
   THStack *hs_1 = new THStack("hs_1","Distribution of Spherocity");
@@ -36,7 +37,7 @@ void plot_sph_compare(string filenames_1,string filenames_2, string plotname, st
   pad2->Draw();
   pad1->cd();
 
-  string selection = "!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_vtx_goodMuonIP>2&&EVENT_run==316569&&Instanton_Trk_TrkCut_mass>0";
+  string selection = "!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_vtx_goodMuonIP>2&&Instanton_Trk_TrkCut_mass>0";
   if(massregion == "verylow") {selection += "&&Instanton_Trk_TrkCut_mass>20&&Instanton_Trk_TrkCut_mass<=40";}
   else if (massregion == "low") {selection += "&&Instanton_Trk_TrkCut_mass>40&&Instanton_Trk_TrkCut_mass<=80";}
   else if (massregion == "medium") {selection += "&&Instanton_Trk_TrkCut_mass>200&&Instanton_Trk_TrkCut_mass<=300";}
@@ -50,10 +51,33 @@ void plot_sph_compare(string filenames_1,string filenames_2, string plotname, st
 
   }
 
+  TH1F *hist = new TH1F("hist","Distribution of Spherocity",nbins,min,max);
   TH1F *hist1 = new TH1F("hist1","Distribution of Spherocity",nbins,min,max);
   TH1F *hist2 = new TH1F("hist2","Distribution of Spherocity",nbins,min,max);
 
-  t_1->Draw("Instanton_Trk_TrkCut_spherocity>>hist1",selection.c_str());
+  for(int i=0; i<filename_1.size(); i++){
+    t->AddFile(filename_1[i].c_str());
+    if(t->GetEntries(selection.c_str())>0){
+      cout<<"processing file "<<filename_1[i]<<endl;
+      t->Draw("Instanton_Trk_TrkCut_spherocity>>hist",selection.c_str(),"goff");
+
+      hist=(TH1F*)gDirectory->Get("hist");
+      hist1->Add(hist);
+    }
+    t->Reset();
+  }
+  for(int i=0; i<filename_2.size(); i++){
+    t->AddFile(filename_2[i].c_str());
+    if(t->GetEntries(selection.c_str())>0){
+      cout<<"processing file "<<filename_2[i]<<endl;
+      t->Draw("Instanton_Trk_TrkCut_spherocity>>hist",selection.c_str(),"goff");
+      hist=(TH1F*)gDirectory->Get("hist");
+      hist2->Add(hist);
+    }
+    t->Reset();
+  }
+
+//  t_1->Draw("Instanton_Trk_TrkCut_spherocity>>hist1",selection.c_str());
 //  t_1->Draw("Instanton_Trk_TrkCut_spherocity>>hist1","Instanton_Trk_TrkCut_mass>20&&Instanton_Trk_TrkCut_mass<=40&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_vtx_goodMuonIP>2&&EVENT_run==316569");
 //  t_1->Draw("Instanton_Trk_TrkCut_spherocity>>hist1","Instanton_Trk_TrkCut_mass>20&&Instanton_Trk_TrkCut_mass<=40&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_vtx_goodMuonIP>2&&EVENT_run==316569&&Instan_Lumi_per_bunch_mean>0.00031&&Instan_Lumi_per_bunch_mean<=0.00032"); //total
 //  t_1->Draw("Instanton_Trk_spherocity>>hist1","Instanton_Trk_mass>20&&Instanton_Trk_mass<=40&&Instanton_N_Trk>20&&(Instanton_Trk_mass/Instanton_N_Trk)<1.5&&Instanton_N_TrackJet==0"); //standard
@@ -62,7 +86,7 @@ void plot_sph_compare(string filenames_1,string filenames_2, string plotname, st
 //  t_1->Draw("Instanton_Trk_spherocity>>hist1","Instanton_Trk_mass>20&&Instanton_Trk_mass<=40&&Instanton_N_Trk>15&&(Instanton_Trk_mass/Instanton_N_Trk)>2.0&&Instanton_N_TrackJet==0&&Instanton_Trk_thrust>0.3"); //CRA
 //  t_1->Draw("Instanton_Trk_spherocity>>hist1","Instanton_Trk_mass>20&&Instanton_Trk_mass<=40&&Instanton_N_Trk>20&&(Instanton_Trk_mass/Instanton_N_Trk)<1.5&&Instanton_N_TrackJet==0&&Instanton_Trk_thrust>0.3&&Instanton_N_Trk_Displaced<4"); //CRB
 
-  t_2->Draw("Instanton_Trk_TrkCut_spherocity>>hist2",selection.c_str());
+//  t_2->Draw("Instanton_Trk_TrkCut_spherocity>>hist2",selection.c_str());
 //  t_2->Draw("Instanton_Trk_TrkCut_spherocity>>hist2","Instanton_Trk_TrkCut_mass>20&&Instanton_Trk_TrkCut_mass<=40&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_vtx_goodMuonIP>2&&EVENT_run==316569"); 
 //  t_2->Draw("Instanton_Trk_TrkCut_spherocity>>hist2","Instanton_Trk_TrkCut_mass>20&&Instanton_Trk_TrkCut_mass<=40&&!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_vtx_goodMuonIP>2&&EVENT_run==316569&&Instan_Lumi_per_bunch_mean>0.00031&&Instan_Lumi_per_bunch_mean<=0.00032"); //total
 //  t_2->Draw("Instanton_Trk_spherocity>>hist2","Instanton_Trk_mass>20&&Instanton_Trk_mass<=40&&Instanton_N_Trk>20&&(Instanton_Trk_mass/Instanton_N_Trk)<1.5&&Instanton_N_TrackJet==0"); //standard
@@ -71,7 +95,7 @@ void plot_sph_compare(string filenames_1,string filenames_2, string plotname, st
 //  t_2->Draw("Instanton_Trk_spherocity>>hist2","Instanton_Trk_mass>20&&Instanton_Trk_mass<=40&&Instanton_N_Trk>15&&(Instanton_Trk_mass/Instanton_N_Trk)>2.0&&Instanton_N_TrackJet==0&&Instanton_Trk_thrust>0.3"); //CRA
 //  t_2->Draw("Instanton_Trk_spherocity>>hist2","Instanton_Trk_mass>20&&Instanton_Trk_mass<=40&&Instanton_N_Trk>20&&(Instanton_Trk_mass/Instanton_N_Trk)<1.5&&Instanton_N_TrackJet==0&&Instanton_Trk_thrust>0.3&&Instanton_N_Trk_Displaced<4"); //CRB
 
-  hist1=(TH1F*)gDirectory->Get("hist1");
+//  hist1=(TH1F*)gDirectory->Get("hist1");
   hist1->Scale(1./hist1->GetSumOfWeights());
   hist1->SetFillColor(kOrange);
 //  hist1->SetLineColor(kBlack);
@@ -83,7 +107,7 @@ void plot_sph_compare(string filenames_1,string filenames_2, string plotname, st
   hs_1->GetXaxis()->SetTitle("Spherocity");
   hs_1->GetYaxis()->SetTitle("Normalized Collisions");
 
-  hist2=(TH1F*)gDirectory->Get("hist2");
+//  hist2=(TH1F*)gDirectory->Get("hist2");
   hist2->Scale(1./hist2->GetSumOfWeights());
   hist2->SetLineColor(kRed);
   hist2->SetMarkerStyle(21);
@@ -94,6 +118,8 @@ void plot_sph_compare(string filenames_1,string filenames_2, string plotname, st
   hs_2->Draw("ElpSAME");
   hs_2->GetXaxis()->SetTitle("Spherocity");
   hs_2->GetYaxis()->SetTitle("Normalized Collisions");
+  hs_1->SetMaximum(std::max(hist1->GetMaximum(),hist2->GetMaximum()));
+  hs_2->SetMaximum(std::max(hist1->GetMaximum(),hist2->GetMaximum()));
 
   Double_t chi2_ndof = 0;
   Double_t p_value = 0;
@@ -191,7 +217,7 @@ void plot_sph_compare(string filenames_1,string filenames_2, string plotname, st
   pad2->Update();
   pad1->Update();
   c->Update();
-  plotname += "_"+massregion+"_sph_runmerge_lumi"+insta_lumi;
+  plotname += "_"+massregion+"_sph_lumi"+insta_lumi;
   c->SaveAs((plotname+".png").c_str());
   c->SaveAs((plotname+".pdf").c_str());
 }
