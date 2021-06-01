@@ -35,24 +35,25 @@ Just set the proper flags in python/ntuplizerOptions_generic_cfi.py
 and then run your config, as for example so :
 
 ```
-cmsRun config_generic_opt_skimmed.py RunPeriod="Fall17" (on 2017 MC)
+cmsRun config_generic_opt_skimmed_crab.py RunPeriod="Fall17" (on 2017 MC)
 ```
 or
 ```
-cmsRun config_generic_opt_skimmed.py RunPeriod="Run2017B" (for 2017 data)
+cmsRun config_generic_opt_skimmed_crab.py RunPeriod="Run2017B" (for 2017 data)
 ```
 
 
 ### CRAB submission 
 List the dataset list you would like to process in sample/sample.txt
-Modify in the submission script the info relative to the user, the storage element (T2_CH_CSCS, T3_CH_PSI).
+Modify in the submission script the info relative to the user, the storage element (T2_CH_CSCS, T3_CH_PSI), and add the local files needed for the jobs into the `config.JobType.inputFiles` list. Change the output directory in `config.Data.outLFNDirBase`.
 Examples of submissions are available in files like `commands_ForPeople.txt` and `commands_sample_submission_CRAB.txt`, and here:
 you need to specify the directory where you want to store the crab project directory, the configaruion file that has to be run with `cmsRun`, the txt file with the sample list and any additional string you want to attach to the dataset name. Do a print of the command, before sending the jobs, to be sure that all options are well taken.
 
 ```
 cmsenv
 source /cvmfs/cms.cern.ch/crab3/crab.sh
-python submit_all_opt.py -d CRAB_dir -c config_generic_opt_skimmed.py -f samples/sample.txt  -s ""
+voms-proxy-init -voms cms -valid 200:0
+python submit_all_opt.py -d CRAB_dir -c config_generic_opt_skimmed_crab.py -f samples/sample.txt  -s ""
 
 ```
 
@@ -97,3 +98,6 @@ Finally, note that, when you run on crab, you have to enable
 config.JobType.sendExternalFolder = True
 ```
 as described at https://twiki.cern.ch/twiki/bin/viewauth/CMS/MultivariateElectronIdentificationRun2#Recipes_and_implementation
+
+### Plotting
+In the folder `PlotTools`, there are some scripts to read the flat ntuples and do the data-MC or BParking-ZeroBias comparisons. The commands for data-MC comparison are listed in `PlotTools/commands_for_plotting.txt`.
