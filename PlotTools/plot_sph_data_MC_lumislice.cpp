@@ -1,9 +1,10 @@
 #include "helper.cpp"
-void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, string plotname, string MClegend, string datalegend, string massregion = "inclu", bool PUreweight = true, bool isLog = false, bool significanceplot = true){
+void plot_sph_data_MC_lumislice(string MCname, string dataname, string PUWeight_tree, string plotname, string MClegend, string datalegend, string MCPU="", string massregion = "inclu",string nPU_cut = "inclu", bool PUreweight = true, bool isLog = false, bool significanceplot = true){
   int nbins=20;
   float min=0.;
   float max=1.;
   TChain *tMC = new TChain("ntuplizer/tree");
+  if(MCPU!="") tMC->AddFriend("tree",MCPU.c_str());
   TChain *tdata = new TChain("ntuplizer/tree");
   TCanvas *c = new TCanvas("c","c",600,600);
   gStyle->SetOptStat(0);
@@ -22,13 +23,28 @@ void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, stri
   pad1->Draw();
   pad2->Draw();
   pad1->cd();
+  string weight;
+  string weighte;
   string selection = "!Instanton_vtx_N_goodMuon&&PV_isgood&&Instanton_vtx_goodMuonIP>2&&Instanton_Trk_TrkCut_mass>0";
-  if(massregion == "verylow") {selection += "&&Instanton_Trk_TrkCut_mass>20&&Instanton_Trk_TrkCut_mass<=40&&Instanton_Trk_TrkCut_spherocity<0.3";}
-  else if (massregion == "low") {selection += "&&Instanton_Trk_TrkCut_mass>40&&Instanton_Trk_TrkCut_mass<=80&&Instanton_Trk_TrkCut_spherocity<0.3";}
-  else if (massregion == "medium") {selection += "&&Instanton_Trk_TrkCut_mass>80&&Instanton_Trk_TrkCut_mass<=200";}
-  else if (massregion == "high") {selection += "&&Instanton_Trk_TrkCut_mass>200&&Instanton_Trk_TrkCut_mass<=300";}
-  else if (massregion == "veryhigh") {selection += "&&Instanton_Trk_TrkCut_mass>300&&Instanton_Trk_TrkCut_mass<=500";}
+  if(massregion == "verylow") {selection += "&&Instanton_Trk_TrkCut_mass>20&&Instanton_Trk_TrkCut_mass<=40&&Instanton_Trk_TrkCut_spherocity<0.3";weight="PUWeight_N_PV_verylow_cut";weighte="PUWeightE_N_PV_verylow_cut";}
+  else if (massregion == "low") {selection += "&&Instanton_Trk_TrkCut_mass>40&&Instanton_Trk_TrkCut_mass<=80&&Instanton_Trk_TrkCut_spherocity<0.3";weight="PUWeight_N_PV_low_cut";weighte="PUWeightE_N_PV_low_cut";}
+  else if (massregion == "medium") {selection += "&&Instanton_Trk_TrkCut_mass>80&&Instanton_Trk_TrkCut_mass<=200";weight="PUWeight_N_PV_medium_cut";weighte="PUWeightE_N_PV_medium_cut";}
+  else if (massregion == "high") {selection += "&&Instanton_Trk_TrkCut_mass>200&&Instanton_Trk_TrkCut_mass<=300";weight="PUWeight_N_PV_high_cut";weighte="PUWeightE_N_PV_high_cut";}
+  else if (massregion == "veryhigh") {selection += "&&Instanton_Trk_TrkCut_mass>300&&Instanton_Trk_TrkCut_mass<=500";weight="PUWeight_N_PV_veryhigh_cut";weighte="PUWeightE_N_PV_veryhigh_cut";}
   else if (massregion != "inclu") {cout<<"Invalid mass region"<<endl; return;}
+  weight="PUWeight_N_PV_inclu_cut";weighte="PUWeightE_N_PV_inclu_cut";
+  string selectionMC,selectiondata;
+  selectionMC=selection;
+  selectiondata=selection;
+
+  if (nPU_cut != "inclu"){
+    if(!(nPU_cut.at(2) == '-' &&(isdigit(nPU_cut.at(0))||nPU_cut.at(0)== ' ')&&(isdigit(nPU_cut.at(1))||nPU_cut.at(0)==' ')&&isdigit(nPU_cut.at(3))&&isdigit(nPU_cut.at(4))))
+      {cout<<"Invalid lumi range"<<endl; return;}
+    selectionMC += "&&nPuVtxTrue_>"+nPU_cut.substr(0,2)+"&&nPuVtxTrue_<="+nPU_cut.substr(3,2);
+    selectiondata += "&&Instan_Lumi_per_bunch_mean*69200>"+nPU_cut.substr(0,2)+"&&Instan_Lumi_per_bunch_mean*69200<="+nPU_cut.substr(3,2);
+  }
+  cout<<"selectionMC "<<selectionMC<<endl;
+  cout<<"selectiondata "<<selectiondata<<endl;
   TH1F *hist = new TH1F("hist","Distribution of Spherocity",nbins,min,max);
   TH1F *hist1 = new TH1F("hist1","Distribution of Spherocity",nbins,min,max);
   TH1F *hist2 = new TH1F("hist2","Distribution of Spherocity",nbins,min,max);
@@ -37,35 +53,44 @@ void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, stri
   tMC->AddFriend("tree",PUWeight_tree.c_str());
   if(PUreweight){
     if(tMC->GetBranchStatus("Instanton_vtx_genvertex_PVDistance"))
-      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selection+"&&Instanton_vtx_genvertex_PVDistance>2)*PUWeight").c_str(),"goff");
+      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selectionMC+"&&Instanton_vtx_genvertex_PVDistance>2)*"+weight).c_str(),"goff");
     else
-      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selection+")*PUWeight").c_str(),"goff");
+      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selectionMC+")*"+weight).c_str(),"goff");
     hist=(TH1F*)gDirectory->Get("hist");
     hist1->Add(hist);
     if(tMC->GetBranchStatus("Instanton_vtx_genvertex_PVDistance"))
-      HistError(tMC,PUWeight_tree,"Instanton_Trk_TrkCut_spherocity","PUWeightE",selection+"&&Instanton_vtx_genvertex_PVDistance>2",hist1,nbins,min,max);
+      HistError(tMC,PUWeight_tree,"Instanton_Trk_TrkCut_spherocity",weighte,selectionMC+"&&Instanton_vtx_genvertex_PVDistance>2",hist1,nbins,min,max);
     else
-      HistError(tMC,PUWeight_tree,"Instanton_Trk_TrkCut_spherocity","PUWeightE",selection,hist1,nbins,min,max);
+      HistError(tMC,PUWeight_tree,"Instanton_Trk_TrkCut_spherocity",weighte,selectionMC,hist1,nbins,min,max);
   }
   else{
     if(tMC->GetBranchStatus("Instanton_vtx_genvertex_PVDistance"))
-      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selection+"&&Instanton_vtx_genvertex_PVDistance>2)").c_str(),"goff");
+      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selectionMC+"&&Instanton_vtx_genvertex_PVDistance>2)").c_str(),"goff");
     else
-      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selection+")").c_str(),"goff");
+      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selectionMC+")").c_str(),"goff");
     hist=(TH1F*)gDirectory->Get("hist");
     hist1->Add(hist);
   }
 
   tdata->AddFile(dataname.c_str());
-  tdata->Draw("Instanton_Trk_TrkCut_spherocity>>hist",selection.c_str(),"goff");
+  tdata->Draw("Instanton_Trk_TrkCut_spherocity>>hist",selectiondata.c_str(),"goff");
   hist=(TH1F*)gDirectory->Get("hist");
   hist2->Add(hist);
+
+  for(int i=0; i<=nbins; i++){
+    cout<<"bin "<<i<<", hist1 unnormalize "<<hist1->GetBinContent(i)<<", error "<<hist1->GetBinError(i)<<endl;
+  }
+  cout<<"hist1 SumWeight "<<hist1->GetSumOfWeights()<<endl;
+  cout<<"hist1 Entries "<<hist1->GetEntries()<<endl;
 
   hist1->Scale(1./hist1->GetSumOfWeights());
   hist1->SetFillColor(kOrange);
   if(isLog)
     hs_1->SetMinimum(0.1/hist1->GetEntries());
   hs_1->Add(hist1);
+
+  cout<<"nPuVtxTrue_ "<<(int)tMC->GetBranchStatus("nPuVtxTrue_")<<", max = "<<tMC->GetMaximum("nPuVtxTrue_")<<", min = "<<tMC->GetMinimum("nPuVtxTrue_")<<endl;
+  cout<<"Instan_Lumi_per_bunch_mean "<<(int)tdata->GetBranchStatus("Instan_Lumi_per_bunch_mean")<<", max = "<<tdata->GetMaximum("Instan_Lumi_per_bunch_mean")*69200<<", min = "<<tdata->GetMinimum("Instan_Lumi_per_bunch_mean")*69200<<endl;
 
   for(int i=0; i<=nbins; i++){
     cout<<"bin "<<i<<", hist1 "<<hist1->GetBinContent(i)<<", error "<<hist1->GetBinError(i)<<endl;
@@ -75,6 +100,11 @@ void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, stri
   hs_1->GetXaxis()->SetTitle("Spherocity");
   hs_1->GetYaxis()->SetTitle("Normalized Collisions");
 
+  for(int i=0; i<=nbins; i++){
+    cout<<"bin "<<i<<", hist2 unnormalize "<<hist2->GetBinContent(i)<<", error "<<hist2->GetBinError(i)<<endl;
+  }
+  cout<<"hist2 SumWeight "<<hist2->GetSumOfWeights()<<endl;
+  cout<<"hist2 Entries "<<hist2->GetEntries()<<endl;
   hist2->Scale(1./hist2->GetSumOfWeights());
   hist2->SetLineColor(kRed);
   hist2->SetMarkerStyle(21);
@@ -105,6 +135,8 @@ void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, stri
   legend->Draw();
   TLegend *legend1 = new TLegend(0.50,0.50,0.89,0.65);
 //  legend1->AddEntry((TObject*)0, "Instantaneous Luminosity per bunch:", "");
+  if (nPU_cut == "inclu") legend1->AddEntry((TObject*)0, "   Inclusive Pileup","");
+  else legend1->AddEntry((TObject*)0, ("           N truePU   "+nPU_cut.substr(0,2)+"-"+nPU_cut.substr(3,2)).c_str(),"");
   if(massregion == "verylow")  legend1->AddEntry((TObject*)0, "           Very low mass region","");
   else if(massregion == "low")  legend1->AddEntry((TObject*)0, "           Low mass region","");
   else if(massregion == "medium")  legend1->AddEntry((TObject*)0, "           Medium mass region","");
@@ -182,9 +214,9 @@ void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, stri
   pad2->Update();
   pad1->Update();
   c->Update();
-  plotname += "_"+massregion+"_sph";
+  plotname += "_"+massregion+"_PU"+nPU_cut+"_sph";
   c->SaveAs((plotname+".png").c_str());
   c->SaveAs((plotname+".pdf").c_str());
-
+  delete c;
 
 }

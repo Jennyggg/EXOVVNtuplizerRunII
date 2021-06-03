@@ -35,14 +35,26 @@ void plot_ndisplace_data_MC(string MCname, string dataname, string PUWeight_tree
   hist->Sumw2(kTRUE);
   tMC->AddFile(MCname.c_str());
   tMC->AddFriend("tree",PUWeight_tree.c_str());
-  if(PUreweight)
-    tMC->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist",("("+selection+"&&Instanton_vtx_genvertex_PVDistance>2)*PUWeight").c_str(),"goff");
-  else
-    tMC->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist",("("+selection+"&&Instanton_vtx_genvertex_PVDistance>2)").c_str(),"goff");
-  hist=(TH1F*)gDirectory->Get("hist");
-  hist1->Add(hist);
-  if(PUreweight)
-  HistError(tMC,PUWeight_tree,"Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity","PUWeightE",selection+"&&Instanton_vtx_genvertex_PVDistance>2",hist1,nbins,min,max);
+  if(PUreweight){
+    if(tMC->GetBranchStatus("Instanton_vtx_genvertex_PVDistance"))
+      tMC->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist",("("+selection+"&&Instanton_vtx_genvertex_PVDistance>2)*PUWeight").c_str(),"goff");
+    else
+      tMC->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist",("("+selection+")*PUWeight").c_str(),"goff");
+    hist=(TH1F*)gDirectory->Get("hist");
+    hist1->Add(hist);
+    if(tMC->GetBranchStatus("Instanton_vtx_genvertex_PVDistance"))
+      HistError(tMC,PUWeight_tree,"Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity","PUWeightE",selection+"&&Instanton_vtx_genvertex_PVDistance>2",hist1,nbins,min,max);
+    else
+      HistError(tMC,PUWeight_tree,"Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity","PUWeightE",selection,hist1,nbins,min,max);
+  }
+  else{
+    if(tMC->GetBranchStatus("Instanton_vtx_genvertex_PVDistance"))
+      tMC->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist",("("+selection+"&&Instanton_vtx_genvertex_PVDistance>2)").c_str(),"goff");
+    else
+      tMC->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist",("("+selection+")").c_str(),"goff");
+    hist=(TH1F*)gDirectory->Get("hist");
+    hist1->Add(hist);
+  }
 
 
   tdata->AddFile(dataname.c_str());

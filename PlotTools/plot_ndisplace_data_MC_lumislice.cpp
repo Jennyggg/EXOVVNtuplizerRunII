@@ -1,14 +1,15 @@
 #include "helper.cpp"
-void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, string plotname, string MClegend, string datalegend, string massregion = "inclu", bool PUreweight = true, bool isLog = false, bool significanceplot = true){
+void plot_ndisplace_data_MC_lumislice(string MCname, string dataname, string PUWeight_tree, string plotname, string MClegend, string datalegend, string MCPU="", string massregion = "inclu",string nPU_cut = "inclu", bool PUreweight = true, bool isLog = false, bool significanceplot = true){
   int nbins=20;
   float min=0.;
-  float max=1.;
+  float max=20.;
   TChain *tMC = new TChain("ntuplizer/tree");
+  if(MCPU!="") tMC->AddFriend("tree",MCPU.c_str());
   TChain *tdata = new TChain("ntuplizer/tree");
   TCanvas *c = new TCanvas("c","c",600,600);
   gStyle->SetOptStat(0);
-  THStack *hs_1 = new THStack("hs_1","Distribution of Spherocity");
-  THStack *hs_2 = new THStack("hs_2","Distribution of Spherocity");
+  THStack *hs_1 = new THStack("hs_1","Distribution of #displaced tracks (IP>0.02cm IP/sigma(IP)>5 highPurity PVAssociationQuality>=4)");
+  THStack *hs_2 = new THStack("hs_2","Distribution of #displaced tracks (IP>0.02cm IP/sigma(IP)>5 highPurity PVAssociationQuality>=4)");
   TPad *pad1 = new TPad("pad1","pad1",0,0.33,1,1);
   TPad *pad2 = new TPad("pad2","pad2",0,0,1,0.33);
   pad1->SetBottomMargin(0.00001);
@@ -29,35 +30,48 @@ void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, stri
   else if (massregion == "high") {selection += "&&Instanton_Trk_TrkCut_mass>200&&Instanton_Trk_TrkCut_mass<=300";}
   else if (massregion == "veryhigh") {selection += "&&Instanton_Trk_TrkCut_mass>300&&Instanton_Trk_TrkCut_mass<=500";}
   else if (massregion != "inclu") {cout<<"Invalid mass region"<<endl; return;}
-  TH1F *hist = new TH1F("hist","Distribution of Spherocity",nbins,min,max);
-  TH1F *hist1 = new TH1F("hist1","Distribution of Spherocity",nbins,min,max);
-  TH1F *hist2 = new TH1F("hist2","Distribution of Spherocity",nbins,min,max);
+
+  string selectionMC,selectiondata;
+  selectionMC=selection;
+  selectiondata=selection;
+
+  if (nPU_cut != "inclu"){
+    if(!(nPU_cut.at(2) == '-' &&isdigit(nPU_cut.at(0))&&isdigit(nPU_cut.at(1))&&isdigit(nPU_cut.at(3))&&isdigit(nPU_cut.at(4))))
+      {cout<<"Invalid lumi range"<<endl; return;}
+    selectionMC += "&&nPuVtxTrue_>"+nPU_cut.substr(0,2)+"&&nPuVtxTrue_<="+nPU_cut.substr(3,2);
+    selectiondata += "&&Instan_Lumi_per_bunch_mean*69200>"+nPU_cut.substr(0,2)+"&&Instan_Lumi_per_bunch_mean*69200<="+nPU_cut.substr(3,2);
+  }
+
+  TH1F *hist = new TH1F("hist","Distribution of ndisplace",nbins,min,max);
+  TH1F *hist1 = new TH1F("hist1","Distribution of ndisplace",nbins,min,max);
+  TH1F *hist2 = new TH1F("hist2","Distribution of ndisplace",nbins,min,max);
   hist->Sumw2(kTRUE);
   tMC->AddFile(MCname.c_str());
   tMC->AddFriend("tree",PUWeight_tree.c_str());
   if(PUreweight){
     if(tMC->GetBranchStatus("Instanton_vtx_genvertex_PVDistance"))
-      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selection+"&&Instanton_vtx_genvertex_PVDistance>2)*PUWeight").c_str(),"goff");
+      tMC->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist",("("+selectionMC+"&&Instanton_vtx_genvertex_PVDistance>2)*PUWeight").c_str(),"goff");
     else
-      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selection+")*PUWeight").c_str(),"goff");
+      tMC->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist",("("+selectionMC+")*PUWeight").c_str(),"goff");
     hist=(TH1F*)gDirectory->Get("hist");
     hist1->Add(hist);
     if(tMC->GetBranchStatus("Instanton_vtx_genvertex_PVDistance"))
-      HistError(tMC,PUWeight_tree,"Instanton_Trk_TrkCut_spherocity","PUWeightE",selection+"&&Instanton_vtx_genvertex_PVDistance>2",hist1,nbins,min,max);
+      HistError(tMC,PUWeight_tree,"Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity","PUWeightE",selectionMC+"&&Instanton_vtx_genvertex_PVDistance>2",hist1,nbins,min,max);
     else
-      HistError(tMC,PUWeight_tree,"Instanton_Trk_TrkCut_spherocity","PUWeightE",selection,hist1,nbins,min,max);
+      HistError(tMC,PUWeight_tree,"Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity","PUWeightE",selectionMC,hist1,nbins,min,max);
   }
   else{
     if(tMC->GetBranchStatus("Instanton_vtx_genvertex_PVDistance"))
-      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selection+"&&Instanton_vtx_genvertex_PVDistance>2)").c_str(),"goff");
+      tMC->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist",("("+selectionMC+"&&Instanton_vtx_genvertex_PVDistance>2)").c_str(),"goff");
     else
-      tMC->Draw("Instanton_Trk_TrkCut_spherocity>>hist",("("+selection+")").c_str(),"goff");
+      tMC->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist",("("+selectionMC+")").c_str(),"goff");
     hist=(TH1F*)gDirectory->Get("hist");
     hist1->Add(hist);
   }
 
+
   tdata->AddFile(dataname.c_str());
-  tdata->Draw("Instanton_Trk_TrkCut_spherocity>>hist",selection.c_str(),"goff");
+  tdata->Draw("Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity>>hist",selectiondata.c_str(),"goff");
   hist=(TH1F*)gDirectory->Get("hist");
   hist2->Add(hist);
 
@@ -72,7 +86,7 @@ void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, stri
   }
   hs_1->Draw("hist");
   hs_1->Draw("ESAME");
-  hs_1->GetXaxis()->SetTitle("Spherocity");
+  hs_1->GetXaxis()->SetTitle("NDisplace");
   hs_1->GetYaxis()->SetTitle("Normalized Collisions");
 
   hist2->Scale(1./hist2->GetSumOfWeights());
@@ -86,7 +100,7 @@ void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, stri
   if(isLog)
     hs_2->SetMinimum(0.1/hist2->GetEntries());
   hs_2->Draw("ElpSAME");
-  hs_2->GetXaxis()->SetTitle("Spherocity");
+  hs_2->GetXaxis()->SetTitle("NDisplace");
   hs_2->GetYaxis()->SetTitle("Normalized Collisions");
   hs_1->SetMaximum(std::max(hist1->GetMaximum(),hist2->GetMaximum()));
   hs_2->SetMaximum(std::max(hist1->GetMaximum(),hist2->GetMaximum()));
@@ -105,6 +119,8 @@ void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, stri
   legend->Draw();
   TLegend *legend1 = new TLegend(0.50,0.50,0.89,0.65);
 //  legend1->AddEntry((TObject*)0, "Instantaneous Luminosity per bunch:", "");
+  if (nPU_cut == "inclu") legend1->AddEntry((TObject*)0, "   Inclusive Pileup","");
+  else legend1->AddEntry((TObject*)0, ("           N truePU   "+nPU_cut.substr(0,2)+"-"+nPU_cut.substr(3,2)).c_str(),"");
   if(massregion == "verylow")  legend1->AddEntry((TObject*)0, "           Very low mass region","");
   else if(massregion == "low")  legend1->AddEntry((TObject*)0, "           Low mass region","");
   else if(massregion == "medium")  legend1->AddEntry((TObject*)0, "           Medium mass region","");
@@ -116,13 +132,14 @@ void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, stri
   legend1->Draw();
 
   pad2->cd();
+
   TH1F *hist_diff = new TH1F("hist_diff","",nbins,min,max);
   hist_diff->SetMarkerStyle(21);
   hist_diff->SetMarkerColor(kBlack);
-  hist_diff->GetXaxis()->SetTitle("Spherocity");
+  hist_diff->GetXaxis()->SetTitle("NDisplace");
   if(significanceplot)
     hist_diff->GetYaxis()->SetTitle("difference/#sigma(difference)");
-  else
+  else 
     hist_diff->GetYaxis()->SetTitle("ratio");
   hist_diff->GetXaxis()->SetLabelSize(.06);
   hist_diff->GetYaxis()->SetLabelSize(.06);
@@ -182,7 +199,7 @@ void plot_sph_data_MC(string MCname, string dataname, string PUWeight_tree, stri
   pad2->Update();
   pad1->Update();
   c->Update();
-  plotname += "_"+massregion+"_sph";
+  plotname += "_"+massregion+"_PU"+nPU_cut+"_ndisplace";
   c->SaveAs((plotname+".png").c_str());
   c->SaveAs((plotname+".pdf").c_str());
 
