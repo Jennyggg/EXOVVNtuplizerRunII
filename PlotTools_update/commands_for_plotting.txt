@@ -1,0 +1,58 @@
+To reweight the MC to data on instantaneous luminosity on the event level, run
+root -l add_PUWeight.cpp'("MC_FILE","DATA_FILE","OUTPUT_PUWEIGHT")'
+
+The OUTPUT_PUWEIGHT is the name of the root file storing the weight.
+
+An example:
+root -l add_PUWeight.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root", "/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/run316187/flatTuple_run316187_v4.root","MCWeight_run316187.root")'
+
+
+To reweight the MC to data on instantaneous luminosity on the collision level, first calculate the number of collisions passing the filters:
+root -l correct_nPuVtxTrue.cpp'("MCFILE","NPUMC_FILE")'
+(This is to correct a bug in nPuVtxTrue production in MINIAOD processing. It will be fixed in the next version.)
+
+root -l add_NVtx_cut.cpp'("MCFILE","NVTX_MC")'
+root -l add_NVtx_cut.cpp'("DATAFILE","NVTX_DATA")'
+
+root -l add_PUWeight_VtxCut.cpp'("MC_FILE","DATA_FILE", "NVTX_MC", "NVTX_DATA","OUTPUT_PUWEIGHT")
+
+NVTX_MC, NVTX_DATA are the names of root files storing the number of collisions after selections.
+
+An example:
+root -l correct_nPuVtxTrue.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root","nPU_DY.root")'
+
+root -l add_NVtx_cut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root","DYMC_NVtx_cut.root")'
+
+root -l add_NVtx_cut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/run316187/flatTuple_run316187_v4.root","ZeroBias_NVtx_cut.root")'
+
+root -l add_PUWeight_VtxCut.cpp'(""/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root", "/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/run316187/flatTuple_run316187_v4.root","DYMC_NVtx_cut.root","ZeroBias_NVtx_cut.root","MCDYWeight_run316187_collision.root")'
+
+To do the data-MC comparison after reweighting, run
+root -l -b -q plot_obs_data_MC_lumislice.cpp'("MCFILE","DATAFILE","OUTPUT_PUWEIGHT","PLOT_NAME","LEGEND_NAME_MC","LEGEND_NAME_DATA","NPUMC_FILE","OBS","MASSREGION","LUMIREGION",PUREWEIGHT,IS_LOG,SIGNIFICANCE_PLOT)'
+
+Options for "OBS":
+"sph": Spherocity
+"thrust": Thrust
+"ndisplace": number of displaced tracks (IP>0.02cm)
+"ntrk": number of tracks
+"masspertrk": C.O.M. mass of tracks/number of tracks
+
+Options for "MASS_REGION":
+"verylow": C.O.M mass of tracks 20-40 GeV
+"low": C.O.M mass of tracks 40-80 GeV
+"medium": C.O.M mass of tracks 80-200 GeV
+"high": C.O.M mass of tracks 200-300 GeV
+"veryhigh": C.O.M mass of tracks 300-500 GeV
+"inclu": inclusive C.O.M mass of tracks
+
+Options for "LUMIREGION":
+"inclu": inclusive instantaneous luminosity for data and number of nPuVtxTrue_ for MC
+"XX-YY": a range of nPuVtxTrue_ (for MC) and Instan_Lumi_per_bunch_mean*69200 (for Run 2 2018 data with lumi 69.2 \mu b ^-1), where XX and YY are 2-digit integer numbers (put a space in the tens if the number<10).
+
+PUREWEIGHT is a bool value to decide whether to apply the reweighting. IS_LOG is a bool value to decide whether to plot in log scale. SIGNIFICANCE_PLOT is a bool value to decide whether to plot the significance of the different in the lower pad. If SIGNIFICANCE_PLOT=false, it will plot the ratio DATA/MC in the lower pad.
+
+An example:
+root -b -l plot_obs_data_MC.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root", "/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/run316187/flatTuple_run316187_v4.root","MCDYWeight_run316187_collision.root","plots/ZeroBias_DYMC_ratio_WColl","DY1JetsToLLPileup","ZeroBias","nPU_DY.root","ndisplace","veryhigh",true,true,false)'
+
+
+
