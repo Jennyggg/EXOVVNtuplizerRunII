@@ -8,25 +8,72 @@ root -l add_PUWeight.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/
 
 
 To reweight the MC to data on instantaneous luminosity on the collision level, first calculate the number of collisions passing the filters:
+
+1.
 root -l correct_nPuVtxTrue.cpp'("MCFILE","NPUMC_FILE")'
 (This is to correct a bug in nPuVtxTrue production in MINIAOD processing. It will be fixed in the next version.)
 
-root -l add_NVtx_cut.cpp'("MCFILE","NVTX_MC")'
-root -l add_NVtx_cut.cpp'("DATAFILE","NVTX_DATA")'
+root -l add_NVtx_cut.cpp'("MCFILE","NVTX_MC",true,true)'
+(if you want to choose pileup collisions >2cm away from the genvertex)
+root -l add_NVtx_cut.cpp'("MCFILE","NVTX_MC",true,false)'
+(if you want to choose the collision closest to the genvertex)
+root -l add_NVtx_cut.cpp'("MCFILE","NVTX_MC",false,false)'
+(if not selection on the distance to the genvertex)
 
+2.
+root -l add_NVtx_cut.cpp'("DATAFILE","NVTX_DATA",false,false)'
+
+3.
 root -l add_PUWeight_VtxCut.cpp'("MC_FILE","DATA_FILE", "NVTX_MC", "NVTX_DATA","OUTPUT_PUWEIGHT")
 
 NVTX_MC, NVTX_DATA are the names of root files storing the number of collisions after selections.
 
 An example:
-root -l correct_nPuVtxTrue.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root","nPU_DY.root")'
+1.
+1.1
+for DYMC:
 
-root -l add_NVtx_cut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root","DYMC_NVtx_cut.root")'
+#v1 root -l correct_nPuVtxTrue.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root","nPU_DY.root")'
 
-root -l add_NVtx_cut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/run316187/flatTuple_run316187_v4.root","ZeroBias_NVtx_cut.root")'
 
-root -l add_PUWeight_VtxCut.cpp'(""/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root", "/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/run316187/flatTuple_run316187_v4.root","DYMC_NVtx_cut.root","ZeroBias_NVtx_cut.root","MCDYWeight_run316187_collision.root")'
+root -l correct_nPuVtxTrue.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2v3/210611_202949/0000/flatTuple_compare.root","nPU_DY_v2.root")'
 
+
+#v1 root -l add_NVtx_cut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root","DYMC_NVtx_cut.root",true,true)'
+
+
+root -l add_NVtx_cut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2v3/210611_202949/0000/flatTuple_compare.root","DYMC_NVtx_cut_v2.root",true, true)'
+
+1.2
+for MinBiasMC:
+root -l correct_nPuVtxTrue.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/CRAB/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210611_200905/0000/flatTuple.root","nPU_MinBias_v2.root")'
+
+root -l add_NVtx_cut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/CRAB/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210611_200905/0000/flatTuple.root","MinBiasMC_NVtx_cut_v2_allPV.root",false, false)'  #if include all the cuts
+
+root -l add_NVtx_cut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/CRAB/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210611_200905/0000/flatTuple.root","MinBiasMC_NVtx_cut_v2_1PV.root",true, false)' # to count in only the collision closest to the genvertex
+
+2.
+for data:
+
+#v1 root -l add_NVtx_cut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/run316187/flatTuple_run316187_v4.root","ZeroBias_NVtx_cut.root",false, false)'
+
+root -l add_NVtx_cut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/CRAB/ZeroBias/ZeroBiasrun316187_v2/ZeroBias/ZeroBias_Run2018A-17Sep2018-v1/210611_210346/0000/flatTuple.root","ZeroBias_NVtx_cut_v2.root",false,false)'
+
+3.
+3.1
+for DYMC:
+#v1 root -l add_PUWeight_VtxCut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root", "/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/run316187/flatTuple_run316187_v4.root","DYMC_NVtx_cut.root","ZeroBias_NVtx_cut.root","MCDYWeight_run316187_collision.root")'
+
+root -l add_PUWeight_VtxCut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2v3/210611_202949/0000/flatTuple_compare.root", "/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/CRAB/ZeroBias/ZeroBiasrun316187_v2/ZeroBias/ZeroBias_Run2018A-17Sep2018-v1/210611_210346/0000/flatTuple.root","DYMC_NVtx_cut_v2.root","ZeroBias_NVtx_cut_v2.root","MCDYWeight_run316187_collision_v2.root")'
+
+3.2 for MinBias:
+
+root -l add_PUWeight_VtxCut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/CRAB/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210611_200905/0000/flatTuple.root","/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/CRAB/ZeroBias/ZeroBiasrun316187_v2/ZeroBias/ZeroBias_Run2018A-17Sep2018-v1/210611_210346/0000/flatTuple.root","MinBiasMC_NVtx_cut_v2_allPV.root","ZeroBias_NVtx_cut_v2.root","MCMinBiasWeight_run316187_collision_v2.root")'
+
+root -l add_PUWeight_VtxCut.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/CRAB/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210611_200905/0000/flatTuple.root","/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/CRAB/ZeroBias/ZeroBiasrun316187_v2/ZeroBias/ZeroBias_Run2018A-17Sep2018-v1/210611_210346/0000/flatTuple.root","MinBiasMC_NVtx_cut_v2_1PV.root","ZeroBias_NVtx_cut_v2.root","MCMinBiasWeight_run316187_collision_v2_1PV.root")'
+
+
+4.
 To do the data-MC comparison after reweighting, run
 root -l -b -q plot_obs_data_MC_lumislice.cpp'("MCFILE","DATAFILE","OUTPUT_PUWEIGHT","PLOT_NAME","LEGEND_NAME_MC","LEGEND_NAME_DATA","NPUMC_FILE","OBS","MASSREGION","LUMIREGION",PUREWEIGHT,IS_LOG,SIGNIFICANCE_PLOT)'
 
@@ -55,4 +102,18 @@ An example:
 root -b -l plot_obs_data_MC.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210520_001515/0000/flatTuple_compare.root", "/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/run316187/flatTuple_run316187_v4.root","MCDYWeight_run316187_collision.root","plots/ZeroBias_DYMC_ratio_WColl","DY1JetsToLLPileup","ZeroBias","nPU_DY.root","ndisplace","veryhigh",true,true,false)'
 
 
+5.
+To check the correlation between two observables, and plot the 2D histogram.
+root -l cal_hist2_MC.cpp'("MCFILE","WEIGHTMC","NVTX_MC","OUTPUT_HIST2","NPUMC_FILE","OBS1","OBS2","MASSREGION","NPUCUT")'
 
+Example:
+5.1
+DYMC
+root -b -l cal_hist2_MC.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/DY1JetsToLL/CRAB/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2v3/210611_202949/0000/flatTuple_compare.root","MCDYWeight_run316187_collision_v2.root", "DYMC_NVtx_cut_v2.root","results_MC_ptcut.root","nPU_DY_v2.root", "ntrk_pt1", "pt_pt1", "inclu", "inclu")' 
+
+5.2
+MinBiasMC
+
+root -b -l cal_hist2_MC.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/CRAB/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210611_200905/0000/flatTuple.root","MCMinBiasWeight_run316187_collision_v2.root","MinBiasMC_NVtx_cut_v2_allPV.root","results_MinBiasMC_ptcut.root","nPU_MinBias_v2.root","ntrk_pt1", "pt_pt1", "inclu", "inclu")'
+
+root -b -l cal_hist2_MC.cpp'("/pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBiasMC/CRAB/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v2/210611_200905/0000/flatTuple.root","MCMinBiasWeight_run316187_collision_v2_1PV.root","MinBiasMC_NVtx_cut_v2_1PV.root","results_MinBiasMC_ptcut_1PV.root","nPU_MinBias_v2.root","ntrk_pt1", "pt_pt1", "inclu", "inclu")'

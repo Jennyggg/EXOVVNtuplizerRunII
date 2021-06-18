@@ -1,10 +1,10 @@
 #include "helper.cpp"
 void plot_obs_data_MC_lumislice(string MCname, string dataname, string PUWeight_tree, string plotname, string MClegend, string datalegend, string MCPU="",string Obs="sph", string massregion = "inclu",string nPU_cut = "inclu", bool PUreweight = true, bool isLog = false, bool significanceplot = true){
-  if(Obs!="pu"&&Obs!="sph"&&Obs!="thrust"&&Obs!="ndisplace"&&Obs!="ntrk"&&Obs!="pt"&&Obs!="masspertrk"){
+  if(Obs!="mass"&&Obs!="pu"&&Obs!="sph"&&Obs!="thrust"&&Obs!="ndisplace"&&Obs!="ntrk"&&Obs!="ntrk_pt05"&&Obs!="ntrk_pt1"&&Obs!="pt"&&Obs!="pt_pt05"&&Obs!="pt_pt1"&&Obs!="masspertrk"){
     cout<<"Invalid Observable"<<endl;
     return;
   }
-  if(massregion!="inclu"&&massregion!="verylow"&&massregion!="low"&&massregion!="medium"&&massregion!="high"&&massregion!="veryhigh"){
+  if(massregion!="incluCR"&&massregion!="inclu"&&massregion!="verylow"&&massregion!="low"&&massregion!="medium"&&massregion!="high"&&massregion!="veryhigh"){
     cout<<"Invalide mass region"<<endl;
     return;
   }
@@ -86,7 +86,7 @@ void plot_obs_data_MC_lumislice(string MCname, string dataname, string PUWeight_
   cout<<"hist1 SumWeight "<<hist1->GetSumOfWeights()<<endl;
   cout<<"hist1 Entries "<<hist1->GetEntries()<<endl;
 
-  hist1->Scale(1./hist1->GetSumOfWeights());
+//  hist1->Scale(1./hist1->GetSumOfWeights());
   hist1->SetFillColor(kOrange);
   if(isLog)
     hs_1->SetMinimum(0.1/hist1->GetEntries());
@@ -108,7 +108,7 @@ void plot_obs_data_MC_lumislice(string MCname, string dataname, string PUWeight_
   }
   cout<<"hist2 SumWeight "<<hist2->GetSumOfWeights()<<endl;
   cout<<"hist2 Entries "<<hist2->GetEntries()<<endl;
-  hist2->Scale(1./hist2->GetSumOfWeights());
+//  hist2->Scale(1./hist2->GetSumOfWeights());
   hist2->SetLineColor(kRed);
   hist2->SetMarkerStyle(21);
   hist2->SetMarkerColor(kBlue);
@@ -190,6 +190,8 @@ void plot_obs_data_MC_lumislice(string MCname, string dataname, string PUWeight_
       hist_diff->SetBinError(i,diff_e);
     }
   }
+  hist_diff->SetMaximum(3.);
+  hist_diff->SetMinimum(0.);
   hist_diff->Draw("p");
   if(significanceplot){
     TLine *line = new TLine(min,0,max,0);
