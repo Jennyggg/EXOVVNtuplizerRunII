@@ -66,7 +66,7 @@ private:
   edm::EDGetTokenT<reco::VertexCollection>                  vtxToken_           ;
   edm::EDGetTokenT<double>                                  rhoToken_           ;
   edm::EDGetTokenT<pat::PackedCandidateCollection>          packedpfcandidatesToken_;
-  edm::EDGetTokenT<std::vector<reco::VertexCompositePtrCandidate>>          svToken_;
+  edm::EDGetTokenT<std::vector<reco::VertexCompositePtrCandidate>>       svToken_;
 
   edm::EDGetTokenT< std::vector<PileupSummaryInfo> >        puinfoToken_        ;
   edm::EDGetTokenT< GenEventInfoProduct >                   geneventToken_      ;

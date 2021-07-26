@@ -19,6 +19,7 @@ public:
                        edm::EDGetTokenT<reco::GenParticleCollection> genptoken,
                        edm::EDGetTokenT<pat::PackedGenParticleCollection> packedgenptoken,
                        edm::EDGetTokenT<pat::JetCollection>     jettoken,
+                       edm::EDGetTokenT<std::vector<reco::VertexCompositePtrCandidate> > svToken,
                        std::map< std::string, bool >& runFlags,
                        std::map< std::string, double >& runValues,
                        std::map< std::string, std::string >& runStrings,
@@ -38,7 +39,8 @@ private:
    edm::EDGetTokenT<reco::GenParticleCollection> genParticlesToken_;
    edm::EDGetTokenT<pat::PackedGenParticleCollection> packedgenParticlesToken_;
    edm::EDGetTokenT<pat::JetCollection>     jetInputToken_    ;
-   edm::Handle<pat::MuonCollection>                            muons_                  ;
+   edm::EDGetTokenT<std::vector<reco::VertexCompositePtrCandidate> > svToken_ ;
+   edm::Handle<pat::MuonCollection>                            muons_;
    edm::Handle< reco::VertexCollection >  vertices_;
    edm::Handle< reco::BeamSpot >  beamspot_;
    edm::Handle< std::vector<pat::PackedCandidate> > packedpfcandidates_   ;
@@ -47,11 +49,16 @@ private:
    edm::Handle< reco::GenParticleCollection >  genParticles_;
    edm::Handle< std::vector<pat::PackedGenParticle> >  packedgenParticles_;
    edm::Handle<pat::JetCollection>              jets_           ;
+   edm::Handle<std::vector<reco::VertexCompositePtrCandidate>> svs_;
    edm::ESHandle<TransientTrackBuilder> builder;
    const MagneticField                 *fMagneticField;
 
 
    bool runOnMC_;
+   bool runOnMCPU_;
+   bool runOnHerwigInstanton_;
+   bool runOnSherpaInstanton_;
+   bool runOnMCTest_;
    bool verbose_;
    bool doTrack_;
 

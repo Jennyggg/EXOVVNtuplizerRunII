@@ -4,6 +4,8 @@
 #include "TVector3.h"
 #include "../interface/helper.h"
 #include <cstring>
+#include <cmath>
+#include <algorithm>
 void calcS_T_B(std::vector<pat::PackedCandidate>& momenta, Float_t& Spherocity,Float_t& Thrust,Float_t& Broaden, TVector3& taxis, int nSeed){
   if (momenta.size()==0) {Spherocity=-1;Thrust=-1;Broaden=-1;return;}
   vector<TLorentzVector> p;
@@ -89,8 +91,6 @@ unsigned int Search_LumiBlock(Json::Value& Run, int Block, string RunNumber){
   unsigned int index_high = Run[RunNumber].size()-1;
   unsigned int index_mid = index_high/2;
   while(Run[RunNumber][index_mid][0u] != Block && index_mid != index_low && index_mid != index_high){
-    //cout<<"index_low = "<<index_low<<", index_mid = "<<index_mid<<", index_high = "<<index_high<<endl;
- //   cout<<"block mid = "<<Run[RunNumber][index_mid][0u]<<endl;
     if (Run[RunNumber][index_mid][0u] < Block) index_low=index_mid;
     else index_high=index_mid;
     index_mid = (index_low+index_high)/2;
@@ -99,21 +99,62 @@ unsigned int Search_LumiBlock(Json::Value& Run, int Block, string RunNumber){
   else {cout<<"lumi block unfound"<<endl;return 0;}
 }
 
+void FindDaughter(const reco::Candidate* particle, vector<const reco::Candidate*> &daughter){
+  if(particle->status()==1&&particle->numberOfDaughters()==0){
+//    cout<<"final state found"<<endl;
+    daughter.push_back(particle);
+    return;
+  }
+  else if(particle->numberOfDaughters()==0){
+//    cout<<"0 daughters, status "<<particle->status()<<endl;
+    return;
+  }
+  else{
+//    cout<<particle->numberOfDaughters()<<" daughters"<<endl;
+//    cout<<"first daughter "<<particle->daughter(0)->pdgId()<<endl;
+    for(unsigned int d=0; d<particle->numberOfDaughters(); d++){
+//      cout<<"daughter "<<d<<endl;
+      FindDaughter(particle->daughter(d),daughter);
+    }
+  }
+}
+
+int cal_IPsign(const reco::Candidate* particle,double pv_x, double pv_y, double pv_z){
+  if(particle->px()*(particle->vx()-pv_x)+particle->py()*(particle->vy()-pv_y)+particle->pz()*(particle->vz()-pv_z))
+    return 1;
+  else
+    return -1;
+}
+
+float cal_dxy(const reco::Candidate* particle, double pv_x, double pv_y, double pv_z){
+  return cal_IPsign(particle,pv_x,pv_y,pv_z)*fabs((particle->vx()-pv_x)*particle->py()-(particle->vy()-pv_y)*particle->px())/particle->pt();
+}
+
+float cal_dz(const reco::Candidate* particle, double pv_x, double pv_y, double pv_z){
+  return cal_IPsign(particle,pv_x,pv_y,pv_z)*fabs(particle->vz()-pv_z-particle->pz()*(particle->px()*(particle->vx()-pv_x)+particle->py()*(particle->vy()-pv_y))/(particle->pt()*particle->pt()));
+}
+
+float cal_IP3D(const reco::Candidate* particle, double pv_x, double pv_y, double pv_z){
+  return cal_IPsign(particle,pv_x,pv_y,pv_z)*sqrt((pow((particle->vx()-pv_x)*particle->py()-(particle->vy()-pv_y)*particle->px(),2)+pow((particle->vx()-pv_x)*particle->pz()-(particle->vz()-pv_z)*particle->px(),2)+pow((particle->vy()-pv_y)*particle->pz()-(particle->vz()-pv_z)*particle->py(),2))/(pow(particle->pt(),2)+pow(particle->pz(),2)));
+
+}
+
 //===================================================================================================================
 InstantonNtuplizer::InstantonNtuplizer(  edm::EDGetTokenT<pat::MuonCollection>    muonToken   ,
-                                         edm::EDGetTokenT<reco::VertexCollection> verticeToken,
-                                         edm::EDGetTokenT<reco::BeamSpot>             beamToken,
-                                         edm::EDGetTokenT<pat::PackedCandidateCollection> packedpfcandidatesToken,
-                                         edm::EDGetTokenT<edm::TriggerResults> triggertoken,
-                                         edm::EDGetTokenT<pat::TriggerObjectStandAloneCollection> triggerobject,
-                                         edm::EDGetTokenT<reco::GenParticleCollection> genptoken,
-                                         edm::EDGetTokenT<pat::PackedGenParticleCollection> packedgenptoken,
-                                         edm::EDGetTokenT<pat::JetCollection>     jettoken,
-                                         std::map< std::string, bool >& runFlags,
-                                         std::map< std::string, double >& runValues,
-                                         std::map< std::string, std::string >& runStrings,
-                                         Json::Value& instan_lumi,
-                                         NtupleBranches* nBranches )
+                       edm::EDGetTokenT<reco::VertexCollection> verticeToken,
+                       edm::EDGetTokenT<reco::BeamSpot>             beamToken ,
+                       edm::EDGetTokenT<pat::PackedCandidateCollection> packedpfcandidatesToken,
+                       edm::EDGetTokenT<edm::TriggerResults> triggertoken,
+                       edm::EDGetTokenT<pat::TriggerObjectStandAloneCollection> triggerobject,
+                       edm::EDGetTokenT<reco::GenParticleCollection> genptoken,
+                       edm::EDGetTokenT<pat::PackedGenParticleCollection> packedgenptoken,
+                       edm::EDGetTokenT<pat::JetCollection>     jettoken,
+                       edm::EDGetTokenT<std::vector<reco::VertexCompositePtrCandidate> > svToken,
+                       std::map< std::string, bool >& runFlags,
+                       std::map< std::string, double >& runValues,
+                       std::map< std::string, std::string >& runStrings,
+                       Json::Value& instan_lumi,
+                       NtupleBranches* nBranches )
 : CandidateNtuplizer ( nBranches )
   , muonToken_          ( muonToken )
   , verticeToken_          ( verticeToken )
@@ -124,7 +165,11 @@ InstantonNtuplizer::InstantonNtuplizer(  edm::EDGetTokenT<pat::MuonCollection>  
   , genParticlesToken_( genptoken )
   , packedgenParticlesToken_( packedgenptoken )
   , jetInputToken_     ( jettoken     )
+  , svToken_   (svToken)
   , runOnMC_   (runFlags["runOnMC"])
+  , runOnMCPU_ (runFlags["runOnMCPU"])
+  , runOnHerwigInstanton_ (runFlags["runOnHerwigInstanton"])
+  , runOnSherpaInstanton_ (runFlags["runOnSherpaInstanton"])
   , verbose_   (runFlags["verbose"])
   , doTrack_   (runFlags["doTrack"])
   , instan_lumi_ (instan_lumi)
@@ -139,6 +184,7 @@ InstantonNtuplizer::~InstantonNtuplizer(void){
 using namespace fastjet;
 bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::EventSetup& iSetup ){
   if(verbose_) std::cout << "[InstantonNtuplizer] ---------------- event, run, lumi = " << event.id().event() << " " << event.id().run() << " " << event.id().luminosityBlock() << "----------------" << std::endl;
+
   if(!runOnMC_){
     unsigned int lumi_index = Search_LumiBlock(instan_lumi_, (unsigned int)event.id().luminosityBlock(),std::to_string(event.id().run()));
     std::stringstream mean_ss;
@@ -161,9 +207,136 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   int nSeed_ThrustCalculation=3;
 
 //Get the Tokens from MINIAOD
+  double PV_X = 0;
+  double PV_Y = 0;
+  double PV_Z = 0;
+//  std::cout<<"runOnMC_"<<(int)runOnMC_<<", runOnMCPU_"<<(int)runOnMCPU_<<std::endl;
+
   if(runOnMC_){
     event.getByToken(genParticlesToken_ , genParticles_);
     event.getByToken(packedgenParticlesToken_ , packedgenParticles_);//packed particles all have status 1 (final state)
+
+//To find the instanton positions
+//For Herwig events, it searches for the gluons with number of daughters > 7, so the selected gluons go through instanton processes
+    if(runOnHerwigInstanton_){
+      float ins_px=0, ins_py=0, ins_pz=0, ins_E=0;
+      for( unsigned p=0; p<genParticles_->size(); ++p ){
+        if((*genParticles_)[p].numberOfDaughters()>7&&(*genParticles_)[p].pdgId()==21){
+          ins_px+=(*genParticles_)[p].px();
+          ins_py+=(*genParticles_)[p].py();
+          ins_pz+=(*genParticles_)[p].pz();
+          ins_E+=(*genParticles_)[p].energy();
+          PV_X=(*genParticles_)[p].vx();
+          PV_Y=(*genParticles_)[p].vy();
+          PV_Z=(*genParticles_)[p].vz();
+        }
+        nBranches_->Instanton_VX=PV_X;
+        nBranches_->Instanton_VY=PV_Y;
+        nBranches_->Instanton_VZ=PV_Z;
+        nBranches_->Instanton_PX=ins_px;
+        nBranches_->Instanton_PY=ins_py;
+        nBranches_->Instanton_PZ=ins_pz;
+        nBranches_->Instanton_E=ins_E;
+        nBranches_->Instanton_MASS=sqrt(ins_E*ins_E-ins_px*ins_px-ins_py*ins_py-ins_pz*ins_pz);
+        nBranches_->Instanton_RAPIDITY=0.5*log((ins_E+sqrt(ins_px*ins_px+ins_py*ins_py+ins_pz*ins_pz))/(ins_E-sqrt(ins_px*ins_px+ins_py*ins_py+ins_pz*ins_pz)));
+      }
+
+    }
+//Sherpa simulates the instantons in a different way: the instanton is considered as a particle (pid=999) instead of a process. So we search for the generated instantons by its pid and store its position.
+    else if(runOnSherpaInstanton_){
+      for( unsigned p=0; p<genParticles_->size(); ++p ){
+        if((*genParticles_)[p].pdgId()==999){
+          nBranches_->Instanton_VX=(*genParticles_)[p].vx();
+          nBranches_->Instanton_VY=(*genParticles_)[p].vy();
+          nBranches_->Instanton_VZ=(*genParticles_)[p].vz();
+          nBranches_->Instanton_PX=(*genParticles_)[p].px();
+          nBranches_->Instanton_PY=(*genParticles_)[p].py();
+          nBranches_->Instanton_PZ=(*genParticles_)[p].pz();
+          nBranches_->Instanton_E=(*genParticles_)[p].energy();
+          nBranches_->Instanton_MASS=(*genParticles_)[p].mass();
+          nBranches_->Instanton_RAPIDITY=(*genParticles_)[p].rapidity();
+          break;
+        }
+      }
+    }
+    else if(runOnMCTest_){
+      for( unsigned p=0; p<genParticles_->size(); ++p ){
+        if((*genParticles_)[p].numberOfMothers()==2 && (*genParticles_)[p].mother(0)->pdgId()==2212 && (*genParticles_)[p].mother(1)->pdgId()==2212){
+//          cout<<"pdgId="<<(*genParticles_)[p].pdgId()<<", vx="<<(*genParticles_)[p].vx()<<", vy="<<(*genParticles_)[p].vy()<<", vz="<<(*genParticles_)[p].vz()<<endl;
+          nBranches_->Instanton_VX=(*genParticles_)[p].vx();
+          nBranches_->Instanton_VY=(*genParticles_)[p].vy();
+          nBranches_->Instanton_VZ=(*genParticles_)[p].vz();
+          break;
+        }
+      }
+    }
+
+
+
+    if(runOnMCPU_){
+      bool PVfound=false;
+      for( unsigned p=0; p<genParticles_->size(); ++p ){
+        if((*genParticles_)[p].numberOfMothers()==1&&(*genParticles_)[p].mother(0)->pdgId()==2212&&((*genParticles_)[p].pdgId()==4||(*genParticles_)[p].pdgId()==5)) nBranches_->Instanton_N_genPromptHeavyQ++;
+        if(PVfound==false&&(*genParticles_)[p].numberOfMothers()==1&&(*genParticles_)[p].mother(0)->pdgId()==2212){
+          PV_X = (*genParticles_)[p].vx();
+          PV_Y = (*genParticles_)[p].vy();
+          PV_Z = (*genParticles_)[p].vz();
+          PVfound=true;
+        } 
+      } 
+      long unsigned int len_FS=0;
+      vector<const reco::Candidate*> finalstates;
+//      cout<<"begin this event"<<endl;
+      for( unsigned p=0; p<genParticles_->size(); ++p ){
+//        if(((*genParticles_)[p].numberOfMothers()>=1&&(*genParticles_)[p].mother(0)->pdgId()==2212)||((*genParticles_)[p].numberOfMothers()>=2&&(*genParticles_)[p].mother(1)->pdgId()==2212)){cout<<"pdgId="<<(*genParticles_)[p].pdgId()<<", vx="<<(*genParticles_)[p].vx()<<", vy="<<(*genParticles_)[p].vy()<<", vz="<<(*genParticles_)[p].vz()<<endl;}
+//        if((*genParticles_)[p].status()==4){cout<<"pdgId="<<(*genParticles_)[p].pdgId()<<", vx="<<(*genParticles_)[p].vx()<<", vy="<<(*genParticles_)[p].vy()<<", vz="<<(*genParticles_)[p].vz()<<endl;}
+//        if((*genParticles_)[p].pdgId()==999){cout<<"Instanton vx="<<(*genParticles_)[p].vx()<<", vy="<<(*genParticles_)[p].vy()<<", vz="<<(*genParticles_)[p].vz()<<endl;}
+//        if((((*genParticles_)[p].pdgId()<=5&&(*genParticles_)[p].pdgId()>=-5)||(*genParticles_)[p].pdgId()==21)&&(*genParticles_)[p].numberOfMothers()==2&&(*genParticles_)[p].mother(0)->pdgId()==21&&(*genParticles_)[p].mother(0)->numberOfDaughters()>7){cout<<"pdgId="<<(*genParticles_)[p].pdgId()<<", vx="<<(*genParticles_)[p].vx()<<", vy="<<(*genParticles_)[p].vy()<<", vz="<<(*genParticles_)[p].vz()<<", mother1 pdgId="<<(*genParticles_)[p].mother(0)->pdgId()<<" #child="<<(*genParticles_)[p].mother(0)->numberOfDaughters()<<", mother2 pdgId="<<(*genParticles_)[p].mother(1)->pdgId()<<" #child="<<(*genParticles_)[p].mother(1)->numberOfDaughters()<<endl;}
+//        if((*genParticles_)[p].pdgId()==21&&(*genParticles_)[p].numberOfDaughters()>7){cout<<"vx="<<(*genParticles_)[p].vx()<<", vy="<<(*genParticles_)[p].vy()<<", vz="<<(*genParticles_)[p].vz()<<", #child="<<(*genParticles_)[p].numberOfDaughters()<<", #mothers="<<(*genParticles_)[p].numberOfMothers()<<endl;}
+        if((*genParticles_)[p].numberOfMothers()==1&&(*genParticles_)[p].mother(0)->pdgId()==2212){
+//          cout<<"pdgId="<<(*genParticles_)[p].pdgId()<<endl;
+          FindDaughter(&(*genParticles_)[p],finalstates);
+          if((*genParticles_)[p].pdgId()==4||(*genParticles_)[p].pdgId()==5){
+            for (long unsigned int iFS=len_FS; iFS<finalstates.size(); iFS++){
+              nBranches_->genParticle_isfromheavyq.push_back(1);
+              nBranches_->genParticle_dxy.push_back(cal_dxy(finalstates[iFS],PV_X,PV_Y,PV_Z));
+              nBranches_->genParticle_dz.push_back(cal_dz(finalstates[iFS],PV_X,PV_Y,PV_Z));
+              nBranches_->genParticle_IP3D.push_back(cal_IP3D(finalstates[iFS],PV_X,PV_Y,PV_Z));
+              nBranches_->Instanton_N_gen_FSParticle++;
+              nBranches_->genParticle_dvxy.push_back((float)sqrt(pow((*genParticles_)[p].vx()-PV_X,2)+pow((*genParticles_)[p].vy()-PV_Y,2)));
+              nBranches_->genParticle_dvz.push_back((float)fabs((*genParticles_)[p].vz()-PV_Z));
+              if((float)sqrt(pow((*genParticles_)[p].vx()-PV_X,2)+pow((*genParticles_)[p].vy()-PV_Y,2))>0.002)
+                nBranches_->Instanton_N_gen_ChargedFS_dvxyp002++;
+              if(finalstates[iFS]->charge()!=0) nBranches_->Instanton_N_gen_ChargedFSParticle++;
+              if(cal_dxy(finalstates[iFS],PV_X,PV_Y,PV_Z)>0.02) {
+                nBranches_->Instanton_N_gen_Displaced++;
+                if(finalstates[iFS]->charge()!=0) nBranches_->Instanton_N_gen_ChargedDisplaced++;
+              }
+            }
+          }
+          else{
+            for (long unsigned int iFS=len_FS; iFS<finalstates.size(); iFS++){
+              nBranches_->genParticle_isfromheavyq.push_back(0);
+              nBranches_->genParticle_dxy.push_back(cal_dxy(finalstates[iFS],PV_X,PV_Y,PV_Z));
+              nBranches_->genParticle_dz.push_back(cal_dz(finalstates[iFS],PV_X,PV_Y,PV_Z));
+              nBranches_->genParticle_IP3D.push_back(cal_IP3D(finalstates[iFS],PV_X,PV_Y,PV_Z));
+              nBranches_->Instanton_N_gen_FSParticle++;
+              nBranches_->genParticle_dvxy.push_back((float)sqrt(pow((*genParticles_)[p].vx()-PV_X,2)+pow((*genParticles_)[p].vy()-PV_Y,2)));
+              nBranches_->genParticle_dvz.push_back((float)fabs((*genParticles_)[p].vz()-PV_Z));
+              if((float)sqrt(pow((*genParticles_)[p].vx()-PV_X,2)+pow((*genParticles_)[p].vy()-PV_Y,2))>0.002)
+                nBranches_->Instanton_N_gen_ChargedFS_dvxyp002++;
+              if(finalstates[iFS]->charge()!=0) nBranches_->Instanton_N_gen_ChargedFSParticle++;
+              if(cal_dxy(finalstates[iFS],PV_X,PV_Y,PV_Z)>0.02) {
+                nBranches_->Instanton_N_gen_Displaced++;
+                if(finalstates[iFS]->charge()!=0) nBranches_->Instanton_N_gen_ChargedDisplaced++;
+              }
+            }
+          }
+          len_FS=finalstates.size();
+        }
+      }
+    }   
+
   }
 
   event.getByToken(verticeToken_   , vertices_     );
@@ -176,8 +349,13 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
 
   event.getByToken( packedpfcandidatesToken_               , packedpfcandidates_      );
   event.getByToken(jetInputToken_      , jets_    );
+  event.getByToken(svToken_, svs_);
   std::vector<pfcand_struct> pfcands;
   iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder", builder);
+
+//cout<<"N sv "<<svs_->size()<<endl;
+//for (size_t i=0; i<svs_->size(); i++) cout<<i<<", N mother "<<(*svs_)[i].numberOfMothers()<<endl;
+  nBranches_->Instanton_N_SV_default=(int)svs_->size();
 //  std::vector<int> alltracks_idx;
 // Count number of tracks and displaced tracks (transverse impact paramter > 0.02 cm)
   int N_Trk_total=0;
@@ -187,17 +365,19 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   int PV_N_good_hasgoodPFMuon = 0;
   int N_Jet_total=0;
   int N_Jet_TrkCut_total=0;
+  int N_Jet_TrkCut_pt05_total=0;
+  int N_Jet_TrkCut_pt1_total=0;
   std::vector<int> N_Trk(vertices_->size(),0);
   std::vector<int> N_Trk_highPurity(vertices_->size(),0);
   std::vector<int> N_Trk_highPurity_pt05(vertices_->size(),0);
   std::vector<int> N_Trk_highPurity_pt08(vertices_->size(),0);
   std::vector<int> N_Trk_highPurity_pt1(vertices_->size(),0);
-  std::vector<int> N_Trk_PVAssociationQuality0(vertices_->size(),0);
-  std::vector<int> N_Trk_PVAssociationQuality1(vertices_->size(),0);
-  std::vector<int> N_Trk_PVAssociationQuality4(vertices_->size(),0);
-  std::vector<int> N_Trk_PVAssociationQuality5(vertices_->size(),0);
-  std::vector<int> N_Trk_PVAssociationQuality6(vertices_->size(),0);
-  std::vector<int> N_Trk_PVAssociationQuality7(vertices_->size(),0);
+//  std::vector<int> N_Trk_PVAssociationQuality0(vertices_->size(),0);
+//  std::vector<int> N_Trk_PVAssociationQuality1(vertices_->size(),0);
+//  std::vector<int> N_Trk_PVAssociationQuality4(vertices_->size(),0);
+//  std::vector<int> N_Trk_PVAssociationQuality5(vertices_->size(),0);
+//  std::vector<int> N_Trk_PVAssociationQuality6(vertices_->size(),0);
+//  std::vector<int> N_Trk_PVAssociationQuality7(vertices_->size(),0);
   std::vector<int> N_Trk_PVAssociationQualityLeq4_highPurity(vertices_->size(),0);
   std::vector<int> N_Trk_PVAssociationQualityLeq4_highPurity_pt05(vertices_->size(),0);
   std::vector<int> N_Trk_PVAssociationQualityLeq4_highPurity_pt08(vertices_->size(),0);
@@ -207,46 +387,84 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   std::vector<int> N_Trk_Displaced_highPurity_pt05(vertices_->size(),0);
   std::vector<int> N_Trk_Displaced_highPurity_pt08(vertices_->size(),0);
   std::vector<int> N_Trk_Displaced_highPurity_pt1(vertices_->size(),0);
-  std::vector<int> N_Trk_Displaced_PVAssociationQuality0(vertices_->size(),0);
-  std::vector<int> N_Trk_Displaced_PVAssociationQuality1(vertices_->size(),0);
-  std::vector<int> N_Trk_Displaced_PVAssociationQuality4(vertices_->size(),0);
-  std::vector<int> N_Trk_Displaced_PVAssociationQuality5(vertices_->size(),0);
-  std::vector<int> N_Trk_Displaced_PVAssociationQuality6(vertices_->size(),0);
-  std::vector<int> N_Trk_Displaced_PVAssociationQuality7(vertices_->size(),0);
+//  std::vector<int> N_Trk_Displaced_PVAssociationQuality0(vertices_->size(),0);
+//  std::vector<int> N_Trk_Displaced_PVAssociationQuality1(vertices_->size(),0);
+//  std::vector<int> N_Trk_Displaced_PVAssociationQuality4(vertices_->size(),0);
+//  std::vector<int> N_Trk_Displaced_PVAssociationQuality5(vertices_->size(),0);
+//  std::vector<int> N_Trk_Displaced_PVAssociationQuality6(vertices_->size(),0);
+//  std::vector<int> N_Trk_Displaced_PVAssociationQuality7(vertices_->size(),0);
   std::vector<int> N_Trk_Displaced_PVAssociationQualityLeq4_highPurity(vertices_->size(),0);
   std::vector<int> N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt05(vertices_->size(),0);
   std::vector<int> N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt08(vertices_->size(),0);
   std::vector<int> N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt1(vertices_->size(),0);
+//  std::vector<int> N_Trk_sig2Displaced_highPurity(vertices_->size(),0);
+//  std::vector<int> N_Trk_sig3Displaced_highPurity(vertices_->size(),0);
+//  std::vector<int> N_Trk_sig5Displaced_highPurity(vertices_->size(),0);
+//  std::vector<int> N_Trk_sig2Displaced_PVAssociationQualityLeq4_highPurity(vertices_->size(),0);
+//  std::vector<int> N_Trk_sig3Displaced_PVAssociationQualityLeq4_highPurity(vertices_->size(),0);
+//  std::vector<int> N_Trk_sig5Displaced_PVAssociationQualityLeq4_highPurity(vertices_->size(),0);
+
+//  std::vector<int> N_Trk_fromPV2_highPurity(vertices_->size(),0);
+//  std::vector<int> N_Trk_Displaced_fromPV2_highPurity(vertices_->size(),0);
+//  std::vector<int> N_Trk_Displaced_fromPV2_highPurity_pt05(vertices_->size(),0);
+//  std::vector<int> N_Trk_Displaced_fromPV2_highPurity_pt08(vertices_->size(),0);
+//  std::vector<int> N_Trk_Displaced_fromPV2_highPurity_pt1(vertices_->size(),0);
+//  std::vector<int> N_Trk_goodDisplaced_fromPV2_highPurity_sig3(vertices_->size(),0);
+//  std::vector<int> N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt05(vertices_->size(),0);
+//  std::vector<int> N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt08(vertices_->size(),0);
+//  std::vector<int> N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt1(vertices_->size(),0);
+  std::vector<int> N_Trk_formSV_sig2(vertices_->size(),0);
+  std::vector<int> N_Trk_formSV_sig3(vertices_->size(),0);
+  std::vector<int> N_Trk_formSV_sig5(vertices_->size(),0);
+  std::vector<int> N_SV_sig2(vertices_->size(),0);
+  std::vector<int> N_SV_sig3(vertices_->size(),0);
+  std::vector<int> N_SV_sig5(vertices_->size(),0);
+  std::vector<int> N_Trk_DisplaceVp002(vertices_->size(),0);
+  std::vector<int> N_Trk_DisplaceVp002_SVsig2(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced_highPurity(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced_highPurity_pt05(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced_highPurity_pt08(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced_highPurity_pt1(vertices_->size(),0);
-  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality0(vertices_->size(),0);
-  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality1(vertices_->size(),0);
-  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality4(vertices_->size(),0);
-  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality5(vertices_->size(),0);
-  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality6(vertices_->size(),0);
-  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality7(vertices_->size(),0);
+//  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality0(vertices_->size(),0);
+//  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality1(vertices_->size(),0);
+//  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality4(vertices_->size(),0);
+//  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality5(vertices_->size(),0);
+//  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality6(vertices_->size(),0);
+//  std::vector<int> N_Trk_goodDisplaced_PVAssociationQuality7(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt05(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt08(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1(vertices_->size(),0);
   std::vector<float> Trk_masssum(vertices_->size(),0);
   std::vector<float> Trk_TrkCut_mass(vertices_->size(),0);
+  std::vector<float> Trk_TrkCut_pt05_mass(vertices_->size(),0);
+  std::vector<float> Trk_TrkCut_pt1_mass(vertices_->size(),0);
   std::vector<float> Trk_TrkCut_pt(vertices_->size(),0);
+  std::vector<float> Trk_TrkCut_pt05_pt(vertices_->size(),0);
+  std::vector<float> Trk_TrkCut_pt1_pt(vertices_->size(),0);
+  std::vector<float> Trk_TrkCut_ptmiss(vertices_->size(),0);
+  std::vector<float> Trk_TrkCut_pt05_ptmiss(vertices_->size(),0);
+  std::vector<float> Trk_TrkCut_pt1_ptmiss(vertices_->size(),0);
   std::vector<int> N_Jet(vertices_->size(),0);
   std::vector<int> N_Jet_TrkCut(vertices_->size(),0);
+  std::vector<int> N_Jet_TrkCut_pt05(vertices_->size(),0);
+  std::vector<int> N_Jet_TrkCut_pt1(vertices_->size(),0);
   std::vector<int> vtx_N_goodMuon(vertices_->size(),0);
   std::vector<int> vtx_N_goodPFMuon(vertices_->size(),0);
   std::vector<bool> vtx_isBPHtrigger_fromMuon(vertices_->size(),false); 
   std::vector<bool> vtx_isBPHtrigger_fromPFMuon(vertices_->size(),false);
   std::vector<float> vtx_goodMuonIP(vertices_->size(),999.);
   std::vector<float> vtx_goodPFMuon_PVDistance(vertices_->size(),999.);
+  std::vector<float> vtx_genvertex_PVDistance(vertices_->size(),999.);
   std::vector<std::vector<reco::TransientTrack>> alltracks(vertices_->size());
   std::vector<std::vector<pat::PackedCandidate>> alltracks_pf(vertices_->size());
   std::vector<std::vector<reco::TransientTrack>> alltracks_TrkCut(vertices_->size());
   std::vector<std::vector<pat::PackedCandidate>> alltracks_pf_TrkCut(vertices_->size());
+  std::vector<std::vector<reco::TransientTrack>> alltracks_TrkCut_pt05(vertices_->size());
+  std::vector<std::vector<pat::PackedCandidate>> alltracks_pf_TrkCut_pt05(vertices_->size());
+  std::vector<std::vector<reco::TransientTrack>> alltracks_TrkCut_pt1(vertices_->size());
+  std::vector<std::vector<pat::PackedCandidate>> alltracks_pf_TrkCut_pt1(vertices_->size());
   std::vector<std::vector<float>> Trk_px(vertices_->size());
   std::vector<std::vector<float>> Trk_py(vertices_->size());
   std::vector<std::vector<float>> Trk_pz(vertices_->size());
@@ -280,10 +498,14 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
       }
       bool isDisplaced=false;
       bool isgoodDisplaced=false;
+//      bool isgoodDisplaced_sig3=false;
       bool ishighPurity=false;
       bool ishighPurity_pt05=false;
       bool ishighPurity_pt08=false;
       bool ishighPurity_pt1=false;
+//      bool issig2Displaced=false;
+//      bool issig3Displaced=false;
+//      bool issig5Displaced=false;
       int PVAssociationQuality = -1;
       N_Trk_total++;
 //associate the track to a primary vertex 
@@ -303,6 +525,20 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
       _track_.setBeamSpot(*beamspot_);
       GlobalPoint vert(pf.vertexRef()->x(), pf.vertexRef()->y(), pf.vertexRef()->z());
       TrajectoryStateClosestToPoint  traj = _track_.trajectoryStateClosestToPoint(vert);
+
+//      if(traj.perigeeParameters().transverseImpactParameter()/traj.perigeeError().transverseImpactParameterError()>2.){
+//        issig2Displaced=true;
+//        N_Trk_sig2Displaced_highPurity[vtxindex]+=(int)ishighPurity;
+//      }
+//      if(traj.perigeeParameters().transverseImpactParameter()/traj.perigeeError().transverseImpactParameterError()>3.){
+//        issig3Displaced=true;
+//        N_Trk_sig3Displaced_highPurity[vtxindex]+=(int)ishighPurity;
+//      }
+//      if(traj.perigeeParameters().transverseImpactParameter()/traj.perigeeError().transverseImpactParameterError()>5.){
+//        issig5Displaced=true;
+//        N_Trk_sig5Displaced_highPurity[vtxindex]+=(int)ishighPurity;
+//      }
+
       if(traj.perigeeParameters().transverseImpactParameter() > 0.02){
 //          math::XYZPoint vert(pf.vertexRef()->x(), pf.vertexRef()->y(), pf.vertexRef()->z());
 //          if(pf.dxy(vert)> 0.002){
@@ -321,22 +557,40 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
           N_Trk_goodDisplaced_highPurity_pt1[vtxindex]+=ishighPurity_pt1;
           N_Trk_goodDisplaced_total++;
           isgoodDisplaced=true;
-        }     
+        }
+//        if(traj.perigeeParameters().transverseImpactParameter()/traj.perigeeError().transverseImpactParameterError()>3.) {
+//          isgoodDisplaced_sig3=true;
+//        }    
       }
+/*      if(pf.fromPV()==2){
+        N_Trk_Displaced_fromPV2_highPurity[vtxindex]+=(int)(isDisplaced&&ishighPurity);
+        N_Trk_Displaced_fromPV2_highPurity_pt05[vtxindex]+=(int)(isDisplaced&&ishighPurity_pt05);
+        N_Trk_Displaced_fromPV2_highPurity_pt08[vtxindex]+=(int)(isDisplaced&&ishighPurity_pt08);
+        N_Trk_Displaced_fromPV2_highPurity_pt1[vtxindex]+=(int)(isDisplaced&&ishighPurity_pt1);
+        N_Trk_goodDisplaced_fromPV2_highPurity_sig3[vtxindex]+=(int)(isgoodDisplaced_sig3&&ishighPurity);
+        N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt05[vtxindex]+=(int)(isgoodDisplaced_sig3&&ishighPurity_pt05);
+        N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt08[vtxindex]+=(int)(isgoodDisplaced_sig3&&ishighPurity_pt08);
+        N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt1[vtxindex]+=(int)(isgoodDisplaced_sig3&&ishighPurity_pt1);
+        N_Trk_fromPV2_highPurity[vtxindex]+=(int)ishighPurity;
+      }
+*/
       switch(pf.pvAssociationQuality()){
-        case pat::PackedCandidate::PVAssociationQuality::NotReconstructedPrimary: N_Trk_PVAssociationQuality0[vtxindex]++;
-                N_Trk_Displaced_PVAssociationQuality0[vtxindex]+=(int)isDisplaced;
-                N_Trk_goodDisplaced_PVAssociationQuality0[vtxindex]+=(int)isgoodDisplaced;
+        case pat::PackedCandidate::PVAssociationQuality::NotReconstructedPrimary:
+//                N_Trk_PVAssociationQuality0[vtxindex]++;
+//                N_Trk_Displaced_PVAssociationQuality0[vtxindex]+=(int)isDisplaced;
+//                N_Trk_goodDisplaced_PVAssociationQuality0[vtxindex]+=(int)isgoodDisplaced;
                 PVAssociationQuality=0;
                 break;
-        case pat::PackedCandidate::PVAssociationQuality::OtherDeltaZ: N_Trk_PVAssociationQuality1[vtxindex]++;
-                N_Trk_Displaced_PVAssociationQuality1[vtxindex]+=(int)isDisplaced;
-                N_Trk_goodDisplaced_PVAssociationQuality1[vtxindex]+=(int)isgoodDisplaced;
+        case pat::PackedCandidate::PVAssociationQuality::OtherDeltaZ: 
+//                N_Trk_PVAssociationQuality1[vtxindex]++;
+//                N_Trk_Displaced_PVAssociationQuality1[vtxindex]+=(int)isDisplaced;
+//                N_Trk_goodDisplaced_PVAssociationQuality1[vtxindex]+=(int)isgoodDisplaced;
                 PVAssociationQuality=1;
                 break;
-        case pat::PackedCandidate::PVAssociationQuality::CompatibilityBTag: N_Trk_PVAssociationQuality4[vtxindex]++;
-                N_Trk_Displaced_PVAssociationQuality4[vtxindex]+=(int)isDisplaced;
-                N_Trk_goodDisplaced_PVAssociationQuality4[vtxindex]+=(int)isgoodDisplaced;
+        case pat::PackedCandidate::PVAssociationQuality::CompatibilityBTag: 
+//                N_Trk_PVAssociationQuality4[vtxindex]++;
+//                N_Trk_Displaced_PVAssociationQuality4[vtxindex]+=(int)isDisplaced;
+//                N_Trk_goodDisplaced_PVAssociationQuality4[vtxindex]+=(int)isgoodDisplaced;
                 N_Trk_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)ishighPurity;
                 N_Trk_PVAssociationQualityLeq4_highPurity_pt05[vtxindex]+=(int)ishighPurity_pt05;
                 N_Trk_PVAssociationQualityLeq4_highPurity_pt08[vtxindex]+=(int)ishighPurity_pt08;
@@ -349,11 +603,15 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt05[vtxindex]+=(int)(ishighPurity_pt05&&isgoodDisplaced);
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt08[vtxindex]+=(int)(ishighPurity_pt08&&isgoodDisplaced);
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1[vtxindex]+=(int)(ishighPurity_pt1&&isgoodDisplaced);
+//                N_Trk_sig2Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig2Displaced&&ishighPurity);
+//                N_Trk_sig3Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig3Displaced&&ishighPurity);
+//                N_Trk_sig5Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig5Displaced&&ishighPurity);
                 PVAssociationQuality=4;
                 break;
-        case pat::PackedCandidate::PVAssociationQuality::CompatibilityDz: N_Trk_PVAssociationQuality5[vtxindex]++;
-                N_Trk_Displaced_PVAssociationQuality5[vtxindex]+=(int)isDisplaced;
-                N_Trk_goodDisplaced_PVAssociationQuality5[vtxindex]+=(int)isgoodDisplaced;
+        case pat::PackedCandidate::PVAssociationQuality::CompatibilityDz: 
+//                N_Trk_PVAssociationQuality5[vtxindex]++;
+//                N_Trk_Displaced_PVAssociationQuality5[vtxindex]+=(int)isDisplaced;
+//                N_Trk_goodDisplaced_PVAssociationQuality5[vtxindex]+=(int)isgoodDisplaced;
                 N_Trk_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)ishighPurity;
                 N_Trk_PVAssociationQualityLeq4_highPurity_pt05[vtxindex]+=(int)ishighPurity_pt05;
                 N_Trk_PVAssociationQualityLeq4_highPurity_pt08[vtxindex]+=(int)ishighPurity_pt08;
@@ -366,11 +624,15 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt05[vtxindex]+=(int)(ishighPurity_pt05&&isgoodDisplaced);
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt08[vtxindex]+=(int)(ishighPurity_pt08&&isgoodDisplaced);
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1[vtxindex]+=(int)(ishighPurity_pt1&&isgoodDisplaced);
+//                N_Trk_sig2Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig2Displaced&&ishighPurity);
+//                N_Trk_sig3Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig3Displaced&&ishighPurity);
+//                N_Trk_sig5Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig5Displaced&&ishighPurity);
                 PVAssociationQuality=5;
                 break;
-        case pat::PackedCandidate::PVAssociationQuality::UsedInFitLoose: N_Trk_PVAssociationQuality6[vtxindex]++;
-                N_Trk_Displaced_PVAssociationQuality6[vtxindex]+=(int)isDisplaced;
-                N_Trk_goodDisplaced_PVAssociationQuality6[vtxindex]+=(int)isgoodDisplaced;
+        case pat::PackedCandidate::PVAssociationQuality::UsedInFitLoose:
+//                N_Trk_PVAssociationQuality6[vtxindex]++;
+//                N_Trk_Displaced_PVAssociationQuality6[vtxindex]+=(int)isDisplaced;
+//                N_Trk_goodDisplaced_PVAssociationQuality6[vtxindex]+=(int)isgoodDisplaced;
                 N_Trk_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)ishighPurity;
                 N_Trk_PVAssociationQualityLeq4_highPurity_pt05[vtxindex]+=(int)ishighPurity_pt05;
                 N_Trk_PVAssociationQualityLeq4_highPurity_pt08[vtxindex]+=(int)ishighPurity_pt08;
@@ -383,11 +645,15 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt05[vtxindex]+=(int)(ishighPurity_pt05&&isgoodDisplaced);
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt08[vtxindex]+=(int)(ishighPurity_pt08&&isgoodDisplaced);
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1[vtxindex]+=(int)(ishighPurity_pt1&&isgoodDisplaced);
+//                N_Trk_sig2Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig2Displaced&&ishighPurity);
+//                N_Trk_sig3Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig3Displaced&&ishighPurity);
+//                N_Trk_sig5Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig5Displaced&&ishighPurity);
                 PVAssociationQuality=6;
                 break;
-        case pat::PackedCandidate::PVAssociationQuality::UsedInFitTight: N_Trk_PVAssociationQuality7[vtxindex]++;
-                N_Trk_Displaced_PVAssociationQuality7[vtxindex]+=(int)isDisplaced;
-                N_Trk_goodDisplaced_PVAssociationQuality7[vtxindex]+=(int)isgoodDisplaced;
+        case pat::PackedCandidate::PVAssociationQuality::UsedInFitTight:
+//                N_Trk_PVAssociationQuality7[vtxindex]++;
+//                N_Trk_Displaced_PVAssociationQuality7[vtxindex]+=(int)isDisplaced;
+//                N_Trk_goodDisplaced_PVAssociationQuality7[vtxindex]+=(int)isgoodDisplaced;
                 N_Trk_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)ishighPurity;
                 N_Trk_PVAssociationQualityLeq4_highPurity_pt05[vtxindex]+=(int)ishighPurity_pt05;
                 N_Trk_PVAssociationQualityLeq4_highPurity_pt08[vtxindex]+=(int)ishighPurity_pt08;
@@ -400,13 +666,26 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt05[vtxindex]+=(int)(ishighPurity_pt05&&isgoodDisplaced);
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt08[vtxindex]+=(int)(ishighPurity_pt08&&isgoodDisplaced);
                 N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1[vtxindex]+=(int)(ishighPurity_pt1&&isgoodDisplaced);
+//                N_Trk_sig2Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig2Displaced&&ishighPurity);
+//                N_Trk_sig3Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig3Displaced&&ishighPurity);
+//                N_Trk_sig5Displaced_PVAssociationQualityLeq4_highPurity[vtxindex]+=(int)(issig5Displaced&&ishighPurity);
                 PVAssociationQuality=7;
                 break;
       }
       alltracks[vtxindex].push_back(_track_);
       alltracks_pf[vtxindex].push_back(pf);
-      if(PVAssociationQuality>=4&&ishighPurity) alltracks_TrkCut[vtxindex].push_back(_track_);
-      if(PVAssociationQuality>=4&&ishighPurity) alltracks_pf_TrkCut[vtxindex].push_back(pf);
+      if(PVAssociationQuality>=4&&ishighPurity){ 
+        alltracks_TrkCut[vtxindex].push_back(_track_);
+        alltracks_pf_TrkCut[vtxindex].push_back(pf);
+        if(ishighPurity_pt05){
+          alltracks_TrkCut_pt05[vtxindex].push_back(_track_);
+          alltracks_pf_TrkCut_pt05[vtxindex].push_back(pf);
+        }
+        if(ishighPurity_pt1){
+          alltracks_TrkCut_pt1[vtxindex].push_back(_track_);
+          alltracks_pf_TrkCut_pt1[vtxindex].push_back(pf);
+        }
+      }
       if(doTrack_){
         Trk_px[vtxindex].push_back((float)pf.px());
         Trk_py[vtxindex].push_back((float)pf.py());
@@ -433,22 +712,112 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   for( size_t j = 0; j < vertices_->size(); j++){
     math::XYZTLorentzVector p4(0,0,0,0);
     math::XYZTLorentzVector p4_TrkCut(0,0,0,0);
+    math::XYZTLorentzVector p4_TrkCut05(0,0,0,0);
+    math::XYZTLorentzVector p4_TrkCut1(0,0,0,0);
     float pt_TrkCut_sum=0;
+    float pt_TrkCut_pt05_sum=0;
+    float pt_TrkCut_pt1_sum=0;
     for(int k = 0; k < N_Trk[j]; k++)
       p4 = p4 + alltracks_pf[j][k].p4();
     for(int k = 0; k < N_Trk_PVAssociationQualityLeq4_highPurity[j]; k++){
       p4_TrkCut = p4_TrkCut + alltracks_pf_TrkCut[j][k].p4();
       pt_TrkCut_sum += alltracks_pf_TrkCut[j][k].pt();
     }
+    for(int k = 0; k < N_Trk_PVAssociationQualityLeq4_highPurity_pt05[j]; k++){
+      p4_TrkCut05 = p4_TrkCut05 + alltracks_pf_TrkCut_pt05[j][k].p4();
+      pt_TrkCut_pt05_sum += alltracks_pf_TrkCut_pt05[j][k].pt();
+    }
+    for(int k = 0; k < N_Trk_PVAssociationQualityLeq4_highPurity_pt1[j]; k++){
+      p4_TrkCut1 = p4_TrkCut1 + alltracks_pf_TrkCut_pt1[j][k].p4();
+      pt_TrkCut_pt1_sum += alltracks_pf_TrkCut_pt1[j][k].pt();
+    }
     Trk_masssum[j] = p4.M();
     Trk_TrkCut_mass[j] = p4_TrkCut.M();
+    Trk_TrkCut_pt05_mass[j] = p4_TrkCut05.M();
+    Trk_TrkCut_pt1_mass[j] = p4_TrkCut1.M();
     Trk_TrkCut_pt[j] = pt_TrkCut_sum;
+    Trk_TrkCut_pt05_pt[j] = pt_TrkCut_pt05_sum;
+    Trk_TrkCut_pt1_pt[j] = pt_TrkCut_pt1_sum;
+    Trk_TrkCut_ptmiss[j] = p4_TrkCut.pt();
+    Trk_TrkCut_pt05_ptmiss[j] = p4_TrkCut05.pt();
+    Trk_TrkCut_pt1_ptmiss[j] = p4_TrkCut1.pt();
   }
 
+
+//find secondary vertices by fitting the trajectory of track pairs.
+
+  std::vector<reco::TransientTrack> trkpair(2);
+  for( size_t j = 0; j < vertices_->size(); j++){
+    std::vector<bool> isfromSV_sig2(alltracks_TrkCut[j].size(),false);
+    std::vector<bool> isfromSV_sig3(alltracks_TrkCut[j].size(),false);
+    std::vector<bool> isfromSV_sig5(alltracks_TrkCut[j].size(),false);
+    TVector3 pvtx;
+    pvtx.SetXYZ((*vertices_)[j].x(),(*vertices_)[j].y(),(*vertices_)[j].z());
+    for( int trkindex1 = 0; trkindex1 < (int)alltracks_TrkCut[j].size()-1; trkindex1++){
+      trkpair[0]=alltracks_TrkCut[j][trkindex1];
+      for( size_t trkindex2 = trkindex1+1; trkindex2 < alltracks_TrkCut[j].size(); trkindex2++){
+        trkpair[1]=alltracks_TrkCut[j][trkindex2];
+        KalmanVertexFitter kalman_fitter;
+        TransientVertex vtx12 = kalman_fitter.vertex(trkpair);
+//        cout<<"track "<<trkindex1<<", "<<trkindex2<<endl;
+        if (vtx12.isValid()&&TMath::Prob(vtx12.totalChiSquared(), int(vtx12.degreesOfFreedom()))>0.5){
+          VertexDistanceXY vdistXY1;
+          Measurement1D distXY1;
+          distXY1 = vdistXY1.distance(vtx12.vertexState(), (*vertices_)[j]); 
+//          TVector3 svtx;
+//          svtx.SetXYZ(vtx12.position().x(),vtx12.position().y(),vtx12.position().z());
+//          TVector3 vdiff = svtx-pvtx;
+//          TVector3 p1,p2;
+//          p1.SetXYZ(alltracks_pf_TrkCut[j][trkindex1].px(),alltracks_pf_TrkCut[j][trkindex1].py(),alltracks_pf_TrkCut[j][trkindex1].pz());
+//          p2.SetXYZ(alltracks_pf_TrkCut[j][trkindex2].px(),alltracks_pf_TrkCut[j][trkindex2].py(),alltracks_pf_TrkCut[j][trkindex2].pz());
+//          if(vdiff.Dot(p1)<0||vdiff.Dot(p2)<0) continue;
+//          cout<<"distance "<<distXY1.value()<<", error "<<distXY1.error()<<", prob "<<TMath::Prob(vtx12.totalChiSquared(), int(vtx12.degreesOfFreedom()))<<endl;
+
+          if(distXY1.value()/distXY1.error()>2.) {
+            N_SV_sig2[j]++;
+            isfromSV_sig2[trkindex1]=isfromSV_sig2[trkindex2]=true;
+          }
+          if(distXY1.value()/distXY1.error()>3.) {
+            N_SV_sig3[j]++;
+            isfromSV_sig3[trkindex1]=isfromSV_sig3[trkindex2]=true;
+          }
+          if(distXY1.value()/distXY1.error()>5.) {
+            N_SV_sig5[j]++;
+            isfromSV_sig5[trkindex1]=isfromSV_sig5[trkindex2]=true;
+          }
+        }
+      }
+    }
+//find tracks with vertices displaced by 0.002cm to the PV in the transverse plane
+    for( size_t trkindex = 0; trkindex < alltracks_pf_TrkCut[j].size(); trkindex++){
+      if(sqrt(pow(alltracks_pf_TrkCut[j][trkindex].vx()-(*vertices_)[j].x(),2)+pow(alltracks_pf_TrkCut[j][trkindex].vy()-(*vertices_)[j].y(),2))>0.002){
+        TVector3 ptrk;
+        ptrk.SetXYZ(alltracks_pf_TrkCut[j][trkindex].px(),alltracks_pf_TrkCut[j][trkindex].py(),alltracks_pf_TrkCut[j][trkindex].pz());
+        TVector3 vtrk;
+        vtrk.SetXYZ(alltracks_pf_TrkCut[j][trkindex].vx(),alltracks_pf_TrkCut[j][trkindex].vy(),alltracks_pf_TrkCut[j][trkindex].vz());
+        TVector3 vdiff = vtrk-pvtx;
+        if(vdiff.Dot(ptrk)<0) continue;
+        N_Trk_DisplaceVp002[j]++;
+        if(isfromSV_sig2[(int)trkindex]) N_Trk_DisplaceVp002_SVsig2[j]++;
+      }
+    }
+    N_Trk_formSV_sig2[j]=count(isfromSV_sig2.begin(),isfromSV_sig2.end(),true);
+    N_Trk_formSV_sig3[j]=count(isfromSV_sig3.begin(),isfromSV_sig3.end(),true);
+    N_Trk_formSV_sig5[j]=count(isfromSV_sig5.begin(),isfromSV_sig5.end(),true);
+  }
+
+//  for( size_t j = 0; j < vertices_->size(); j++){
+//    for( size_t trkindex = 0; trkindex < alltracks_pf_TrkCut[j].size(); trkindex++){
+//      if(sqrt(pow(alltracks_pf_TrkCut[j][trkindex].vx()-(*vertices_)[j].position().X(),2)+pow(alltracks_pf_TrkCut[j][trkindex].vy()-(*vertices_)[j].position().Y(),2))>0.002){
+//        N_Trk_DisplaceVp002[j]++;
+//        N_Trk_DisplaceVp002_SVsig2[j]++;
+//      }
+//    }
+//  }
 //Calculate TrackJets
   for( size_t j = 0; j < vertices_->size(); j++){
     std::vector<PseudoJet> particles;
-    std::vector<TLorentzVector> TrackJet_P4_thisvertex;
+//    std::vector<TLorentzVector> TrackJet_P4_thisvertex;
     for( size_t trkindex = 0; trkindex < alltracks_pf[j].size(); trkindex++)
       particles.push_back(PseudoJet(alltracks_pf[j][trkindex].px(),alltracks_pf[j][trkindex].py(),alltracks_pf[j][trkindex].pz(),alltracks_pf[j][trkindex].energy()));
 
@@ -459,16 +828,20 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
 //    cout << "Clustered with " << jet_def.description() << endl;
     N_Jet[j] = selected_jets.size();
     N_Jet_total += selected_jets.size();
-    for(size_t jetindex=0; jetindex < selected_jets.size(); jetindex++){
-      TLorentzVector Jet_P4(selected_jets[jetindex].px(),selected_jets[jetindex].py(),selected_jets[jetindex].pz(),selected_jets[jetindex].E());
-      TrackJet_P4_thisvertex.push_back(Jet_P4);
-    }
-    nBranches_->TrackJet_P4.push_back(TrackJet_P4_thisvertex);
+//    for(size_t jetindex=0; jetindex < selected_jets.size(); jetindex++){
+//      TLorentzVector Jet_P4(selected_jets[jetindex].px(),selected_jets[jetindex].py(),selected_jets[jetindex].pz(),selected_jets[jetindex].E());
+//      TrackJet_P4_thisvertex.push_back(Jet_P4);
+//    }
+//    nBranches_->TrackJet_P4.push_back(TrackJet_P4_thisvertex);
   }
 
   for( size_t j = 0; j < vertices_->size(); j++){
     std::vector<PseudoJet> particles;
-    std::vector<TLorentzVector> TrackJet_TrkCut_P4_thisvertex;
+    float TrackJet_TrkCut_E_thisvertex=0;
+    float TrackJet_TrkCut_pt_thisvertex=0;
+    float TrackJet_TrkCut_px_thisvertex=0;
+    float TrackJet_TrkCut_py_thisvertex=0;
+    float TrackJet_TrkCut_pz_thisvertex=0;
     for( size_t trkindex = 0; trkindex < alltracks_pf_TrkCut[j].size(); trkindex++)
       particles.push_back(PseudoJet(alltracks_pf_TrkCut[j][trkindex].px(),alltracks_pf_TrkCut[j][trkindex].py(),alltracks_pf_TrkCut[j][trkindex].pz(),alltracks_pf_TrkCut[j][trkindex].energy()));
 
@@ -479,13 +852,80 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
     N_Jet_TrkCut[j] = selected_jets.size();
     N_Jet_TrkCut_total += selected_jets.size();
     for(size_t jetindex=0; jetindex < selected_jets.size(); jetindex++){
-      TLorentzVector Jet_P4(selected_jets[jetindex].px(),selected_jets[jetindex].py(),selected_jets[jetindex].pz(),selected_jets[jetindex].E());
-      TrackJet_TrkCut_P4_thisvertex.push_back(Jet_P4);
+      TrackJet_TrkCut_E_thisvertex+=selected_jets[jetindex].E();
+      TrackJet_TrkCut_pt_thisvertex+=selected_jets[jetindex].pt();
+      TrackJet_TrkCut_px_thisvertex+=selected_jets[jetindex].px();
+      TrackJet_TrkCut_py_thisvertex+=selected_jets[jetindex].py();
+      TrackJet_TrkCut_pz_thisvertex+=selected_jets[jetindex].pz();
     }
-    nBranches_->TrackJet_TrkCut_P4.push_back(TrackJet_TrkCut_P4_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_E.push_back(TrackJet_TrkCut_E_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_pt.push_back(TrackJet_TrkCut_pt_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_px.push_back(TrackJet_TrkCut_px_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_py.push_back(TrackJet_TrkCut_py_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_pz.push_back(TrackJet_TrkCut_pz_thisvertex);
   }
 
-//Calculate event shape observables: Spherocity, Thrust, Broadening
+  for( size_t j = 0; j < vertices_->size(); j++){
+    std::vector<PseudoJet> particles;
+    float TrackJet_TrkCut_pt05_E_thisvertex=0;
+    float TrackJet_TrkCut_pt05_pt_thisvertex=0;
+    float TrackJet_TrkCut_pt05_px_thisvertex=0;
+    float TrackJet_TrkCut_pt05_py_thisvertex=0;
+    float TrackJet_TrkCut_pt05_pz_thisvertex=0;
+    for( size_t trkindex = 0; trkindex < alltracks_pf_TrkCut_pt05[j].size(); trkindex++)
+      particles.push_back(PseudoJet(alltracks_pf_TrkCut_pt05[j][trkindex].px(),alltracks_pf_TrkCut_pt05[j][trkindex].py(),alltracks_pf_TrkCut_pt05[j][trkindex].pz(),alltracks_pf_TrkCut_pt05[j][trkindex].energy()));
+
+    ClusterSequence cs(particles, jet_def);
+    vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets());
+    Selector select_pt       = SelectorPtMin(TrackJet_PtCut);
+    vector<PseudoJet> selected_jets = select_pt(jets);
+    N_Jet_TrkCut_pt05[j] = selected_jets.size();
+    N_Jet_TrkCut_pt05_total += selected_jets.size();
+    for(size_t jetindex=0; jetindex < selected_jets.size(); jetindex++){
+      TrackJet_TrkCut_pt05_E_thisvertex+=selected_jets[jetindex].E();
+      TrackJet_TrkCut_pt05_pt_thisvertex+=selected_jets[jetindex].pt();
+      TrackJet_TrkCut_pt05_px_thisvertex+=selected_jets[jetindex].px();
+      TrackJet_TrkCut_pt05_py_thisvertex+=selected_jets[jetindex].py();
+      TrackJet_TrkCut_pt05_pz_thisvertex+=selected_jets[jetindex].pz();
+    }
+    nBranches_->Instanton_TrackJet_TrkCut_pt05_E.push_back(TrackJet_TrkCut_pt05_E_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_pt05_pt.push_back(TrackJet_TrkCut_pt05_pt_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_pt05_px.push_back(TrackJet_TrkCut_pt05_px_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_pt05_py.push_back(TrackJet_TrkCut_pt05_py_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_pt05_pz.push_back(TrackJet_TrkCut_pt05_pz_thisvertex);
+  }
+
+  for( size_t j = 0; j < vertices_->size(); j++){
+    std::vector<PseudoJet> particles;
+    float TrackJet_TrkCut_pt1_E_thisvertex;
+    float TrackJet_TrkCut_pt1_pt_thisvertex;
+    float TrackJet_TrkCut_pt1_px_thisvertex;
+    float TrackJet_TrkCut_pt1_py_thisvertex;
+    float TrackJet_TrkCut_pt1_pz_thisvertex;
+    for( size_t trkindex = 0; trkindex < alltracks_pf_TrkCut_pt1[j].size(); trkindex++)
+      particles.push_back(PseudoJet(alltracks_pf_TrkCut_pt1[j][trkindex].px(),alltracks_pf_TrkCut_pt1[j][trkindex].py(),alltracks_pf_TrkCut_pt1[j][trkindex].pz(),alltracks_pf_TrkCut_pt1[j][trkindex].energy()));
+
+    ClusterSequence cs(particles, jet_def);
+    vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets());
+    Selector select_pt       = SelectorPtMin(TrackJet_PtCut);
+    vector<PseudoJet> selected_jets = select_pt(jets);
+    N_Jet_TrkCut_pt1[j] = selected_jets.size();
+    N_Jet_TrkCut_pt1_total += selected_jets.size();
+    for(size_t jetindex=0; jetindex < selected_jets.size(); jetindex++){
+      TrackJet_TrkCut_pt1_E_thisvertex+=selected_jets[jetindex].E();
+      TrackJet_TrkCut_pt1_pt_thisvertex+=selected_jets[jetindex].pt();
+      TrackJet_TrkCut_pt1_px_thisvertex+=selected_jets[jetindex].px();
+      TrackJet_TrkCut_pt1_py_thisvertex+=selected_jets[jetindex].py();
+      TrackJet_TrkCut_pt1_pz_thisvertex+=selected_jets[jetindex].pz();
+    }
+    nBranches_->Instanton_TrackJet_TrkCut_pt1_E.push_back(TrackJet_TrkCut_pt1_E_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_pt1_pt.push_back(TrackJet_TrkCut_pt1_pt_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_pt1_px.push_back(TrackJet_TrkCut_pt1_px_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_pt1_py.push_back(TrackJet_TrkCut_pt1_py_thisvertex);
+    nBranches_->Instanton_TrackJet_TrkCut_pt1_pz.push_back(TrackJet_TrkCut_pt1_pz_thisvertex);
+  }
+
+//Calculate event shape (bservables: Spherocity, Thrust, Broadening
 
   Float_t Spherocity, Thrust, Broaden;
   TVector3 taxis;
@@ -505,6 +945,26 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
     nBranches_->Instanton_Trk_TrkCut_spherocity.push_back(Spherocity_TrkCut);
     nBranches_->Instanton_Trk_TrkCut_thrust.push_back(Thrust_TrkCut);
     nBranches_->Instanton_Trk_TrkCut_broaden.push_back(Broaden_TrkCut);
+  }
+
+  Float_t Spherocity_TrkCut_pt05, Thrust_TrkCut_pt05, Broaden_TrkCut_pt05;
+  TVector3 taxis_TrkCut_pt05;
+
+  for(size_t j = 0; j < vertices_->size(); j++){
+    calcS_T_B(alltracks_pf_TrkCut_pt05[j], Spherocity_TrkCut_pt05,Thrust_TrkCut_pt05,Broaden_TrkCut_pt05, taxis_TrkCut_pt05, min(nSeed_ThrustCalculation,(int)alltracks_pf_TrkCut_pt05[j].size()));
+    nBranches_->Instanton_Trk_TrkCut_pt05_spherocity.push_back(Spherocity_TrkCut_pt05);
+    nBranches_->Instanton_Trk_TrkCut_pt05_thrust.push_back(Thrust_TrkCut_pt05);
+    nBranches_->Instanton_Trk_TrkCut_pt05_broaden.push_back(Broaden_TrkCut_pt05);
+  }
+
+  Float_t Spherocity_TrkCut_pt1, Thrust_TrkCut_pt1, Broaden_TrkCut_pt1;
+  TVector3 taxis_TrkCut_pt1;
+
+  for(size_t j = 0; j < vertices_->size(); j++){
+    calcS_T_B(alltracks_pf_TrkCut_pt1[j], Spherocity_TrkCut_pt1,Thrust_TrkCut_pt1,Broaden_TrkCut_pt1, taxis_TrkCut_pt1, min(nSeed_ThrustCalculation,(int)alltracks_pf_TrkCut_pt1[j].size()));
+    nBranches_->Instanton_Trk_TrkCut_pt1_spherocity.push_back(Spherocity_TrkCut_pt1);
+    nBranches_->Instanton_Trk_TrkCut_pt1_thrust.push_back(Thrust_TrkCut_pt1);
+    nBranches_->Instanton_Trk_TrkCut_pt1_broaden.push_back(Broaden_TrkCut_pt1);
   }
 
 /*  if(runOnMC_){
@@ -628,11 +1088,21 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
       if(vtx_isBPHtrigger_fromPFMuon[nn]) PV_N_good_hasgoodPFMuon++;
     }
   }
+  if(runOnMC_&&runOnMCPU_){
+  //  std::cout<<"calculate distance to PV"<<std::endl;
+    for( size_t nn = 0; nn < vertices_->size(); nn++){
+      vtx_genvertex_PVDistance[nn] = (float)std::sqrt(std::pow((*vertices_)[nn].position().x()-PV_X,2)+std::pow((*vertices_)[nn].position().y()-PV_Y,2)+std::pow((*vertices_)[nn].position().z()-PV_Z,2));
+//      std::cout<<"distance "<<vtx_genvertex_PVDistance[nn]<<std::endl;
+      nBranches_->Instanton_vtx_genvertex_PVDistance.push_back(vtx_genvertex_PVDistance[nn]);
+    }
+  }
   nBranches_->Instanton_N_Trk_total = N_Trk_total;
   nBranches_->Instanton_N_Trk_Displaced_total = N_Trk_Displaced_total;
   nBranches_->Instanton_N_Trk_goodDisplaced_total = N_Trk_goodDisplaced_total;
   nBranches_->Instanton_N_TrackJet_total = N_Jet_total;
   nBranches_->Instanton_N_TrackJet_TrkCut_total = N_Jet_TrkCut_total;
+  nBranches_->Instanton_N_TrackJet_TrkCut_pt05_total = N_Jet_TrkCut_pt05_total;
+  nBranches_->Instanton_N_TrackJet_TrkCut_pt1_total = N_Jet_TrkCut_pt1_total; 
   nBranches_->PV_N_good_hasgoodMuon = PV_N_good_hasgoodMuon;
   nBranches_->PV_N_good_hasgoodPFMuon = PV_N_good_hasgoodPFMuon;
   for( size_t jj = 0; jj < vertices_->size(); ++jj ){
@@ -641,12 +1111,12 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
     nBranches_->Instanton_N_Trk_highPurity_pt05.push_back(N_Trk_highPurity_pt05[jj]);
     nBranches_->Instanton_N_Trk_highPurity_pt08.push_back(N_Trk_highPurity_pt08[jj]);
     nBranches_->Instanton_N_Trk_highPurity_pt1.push_back(N_Trk_highPurity_pt1[jj]);
-    nBranches_->Instanton_N_Trk_PVAssociationQuality0.push_back(N_Trk_PVAssociationQuality0[jj]);
-    nBranches_->Instanton_N_Trk_PVAssociationQuality1.push_back(N_Trk_PVAssociationQuality1[jj]);
-    nBranches_->Instanton_N_Trk_PVAssociationQuality4.push_back(N_Trk_PVAssociationQuality4[jj]);
-    nBranches_->Instanton_N_Trk_PVAssociationQuality5.push_back(N_Trk_PVAssociationQuality5[jj]);
-    nBranches_->Instanton_N_Trk_PVAssociationQuality6.push_back(N_Trk_PVAssociationQuality6[jj]);
-    nBranches_->Instanton_N_Trk_PVAssociationQuality7.push_back(N_Trk_PVAssociationQuality7[jj]);
+//    nBranches_->Instanton_N_Trk_PVAssociationQuality0.push_back(N_Trk_PVAssociationQuality0[jj]);
+//    nBranches_->Instanton_N_Trk_PVAssociationQuality1.push_back(N_Trk_PVAssociationQuality1[jj]);
+//    nBranches_->Instanton_N_Trk_PVAssociationQuality4.push_back(N_Trk_PVAssociationQuality4[jj]);
+//    nBranches_->Instanton_N_Trk_PVAssociationQuality5.push_back(N_Trk_PVAssociationQuality5[jj]);
+//    nBranches_->Instanton_N_Trk_PVAssociationQuality6.push_back(N_Trk_PVAssociationQuality6[jj]);
+//    nBranches_->Instanton_N_Trk_PVAssociationQuality7.push_back(N_Trk_PVAssociationQuality7[jj]);
     nBranches_->Instanton_N_Trk_PVAssociationQualityLeq4_highPurity.push_back(N_Trk_PVAssociationQualityLeq4_highPurity[jj]);
     nBranches_->Instanton_N_Trk_PVAssociationQualityLeq4_highPurity_pt05.push_back(N_Trk_PVAssociationQualityLeq4_highPurity_pt05[jj]);
     nBranches_->Instanton_N_Trk_PVAssociationQualityLeq4_highPurity_pt08.push_back(N_Trk_PVAssociationQualityLeq4_highPurity_pt08[jj]);
@@ -656,36 +1126,68 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
     nBranches_->Instanton_N_Trk_Displaced_highPurity_pt05.push_back(N_Trk_Displaced_highPurity_pt05[jj]);
     nBranches_->Instanton_N_Trk_Displaced_highPurity_pt08.push_back(N_Trk_Displaced_highPurity_pt08[jj]);
     nBranches_->Instanton_N_Trk_Displaced_highPurity_pt1.push_back(N_Trk_Displaced_highPurity_pt1[jj]);
-    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality0.push_back(N_Trk_Displaced_PVAssociationQuality0[jj]);
-    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality1.push_back(N_Trk_Displaced_PVAssociationQuality1[jj]);
-    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality4.push_back(N_Trk_Displaced_PVAssociationQuality4[jj]);
-    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality5.push_back(N_Trk_Displaced_PVAssociationQuality5[jj]);
-    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality6.push_back(N_Trk_Displaced_PVAssociationQuality6[jj]);
-    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality7.push_back(N_Trk_Displaced_PVAssociationQuality7[jj]);
+//    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality0.push_back(N_Trk_Displaced_PVAssociationQuality0[jj]);
+//    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality1.push_back(N_Trk_Displaced_PVAssociationQuality1[jj]);
+//    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality4.push_back(N_Trk_Displaced_PVAssociationQuality4[jj]);
+//    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality5.push_back(N_Trk_Displaced_PVAssociationQuality5[jj]);
+//    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality6.push_back(N_Trk_Displaced_PVAssociationQuality6[jj]);
+//    nBranches_->Instanton_N_Trk_Displaced_PVAssociationQuality7.push_back(N_Trk_Displaced_PVAssociationQuality7[jj]);
     nBranches_->Instanton_N_Trk_Displaced_PVAssociationQualityLeq4_highPurity.push_back(N_Trk_Displaced_PVAssociationQualityLeq4_highPurity[jj]);
     nBranches_->Instanton_N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt05.push_back(N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt05[jj]);
     nBranches_->Instanton_N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt08.push_back(N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt08[jj]);
     nBranches_->Instanton_N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt1.push_back(N_Trk_Displaced_PVAssociationQualityLeq4_highPurity_pt1[jj]);
+//    nBranches_->Instanton_N_Trk_sig2Displaced_highPurity.push_back(N_Trk_sig2Displaced_highPurity[jj]);
+//    nBranches_->Instanton_N_Trk_sig3Displaced_highPurity.push_back(N_Trk_sig3Displaced_highPurity[jj]);
+//    nBranches_->Instanton_N_Trk_sig5Displaced_highPurity.push_back(N_Trk_sig5Displaced_highPurity[jj]);
+//    nBranches_->Instanton_N_Trk_sig2Displaced_PVAssociationQualityLeq4_highPurity.push_back(N_Trk_sig2Displaced_PVAssociationQualityLeq4_highPurity[jj]);
+//    nBranches_->Instanton_N_Trk_sig3Displaced_PVAssociationQualityLeq4_highPurity.push_back(N_Trk_sig3Displaced_PVAssociationQualityLeq4_highPurity[jj]);
+//    nBranches_->Instanton_N_Trk_sig5Displaced_PVAssociationQualityLeq4_highPurity.push_back(N_Trk_sig5Displaced_PVAssociationQualityLeq4_highPurity[jj]);
+//    nBranches_->Instanton_N_Trk_fromPV2_highPurity.push_back(N_Trk_fromPV2_highPurity[jj]);
+//    nBranches_->Instanton_N_Trk_Displaced_fromPV2_highPurity.push_back(N_Trk_Displaced_fromPV2_highPurity[jj]);
+//    nBranches_->Instanton_N_Trk_Displaced_fromPV2_highPurity_pt05.push_back(N_Trk_Displaced_fromPV2_highPurity_pt05[jj]);
+//    nBranches_->Instanton_N_Trk_Displaced_fromPV2_highPurity_pt08.push_back(N_Trk_Displaced_fromPV2_highPurity_pt08[jj]);
+//    nBranches_->Instanton_N_Trk_Displaced_fromPV2_highPurity_pt1.push_back(N_Trk_Displaced_fromPV2_highPurity_pt1[jj]);
+//    nBranches_->Instanton_N_Trk_goodDisplaced_fromPV2_highPurity_sig3.push_back(N_Trk_goodDisplaced_fromPV2_highPurity_sig3[jj]);
+//    nBranches_->Instanton_N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt05.push_back(N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt05[jj]);
+//    nBranches_->Instanton_N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt08.push_back(N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt08[jj]);
+//    nBranches_->Instanton_N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt1.push_back(N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt1[jj]);
+    nBranches_->Instanton_N_SV_sig2.push_back(N_SV_sig2[jj]);
+    nBranches_->Instanton_N_SV_sig3.push_back(N_SV_sig3[jj]);
+    nBranches_->Instanton_N_SV_sig5.push_back(N_SV_sig5[jj]);
+    nBranches_->Instanton_N_Trk_formSV_sig2.push_back(N_Trk_formSV_sig2[jj]);
+    nBranches_->Instanton_N_Trk_formSV_sig3.push_back(N_Trk_formSV_sig3[jj]);
+    nBranches_->Instanton_N_Trk_formSV_sig5.push_back(N_Trk_formSV_sig5[jj]);
+    nBranches_->Instanton_N_Trk_DisplaceVp002.push_back(N_Trk_DisplaceVp002[jj]);
+    nBranches_->Instanton_N_Trk_DisplaceVp002_SVsig2.push_back(N_Trk_DisplaceVp002_SVsig2[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced.push_back(N_Trk_goodDisplaced[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced_highPurity.push_back(N_Trk_goodDisplaced_highPurity[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced_highPurity_pt05.push_back(N_Trk_goodDisplaced_highPurity_pt05[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced_highPurity_pt08.push_back(N_Trk_goodDisplaced_highPurity_pt08[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced_highPurity_pt1.push_back(N_Trk_goodDisplaced_highPurity_pt1[jj]);
-    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality0.push_back(N_Trk_goodDisplaced_PVAssociationQuality0[jj]);
-    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality1.push_back(N_Trk_goodDisplaced_PVAssociationQuality1[jj]);
-    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality4.push_back(N_Trk_goodDisplaced_PVAssociationQuality4[jj]);
-    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality5.push_back(N_Trk_goodDisplaced_PVAssociationQuality5[jj]);
-    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality6.push_back(N_Trk_goodDisplaced_PVAssociationQuality6[jj]);
-    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality7.push_back(N_Trk_goodDisplaced_PVAssociationQuality7[jj]);
+//    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality0.push_back(N_Trk_goodDisplaced_PVAssociationQuality0[jj]);
+//    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality1.push_back(N_Trk_goodDisplaced_PVAssociationQuality1[jj]);
+//    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality4.push_back(N_Trk_goodDisplaced_PVAssociationQuality4[jj]);
+//    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality5.push_back(N_Trk_goodDisplaced_PVAssociationQuality5[jj]);
+//    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality6.push_back(N_Trk_goodDisplaced_PVAssociationQuality6[jj]);
+//    nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQuality7.push_back(N_Trk_goodDisplaced_PVAssociationQuality7[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity.push_back(N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt05.push_back(N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt05[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt08.push_back(N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt08[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1.push_back(N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1[jj]);
     nBranches_->Instanton_Trk_mass.push_back(Trk_masssum[jj]);
     nBranches_->Instanton_Trk_TrkCut_mass.push_back(Trk_TrkCut_mass[jj]);
+    nBranches_->Instanton_Trk_TrkCut_pt05_mass.push_back(Trk_TrkCut_pt05_mass[jj]);
+    nBranches_->Instanton_Trk_TrkCut_pt1_mass.push_back(Trk_TrkCut_pt1_mass[jj]);
     nBranches_->Instanton_Trk_TrkCut_pt.push_back(Trk_TrkCut_pt[jj]);
+    nBranches_->Instanton_Trk_TrkCut_pt05_pt.push_back(Trk_TrkCut_pt05_pt[jj]);
+    nBranches_->Instanton_Trk_TrkCut_pt1_pt.push_back(Trk_TrkCut_pt1_pt[jj]);
+    nBranches_->Instanton_Trk_TrkCut_ptmiss.push_back(Trk_TrkCut_ptmiss[jj]);
+    nBranches_->Instanton_Trk_TrkCut_pt05_ptmiss.push_back(Trk_TrkCut_pt05_ptmiss[jj]);
+    nBranches_->Instanton_Trk_TrkCut_pt1_ptmiss.push_back(Trk_TrkCut_pt1_ptmiss[jj]);
     nBranches_->Instanton_N_TrackJet.push_back(N_Jet[jj]);
     nBranches_->Instanton_N_TrackJet_TrkCut.push_back(N_Jet_TrkCut[jj]);
+    nBranches_->Instanton_N_TrackJet_TrkCut_pt05.push_back(N_Jet_TrkCut_pt05[jj]);
+    nBranches_->Instanton_N_TrackJet_TrkCut_pt1.push_back(N_Jet_TrkCut_pt1[jj]);
     nBranches_->Instanton_vtx_N_goodMuon.push_back(vtx_N_goodMuon[jj]);
     nBranches_->Instanton_vtx_N_goodPFMuon.push_back(vtx_N_goodPFMuon[jj]);
     nBranches_->Instanton_vtx_isBPHtrigger_fromMuon.push_back(vtx_isBPHtrigger_fromMuon[jj]);

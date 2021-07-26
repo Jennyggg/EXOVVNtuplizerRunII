@@ -31,7 +31,7 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
 	vtxToken_             	    (consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertices"))),
 	rhoToken_             	    (consumes<double>(iConfig.getParameter<edm::InputTag>("rho"))),
   	packedpfcandidatesToken_    (consumes<std::vector<pat::PackedCandidate>>(iConfig.getParameter<edm::InputTag>("packedpfcandidates"))), 
-//        svToken_                    (consumes<std::vector<reco::VertexCompositePtrCandidate>>(iConfig.getParameter<edm::InputTag>("SecondaryVertices"))), 
+        svToken_                    (consumes<std::vector<reco::VertexCompositePtrCandidate>>(iConfig.getParameter<edm::InputTag>("SecondaryVertices"))), 
 	puinfoToken_          	    (consumes<std::vector<PileupSummaryInfo> >(iConfig.getParameter<edm::InputTag>("PUInfo"))),
 	geneventToken_        	    (consumes<GenEventInfoProduct>(iConfig.getParameter<edm::InputTag>("genEventInfo"))),     
 	lheEventProductToken_       (consumes<LHEEventProduct>(iConfig.getParameter<edm::InputTag>("externallheProducer"))),     
@@ -78,6 +78,10 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
  
   //std::map< std::string, bool > runFlags;
   runFlags["runOnMC"] = iConfig.getParameter<bool>("runOnMC");
+  runFlags["runOnMCPU"] = iConfig.getParameter<bool>("runOnMCPU");
+  runFlags["runOnHerwigInstanton"] = iConfig.getParameter<bool>("runOnHerwigInstanton");
+  runFlags["runOnSherpaInstanton"] = iConfig.getParameter<bool>("runOnSherpaInstanton");
+  runFlags["runOnMCTest"] = iConfig.getParameter<bool>("runOnMCTest");
   runFlags["useDNN"] = iConfig.getParameter<bool>("useDNN");
   runFlags["useHammer"] = iConfig.getParameter<bool>("useHammer");
   runFlags["doGenParticles"] = iConfig.getParameter<bool>("doGenParticles");
@@ -275,6 +279,7 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
                                                    genparticleToken_,
                                                    packedgenparticleToken_,
                                                    jetInputToken_,
+                                                   svToken_,
                                                    runFlags,
                                                    runValues,
                                                    runStrings,

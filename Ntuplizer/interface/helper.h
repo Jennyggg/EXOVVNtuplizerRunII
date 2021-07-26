@@ -78,7 +78,6 @@
 #include "RecoVertex/KinematicFitPrimitives/interface/MultiTrackKinematicConstraint.h"
 #include "RecoVertex/KinematicFit/interface/TwoTrackMassKinematicConstraint.h"
 
-
 #include "CommonTools/Statistics/interface/ChiSquaredProbability.h"
 
 #include "PhysicsTools/JetMCUtils/interface/JetMCTag.h"

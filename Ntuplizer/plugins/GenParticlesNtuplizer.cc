@@ -93,6 +93,13 @@ bool GenParticlesNtuplizer::fillBranches( edm::Event const & event, const edm::E
     if ( doGenHist_ ) {
         for( unsigned p=0; p<genParticles_->size(); ++p ){
             // Looking At B mesons who decay to Jpsi+X. Catalogue what else they decay to in addition to the Jpsi. Get the particle's pdgid, the pT, eta, and phi of it and the two muons from the jpsi, the jpsi's (aka dimuon) pt, eta, phi, and mass, and the B's visible pt, eta, phi, and mass
+//            std::cout<<"pdgId = "<<(*genParticles_)[p].pdgId()<<", vx = "<<(*genParticles_)[p].vx()<<", vy = "<<(*genParticles_)[p].vy()<<", vz = "<<(*genParticles_)[p].vz()<<std::endl;
+//            std::cout<<"mother pdgId ";
+//            for(unsigned int m=0; m<(*genParticles_)[p].numberOfMothers(); ++m )
+//              std::cout<<(*genParticles_)[p].mother(m)->pdgId()<<" ";
+//            std::cout<<std::endl;
+
+
             if ( (  abs((*genParticles_)[p].pdgId()) >= 500
                     && abs((*genParticles_)[p].pdgId()) < 600 )
                  && (*genParticles_)[p].status() == 2 ) {
