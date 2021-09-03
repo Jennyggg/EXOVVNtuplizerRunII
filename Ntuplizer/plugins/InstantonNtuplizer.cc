@@ -6,7 +6,11 @@
 #include <cstring>
 #include <cmath>
 #include <algorithm>
-void calcS_T_B(std::vector<pat::PackedCandidate>& momenta, Float_t& Spherocity,Float_t& Thrust,Float_t& Broaden, TVector3& taxis, int nSeed){
+#include <numeric>
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+template <typename T>
+//void calcS_T_B(std::vector<pat::PackedCandidate>& momenta, Float_t& Spherocity,Float_t& Thrust,Float_t& Broaden, TVector3& taxis, int nSeed){
+void calcS_T_B(std::vector<T>& momenta, Float_t& Spherocity,Float_t& Thrust,Float_t& Broaden, TVector3& taxis, int nSeed){
   if (momenta.size()==0) {Spherocity=-1;Thrust=-1;Broaden=-1;return;}
   vector<TLorentzVector> p;
   TLorentzVector p_total;
@@ -139,6 +143,55 @@ float cal_IP3D(const reco::Candidate* particle, double pv_x, double pv_y, double
 
 }
 
+void cal_p4_pt(std::vector<std::vector<pat::PackedCandidate>> pf_byvtx, vector<float> &mass, vector<float> &pt_scalarsum,vector<float> &pt){
+  mass.clear();
+  pt_scalarsum.clear();
+  pt.clear();
+  for(size_t ivtx=0; ivtx<pf_byvtx.size(); ivtx++){
+    math::XYZTLorentzVector p4_vertex(0,0,0,0);
+    float pt_vertex = 0.;
+    for(size_t itrk=0; itrk<pf_byvtx[ivtx].size(); itrk++){
+      p4_vertex += pf_byvtx[ivtx][itrk].p4();
+      pt_vertex += pf_byvtx[ivtx][itrk].pt();
+    }
+    mass.push_back(p4_vertex.M());
+    pt.push_back(p4_vertex.pt());
+    pt_scalarsum.push_back(pt_vertex);
+  }
+}
+
+void cal_TrackJet(std::vector<std::vector<pat::PackedCandidate>> pf_byvtx,vector<int> &N_TrackJet, float TrackJet_PtCut){
+//  N_TrackJet.clear();
+  using namespace fastjet;
+  double R=0.4;
+  JetDefinition jet_def(antikt_algorithm, R);
+  for(size_t ivtx=0; ivtx<pf_byvtx.size(); ivtx++){
+    std::vector<PseudoJet> particles;
+    for( size_t trkindex = 0; trkindex < pf_byvtx[ivtx].size(); trkindex++)
+      particles.push_back(PseudoJet(pf_byvtx[ivtx][trkindex].px(),pf_byvtx[ivtx][trkindex].py(),pf_byvtx[ivtx][trkindex].pz(),pf_byvtx[ivtx][trkindex].energy()));
+
+    ClusterSequence cs(particles, jet_def);
+    vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets());
+    Selector select_pt       = SelectorPtMin(TrackJet_PtCut);
+    vector<PseudoJet> selected_jets = select_pt(jets);
+//    float jet_E_vtx=0,jet_pt_vtx=0,jet_px_vtx=0,jet_py_vtx=0,jet_pz_vtx=0;
+//    for(size_t jetindex=0; jetindex < selected_jets.size(); jetindex++){
+//      jet_E_vtx+=selected_jets[jetindex].E();
+//      jet_pt_vtx+=selected_jets[jetindex].pt();
+//      jet_px_vtx+=selected_jets[jetindex].px();
+//      jet_py_vtx+=selected_jets[jetindex].py();
+//      jet_pz_vtx+=selected_jets[jetindex].pz();
+//    }
+//    jet_E.push_back(jet_E_vtx);
+//    jet_pt.push_back(jet_pt_vtx);
+//    jet_px.push_back(jet_px_vtx);
+//    jet_py.push_back(jet_py_vtx);
+//    jet_pz.push_back(jet_pz_vtx);
+    N_TrackJet.push_back((int)selected_jets.size());
+  }
+  return;
+}
+
 //===================================================================================================================
 InstantonNtuplizer::InstantonNtuplizer(  edm::EDGetTokenT<pat::MuonCollection>    muonToken   ,
                        edm::EDGetTokenT<reco::VertexCollection> verticeToken,
@@ -170,6 +223,7 @@ InstantonNtuplizer::InstantonNtuplizer(  edm::EDGetTokenT<pat::MuonCollection>  
   , runOnMCPU_ (runFlags["runOnMCPU"])
   , runOnHerwigInstanton_ (runFlags["runOnHerwigInstanton"])
   , runOnSherpaInstanton_ (runFlags["runOnSherpaInstanton"])
+  , runOnMCTest_ (runFlags["runOnMCTest"])
   , verbose_   (runFlags["verbose"])
   , doTrack_   (runFlags["doTrack"])
   , instan_lumi_ (instan_lumi)
@@ -181,7 +235,6 @@ InstantonNtuplizer::InstantonNtuplizer(  edm::EDGetTokenT<pat::MuonCollection>  
 InstantonNtuplizer::~InstantonNtuplizer(void){
 
 }
-using namespace fastjet;
 bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::EventSetup& iSetup ){
   if(verbose_) std::cout << "[InstantonNtuplizer] ---------------- event, run, lumi = " << event.id().event() << " " << event.id().run() << " " << event.id().luminosityBlock() << "----------------" << std::endl;
 
@@ -201,8 +254,8 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   }
 
 //TrackJet calculating parameters
-  double R=0.4;
-  JetDefinition jet_def(antikt_algorithm, R);
+//  double R=0.4;
+//  JetDefinition jet_def(antikt_algorithm, R);
   float TrackJet_PtCut=3.0; //Pt Cut > 3.0 GeV
   int nSeed_ThrustCalculation=3;
 
@@ -244,8 +297,10 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
     }
 //Sherpa simulates the instantons in a different way: the instanton is considered as a particle (pid=999) instead of a process. So we search for the generated instantons by its pid and store its position.
     else if(runOnSherpaInstanton_){
+//      bool findins = false;
       for( unsigned p=0; p<genParticles_->size(); ++p ){
         if((*genParticles_)[p].pdgId()==999){
+//          findins = true;
           nBranches_->Instanton_VX=(*genParticles_)[p].vx();
           nBranches_->Instanton_VY=(*genParticles_)[p].vy();
           nBranches_->Instanton_VZ=(*genParticles_)[p].vz();
@@ -258,21 +313,36 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
           break;
         }
       }
+//      if(findins == false) cout<<"Cannot find the generated instanton !"<<endl;
     }
     else if(runOnMCTest_){
       for( unsigned p=0; p<genParticles_->size(); ++p ){
-        if((*genParticles_)[p].numberOfMothers()==2 && (*genParticles_)[p].mother(0)->pdgId()==2212 && (*genParticles_)[p].mother(1)->pdgId()==2212){
+//        if((*genParticles_)[p].numberOfMothers()==2 && (*genParticles_)[p].mother(0)->pdgId()==2212 && (*genParticles_)[p].mother(1)->pdgId()==2212){
+        if((*genParticles_)[p].numberOfDaughters()>7&&(*genParticles_)[p].pdgId()==21){
 //          cout<<"pdgId="<<(*genParticles_)[p].pdgId()<<", vx="<<(*genParticles_)[p].vx()<<", vy="<<(*genParticles_)[p].vy()<<", vz="<<(*genParticles_)[p].vz()<<endl;
-          nBranches_->Instanton_VX=(*genParticles_)[p].vx();
-          nBranches_->Instanton_VY=(*genParticles_)[p].vy();
-          nBranches_->Instanton_VZ=(*genParticles_)[p].vz();
-          break;
+//          nBranches_->Instanton_VX=(*genParticles_)[p].vx();
+//          nBranches_->Instanton_VY=(*genParticles_)[p].vy();
+//          nBranches_->Instanton_VZ=(*genParticles_)[p].vz();
+//          break;
         }
+        if((*genParticles_)[p].pdgId()==999) cout<<"Instanton position "<<(*genParticles_)[p].vx()<<" "<<(*genParticles_)[p].vy()<<" "<<(*genParticles_)[p].vz()<<endl;
       }
     }
-
-
-
+/*
+    if(runOnHerwigInstanton_||runOnSherpaInstanton_){
+      vector<reco::GenParticle> genParticles_fscharge;
+      for( unsigned p=0; p<genParticles_->size(); ++p ){
+        if((*genParticles_)[p].status()==1&&(*genParticles_)[p].charge()!=0&&(*genParticles_)[p].eta()>-2.4&&(*genParticles_)[p].eta()<2.4&&(*genParticles_)[p].pt()>=0.5){
+          genParticles_fscharge.push_back((*genParticles_)[p]);
+//          cout<<"pdgId="<<(*genParticles_)[p].pdgId()<<" charge="<<(*genParticles_)[p].charge()<<" px="<<(*genParticles_)[p].px()<<" py="<<(*genParticles_)[p].py()<<" pz="<<(*genParticles_)[p].pz()<<" pt="<<(*genParticles_)[p].pt()<<endl;
+        }
+      }
+      Float_t gen_sph,gen_thrust,gen_broaden;
+      TVector3 gen_taxis;
+      calcS_T_B(genParticles_fscharge, gen_sph,gen_thrust,gen_broaden, gen_taxis, min(nSeed_ThrustCalculation,(int)genParticles_fscharge.size()));
+//      cout<<gen_sph<<" "<<gen_thrust<<" "<<gen_broaden<<" "<<(int)genParticles_fscharge.size()<<endl;
+    }
+*/
     if(runOnMCPU_){
       bool PVfound=false;
       for( unsigned p=0; p<genParticles_->size(); ++p ){
@@ -347,6 +417,10 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   std::vector<pat::Muon> muoncollection;
   muoncollection.clear();
 
+
+cout<<"vertices_ size "<<vertices_->size()<<endl;
+
+
   event.getByToken( packedpfcandidatesToken_               , packedpfcandidates_      );
   event.getByToken(jetInputToken_      , jets_    );
   event.getByToken(svToken_, svs_);
@@ -363,10 +437,10 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   int N_Trk_goodDisplaced_total=0;
   int PV_N_good_hasgoodMuon = 0;
   int PV_N_good_hasgoodPFMuon = 0;
-  int N_Jet_total=0;
-  int N_Jet_TrkCut_total=0;
-  int N_Jet_TrkCut_pt05_total=0;
-  int N_Jet_TrkCut_pt1_total=0;
+//  int N_Jet_total=0;
+//  int N_Jet_TrkCut_total=0;
+//  int N_Jet_TrkCut_pt05_total=0;
+//  int N_Jet_TrkCut_pt1_total=0;
   std::vector<int> N_Trk(vertices_->size(),0);
   std::vector<int> N_Trk_highPurity(vertices_->size(),0);
   std::vector<int> N_Trk_highPurity_pt05(vertices_->size(),0);
@@ -413,14 +487,16 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
 //  std::vector<int> N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt05(vertices_->size(),0);
 //  std::vector<int> N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt08(vertices_->size(),0);
 //  std::vector<int> N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt1(vertices_->size(),0);
-  std::vector<int> N_Trk_formSV_sig2(vertices_->size(),0);
-  std::vector<int> N_Trk_formSV_sig3(vertices_->size(),0);
-  std::vector<int> N_Trk_formSV_sig5(vertices_->size(),0);
-  std::vector<int> N_SV_sig2(vertices_->size(),0);
-  std::vector<int> N_SV_sig3(vertices_->size(),0);
-  std::vector<int> N_SV_sig5(vertices_->size(),0);
-  std::vector<int> N_Trk_DisplaceVp002(vertices_->size(),0);
-  std::vector<int> N_Trk_DisplaceVp002_SVsig2(vertices_->size(),0);
+  std::vector<int> N_Trk_formSV_sig2_pt05(vertices_->size(),0);
+  std::vector<int> N_Trk_formSV_sig3_pt05(vertices_->size(),0);
+  std::vector<int> N_Trk_formSV_sig5_pt05(vertices_->size(),0);
+  std::vector<int> N_Trk_formSV_dxyp02_pt05(vertices_->size(),0);
+  std::vector<int> N_Trk_PVAQLeq4_formSV_dxyp02_pt05(vertices_->size(),0);
+  std::vector<int> N_SV_sig2_pt05(vertices_->size(),0);
+  std::vector<int> N_SV_sig3_pt05(vertices_->size(),0);
+  std::vector<int> N_SV_sig5_pt05(vertices_->size(),0);
+  std::vector<int> N_Trk_DisplaceVp02_pt05(vertices_->size(),0);
+  std::vector<int> N_Trk_formSV_dxyp02_sig2_pt05(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced_highPurity(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced_highPurity_pt05(vertices_->size(),0);
@@ -437,6 +513,8 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   std::vector<int> N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt08(vertices_->size(),0);
   std::vector<int> N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1(vertices_->size(),0);
   std::vector<float> Trk_masssum(vertices_->size(),0);
+  std::vector<float> Trk_ptsum(vertices_->size(),0);
+  std::vector<float> Trk_ptmiss(vertices_->size(),0);
   std::vector<float> Trk_TrkCut_mass(vertices_->size(),0);
   std::vector<float> Trk_TrkCut_pt05_mass(vertices_->size(),0);
   std::vector<float> Trk_TrkCut_pt1_mass(vertices_->size(),0);
@@ -446,10 +524,14 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   std::vector<float> Trk_TrkCut_ptmiss(vertices_->size(),0);
   std::vector<float> Trk_TrkCut_pt05_ptmiss(vertices_->size(),0);
   std::vector<float> Trk_TrkCut_pt1_ptmiss(vertices_->size(),0);
+  std::vector<float> Trk_Purity_pt05_mass(vertices_->size(),0);
+  std::vector<float> Trk_Purity_pt05_pt(vertices_->size(),0);
+  std::vector<float> Trk_Purity_pt05_ptmiss(vertices_->size(),0);
   std::vector<int> N_Jet(vertices_->size(),0);
-  std::vector<int> N_Jet_TrkCut(vertices_->size(),0);
-  std::vector<int> N_Jet_TrkCut_pt05(vertices_->size(),0);
-  std::vector<int> N_Jet_TrkCut_pt1(vertices_->size(),0);
+//  std::vector<int> N_Jet_TrkCut(vertices_->size(),0);
+//  std::vector<int> N_Jet_TrkCut_pt05(vertices_->size(),0);
+//  std::vector<int> N_Jet_TrkCut_pt05_tjpt10(vertices_->size(),0);
+//  std::vector<int> N_Jet_TrkCut_pt1(vertices_->size(),0);
   std::vector<int> vtx_N_goodMuon(vertices_->size(),0);
   std::vector<int> vtx_N_goodPFMuon(vertices_->size(),0);
   std::vector<bool> vtx_isBPHtrigger_fromMuon(vertices_->size(),false); 
@@ -459,6 +541,8 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   std::vector<float> vtx_genvertex_PVDistance(vertices_->size(),999.);
   std::vector<std::vector<reco::TransientTrack>> alltracks(vertices_->size());
   std::vector<std::vector<pat::PackedCandidate>> alltracks_pf(vertices_->size());
+  std::vector<std::vector<reco::TransientTrack>> alltracks_purity_pt05(vertices_->size());
+  std::vector<std::vector<pat::PackedCandidate>> alltracks_pf_purity_pt05(vertices_->size());
   std::vector<std::vector<reco::TransientTrack>> alltracks_TrkCut(vertices_->size());
   std::vector<std::vector<pat::PackedCandidate>> alltracks_pf_TrkCut(vertices_->size());
   std::vector<std::vector<reco::TransientTrack>> alltracks_TrkCut_pt05(vertices_->size());
@@ -485,6 +569,29 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
 //  for(reco::VertexCollection::const_iterator vtx = vertices_->begin(); vtx != vertices_->end(); ++vtx){
 //    cout<<"PV "<<vtx->position().X()<<" "<<vtx->position().Y()<<" "<<vtx->position().Z()<<endl;
 //  }
+
+//  int ijet = 0;
+  int njets_pt20=0;
+  int njets_pt20_MVAPU05=0;
+ // cout<<"test jet"<<endl;
+  for (const pat::Jet &j : *jets_) {
+    if (j.pt() < 20 || j.eta()>2.5 || j.eta()<-2.5) continue;
+    njets_pt20++;
+    if(j.userFloat("pileupJetId:fullDiscriminant")>0.5) njets_pt20_MVAPU05++;
+//    printf("jet  with pt %5.1f (raw pt %5.1f), eta %+4.2f, btag CSV %.3f, CISV %.3f, pileup mva disc %+.2f\n",j.pt(), j.pt()*j.jecFactor("Uncorrected"), j.eta(), std::max(0.f,j.bDiscriminator("combinedSecondaryVertexBJetTags")), std::max(0.f,j.bDiscriminator("combinedInclusiveSecondaryVertexBJetTags")), j.userFloat("pileupJetId:fullDiscriminant"));
+//    if ((++ijet) == 1) {
+//      std::vector daus(j.daughterPtrVector());
+//      std::sort(daus.begin(), daus.end(), [](const reco::CandidatePtr &p1, const reco::CandidatePtr &p2) { return p1->pt() > p2->pt(); }); // the joys of C++11
+//      for (unsigned int i2 = 0, n = daus.size(); i2 < n; ++i2) {
+//        const pat::PackedCandidate &cand = dynamic_cast<const pat::PackedCandidate &>(*daus[i2]);
+//        printf("         constituent %3d: vtxid %d,  pt %6.2f, dz(pv) %+.3f, pdgId %+3d\n", i2,cand.vertexRef().key(),cand.pt(),cand.dz(),cand.pdgId());
+//      }
+//    }
+
+  }
+  nBranches_->Instanton_N_PFAK4Jet_pt20_total = njets_pt20;
+  nBranches_->Instanton_N_PFAK4Jet_pt20_PUMVA05_total = njets_pt20_MVAPU05;
+
   std::vector<pat::PackedCandidate> alltracks_pfmuon;
   for( size_t ii = 0; ii < packedpfcandidates_->size(); ++ii ){
     pat::PackedCandidate pf = (*packedpfcandidates_)[ii];
@@ -674,6 +781,10 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
       }
       alltracks[vtxindex].push_back(_track_);
       alltracks_pf[vtxindex].push_back(pf);
+      if(ishighPurity_pt05){
+        alltracks_purity_pt05[vtxindex].push_back(_track_);
+        alltracks_pf_purity_pt05[vtxindex].push_back(pf);
+      }
       if(PVAssociationQuality>=4&&ishighPurity){ 
         alltracks_TrkCut[vtxindex].push_back(_track_);
         alltracks_pf_TrkCut[vtxindex].push_back(pf);
@@ -709,7 +820,7 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   }
 
 //Calculate total mass of the tracks for each PV
-  for( size_t j = 0; j < vertices_->size(); j++){
+/*  for( size_t j = 0; j < vertices_->size(); j++){
     math::XYZTLorentzVector p4(0,0,0,0);
     math::XYZTLorentzVector p4_TrkCut(0,0,0,0);
     math::XYZTLorentzVector p4_TrkCut05(0,0,0,0);
@@ -742,21 +853,28 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
     Trk_TrkCut_pt05_ptmiss[j] = p4_TrkCut05.pt();
     Trk_TrkCut_pt1_ptmiss[j] = p4_TrkCut1.pt();
   }
-
+*/
+  cal_p4_pt(alltracks_pf, Trk_masssum, Trk_ptsum, Trk_ptmiss);
+  cal_p4_pt(alltracks_pf_purity_pt05, Trk_Purity_pt05_mass,Trk_Purity_pt05_pt,Trk_Purity_pt05_ptmiss);
+  cal_p4_pt(alltracks_pf_TrkCut, Trk_TrkCut_mass,Trk_TrkCut_pt,Trk_TrkCut_ptmiss);
+  cal_p4_pt(alltracks_pf_TrkCut_pt05, Trk_TrkCut_pt05_mass,Trk_TrkCut_pt05_pt,Trk_TrkCut_pt05_ptmiss);
+  cal_p4_pt(alltracks_pf_TrkCut_pt1, Trk_TrkCut_pt1_mass,Trk_TrkCut_pt1_pt,Trk_TrkCut_pt1_ptmiss);
 
 //find secondary vertices by fitting the trajectory of track pairs.
 
   std::vector<reco::TransientTrack> trkpair(2);
   for( size_t j = 0; j < vertices_->size(); j++){
-    std::vector<bool> isfromSV_sig2(alltracks_TrkCut[j].size(),false);
-    std::vector<bool> isfromSV_sig3(alltracks_TrkCut[j].size(),false);
-    std::vector<bool> isfromSV_sig5(alltracks_TrkCut[j].size(),false);
+    std::vector<bool> isfromSV_sig2_pt05(alltracks_purity_pt05[j].size(),false);
+    std::vector<bool> isfromSV_sig3_pt05(alltracks_purity_pt05[j].size(),false);
+    std::vector<bool> isfromSV_sig5_pt05(alltracks_purity_pt05[j].size(),false);
+    std::vector<bool> isfromSV_dxyp02_pt05(alltracks_purity_pt05[j].size(),false);
+    std::vector<bool> isfromSV_dxyp02_pt05_PVAQLeq4(alltracks_purity_pt05[j].size(),false);
     TVector3 pvtx;
     pvtx.SetXYZ((*vertices_)[j].x(),(*vertices_)[j].y(),(*vertices_)[j].z());
-    for( int trkindex1 = 0; trkindex1 < (int)alltracks_TrkCut[j].size()-1; trkindex1++){
-      trkpair[0]=alltracks_TrkCut[j][trkindex1];
-      for( size_t trkindex2 = trkindex1+1; trkindex2 < alltracks_TrkCut[j].size(); trkindex2++){
-        trkpair[1]=alltracks_TrkCut[j][trkindex2];
+   for( int trkindex1 = 0; trkindex1 < (int)alltracks_purity_pt05[j].size()-1; trkindex1++){
+      trkpair[0]=alltracks_purity_pt05[j][trkindex1];
+      for( size_t trkindex2 = trkindex1+1; trkindex2 < alltracks_purity_pt05[j].size(); trkindex2++){
+        trkpair[1]=alltracks_purity_pt05[j][trkindex2];
         KalmanVertexFitter kalman_fitter;
         TransientVertex vtx12 = kalman_fitter.vertex(trkpair);
 //        cout<<"track "<<trkindex1<<", "<<trkindex2<<endl;
@@ -774,36 +892,44 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
 //          cout<<"distance "<<distXY1.value()<<", error "<<distXY1.error()<<", prob "<<TMath::Prob(vtx12.totalChiSquared(), int(vtx12.degreesOfFreedom()))<<endl;
 
           if(distXY1.value()/distXY1.error()>2.) {
-            N_SV_sig2[j]++;
-            isfromSV_sig2[trkindex1]=isfromSV_sig2[trkindex2]=true;
+            N_SV_sig2_pt05[j]++;
+            isfromSV_sig2_pt05[trkindex1]=isfromSV_sig2_pt05[trkindex2]=true;
           }
           if(distXY1.value()/distXY1.error()>3.) {
-            N_SV_sig3[j]++;
-            isfromSV_sig3[trkindex1]=isfromSV_sig3[trkindex2]=true;
+            N_SV_sig3_pt05[j]++;
+            isfromSV_sig3_pt05[trkindex1]=isfromSV_sig3_pt05[trkindex2]=true;
           }
           if(distXY1.value()/distXY1.error()>5.) {
-            N_SV_sig5[j]++;
-            isfromSV_sig5[trkindex1]=isfromSV_sig5[trkindex2]=true;
+            N_SV_sig5_pt05[j]++;
+            isfromSV_sig5_pt05[trkindex1]=isfromSV_sig5_pt05[trkindex2]=true;
+         }
+          if(distXY1.value()>0.02){
+            isfromSV_dxyp02_pt05[trkindex1]=true;
+            isfromSV_dxyp02_pt05[trkindex2]=true;
+            isfromSV_dxyp02_pt05_PVAQLeq4[trkindex1]=(alltracks_pf_purity_pt05[j][trkindex1].pvAssociationQuality()>=4);
+            isfromSV_dxyp02_pt05_PVAQLeq4[trkindex2]=(alltracks_pf_purity_pt05[j][trkindex2].pvAssociationQuality()>=4);
           }
         }
       }
     }
-//find tracks with vertices displaced by 0.002cm to the PV in the transverse plane
-    for( size_t trkindex = 0; trkindex < alltracks_pf_TrkCut[j].size(); trkindex++){
-      if(sqrt(pow(alltracks_pf_TrkCut[j][trkindex].vx()-(*vertices_)[j].x(),2)+pow(alltracks_pf_TrkCut[j][trkindex].vy()-(*vertices_)[j].y(),2))>0.002){
+//find tracks with vertices displaced by 0.02cm to the PV in the transverse plane
+    for( size_t trkindex = 0; trkindex < alltracks_pf_purity_pt05[j].size(); trkindex++){
+      if(sqrt(pow(alltracks_pf_purity_pt05[j][trkindex].vx()-(*vertices_)[j].x(),2)+pow(alltracks_pf_purity_pt05[j][trkindex].vy()-(*vertices_)[j].y(),2))>0.02){
         TVector3 ptrk;
-        ptrk.SetXYZ(alltracks_pf_TrkCut[j][trkindex].px(),alltracks_pf_TrkCut[j][trkindex].py(),alltracks_pf_TrkCut[j][trkindex].pz());
+        ptrk.SetXYZ(alltracks_pf_purity_pt05[j][trkindex].px(),alltracks_pf_purity_pt05[j][trkindex].py(),alltracks_pf_purity_pt05[j][trkindex].pz());
         TVector3 vtrk;
-        vtrk.SetXYZ(alltracks_pf_TrkCut[j][trkindex].vx(),alltracks_pf_TrkCut[j][trkindex].vy(),alltracks_pf_TrkCut[j][trkindex].vz());
+        vtrk.SetXYZ(alltracks_pf_purity_pt05[j][trkindex].vx(),alltracks_pf_purity_pt05[j][trkindex].vy(),alltracks_pf_purity_pt05[j][trkindex].vz());
         TVector3 vdiff = vtrk-pvtx;
         if(vdiff.Dot(ptrk)<0) continue;
-        N_Trk_DisplaceVp002[j]++;
-        if(isfromSV_sig2[(int)trkindex]) N_Trk_DisplaceVp002_SVsig2[j]++;
+        N_Trk_DisplaceVp02_pt05[j]++;
+        if(isfromSV_sig2_pt05[(int)trkindex]) N_Trk_formSV_dxyp02_sig2_pt05[j]++;
       }
     }
-    N_Trk_formSV_sig2[j]=count(isfromSV_sig2.begin(),isfromSV_sig2.end(),true);
-    N_Trk_formSV_sig3[j]=count(isfromSV_sig3.begin(),isfromSV_sig3.end(),true);
-    N_Trk_formSV_sig5[j]=count(isfromSV_sig5.begin(),isfromSV_sig5.end(),true);
+    N_Trk_formSV_sig2_pt05[j]=count(isfromSV_sig2_pt05.begin(),isfromSV_sig2_pt05.end(),true);
+    N_Trk_formSV_sig3_pt05[j]=count(isfromSV_sig3_pt05.begin(),isfromSV_sig3_pt05.end(),true);
+    N_Trk_formSV_sig5_pt05[j]=count(isfromSV_sig5_pt05.begin(),isfromSV_sig5_pt05.end(),true);
+    N_Trk_formSV_dxyp02_pt05[j]=count(isfromSV_dxyp02_pt05.begin(),isfromSV_dxyp02_pt05.end(),true);
+    N_Trk_PVAQLeq4_formSV_dxyp02_pt05[j]=count(isfromSV_dxyp02_pt05_PVAQLeq4.begin(),isfromSV_dxyp02_pt05_PVAQLeq4.end(),true);
   }
 
 //  for( size_t j = 0; j < vertices_->size(); j++){
@@ -815,6 +941,7 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
 //    }
 //  }
 //Calculate TrackJets
+/*
   for( size_t j = 0; j < vertices_->size(); j++){
     std::vector<PseudoJet> particles;
 //    std::vector<TLorentzVector> TrackJet_P4_thisvertex;
@@ -879,7 +1006,10 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
     vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets());
     Selector select_pt       = SelectorPtMin(TrackJet_PtCut);
     vector<PseudoJet> selected_jets = select_pt(jets);
+    Selector select_pt10       = SelectorPtMin(10);
+    vector<PseudoJet> selected_jets_tjpt10 = select_pt10(jets);
     N_Jet_TrkCut_pt05[j] = selected_jets.size();
+    N_Jet_TrkCut_pt05_tjpt10[j] = selected_jets_tjpt10.size();
     N_Jet_TrkCut_pt05_total += selected_jets.size();
     for(size_t jetindex=0; jetindex < selected_jets.size(); jetindex++){
       TrackJet_TrkCut_pt05_E_thisvertex+=selected_jets[jetindex].E();
@@ -924,14 +1054,25 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
     nBranches_->Instanton_TrackJet_TrkCut_pt1_py.push_back(TrackJet_TrkCut_pt1_py_thisvertex);
     nBranches_->Instanton_TrackJet_TrkCut_pt1_pz.push_back(TrackJet_TrkCut_pt1_pz_thisvertex);
   }
-
+*/
+  cal_TrackJet(alltracks_pf,nBranches_->Instanton_N_TrackJet, TrackJet_PtCut);
+  nBranches_->Instanton_N_TrackJet_total = std::accumulate(nBranches_->Instanton_N_TrackJet.begin(), nBranches_->Instanton_N_TrackJet.end(), 0);
+  cal_TrackJet(alltracks_pf_TrkCut,nBranches_->Instanton_N_TrackJet_TrkCut, TrackJet_PtCut);
+  nBranches_->Instanton_N_TrackJet_TrkCut_total = std::accumulate(nBranches_->Instanton_N_TrackJet_TrkCut.begin(), nBranches_->Instanton_N_TrackJet_TrkCut.end(), 0);
+  cal_TrackJet(alltracks_pf_TrkCut_pt05,nBranches_->Instanton_N_TrackJet_TrkCut_pt05, TrackJet_PtCut);
+  nBranches_->Instanton_N_TrackJet_TrkCut_pt05_total = std::accumulate(nBranches_->Instanton_N_TrackJet_TrkCut_pt05.begin(), nBranches_->Instanton_N_TrackJet_TrkCut_pt05.end(), 0);
+  cal_TrackJet(alltracks_pf_TrkCut_pt05,nBranches_->Instanton_N_TrackJet_TrkCut_pt05_tjpt10, 10.);
+  cal_TrackJet(alltracks_pf_purity_pt05,nBranches_->Instanton_N_TrackJet_Purity_pt05, TrackJet_PtCut);
+  cal_TrackJet(alltracks_pf_purity_pt05,nBranches_->Instanton_N_TrackJet_Purity_pt05_tjpt10, 10.);
+  cal_TrackJet(alltracks_pf_TrkCut_pt1,nBranches_->Instanton_N_TrackJet_TrkCut_pt1, TrackJet_PtCut);
+  nBranches_->Instanton_N_TrackJet_TrkCut_pt1_total = std::accumulate(nBranches_->Instanton_N_TrackJet_TrkCut_pt1.begin(), nBranches_->Instanton_N_TrackJet_TrkCut_pt1.end(), 0);
 //Calculate event shape (bservables: Spherocity, Thrust, Broadening
 
   Float_t Spherocity, Thrust, Broaden;
   TVector3 taxis;
 
   for(size_t j = 0; j < vertices_->size(); j++){
-    calcS_T_B(alltracks_pf[j], Spherocity,Thrust,Broaden, taxis, min(nSeed_ThrustCalculation,(int)alltracks_pf[j].size()));
+    calcS_T_B(alltracks_pf_purity_pt05[j], Spherocity,Thrust,Broaden, taxis, min(nSeed_ThrustCalculation,(int)alltracks_pf_purity_pt05[j].size()));
     nBranches_->Instanton_Trk_spherocity.push_back(Spherocity);
     nBranches_->Instanton_Trk_thrust.push_back(Thrust);
     nBranches_->Instanton_Trk_broaden.push_back(Broaden);
@@ -955,6 +1096,12 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
     nBranches_->Instanton_Trk_TrkCut_pt05_spherocity.push_back(Spherocity_TrkCut_pt05);
     nBranches_->Instanton_Trk_TrkCut_pt05_thrust.push_back(Thrust_TrkCut_pt05);
     nBranches_->Instanton_Trk_TrkCut_pt05_broaden.push_back(Broaden_TrkCut_pt05);
+/*    cout<<"reco tracks="<<(int)alltracks_pf_TrkCut_pt05[j].size()<<" sph="<<Spherocity_TrkCut_pt05<<" thrust="<<Thrust_TrkCut_pt05<<" broaden="<<Broaden_TrkCut_pt05<<endl;
+    if(j==0){
+      for(size_t trkindex=0; trkindex<alltracks_pf_TrkCut_pt05[j].size(); trkindex++)
+        cout<<"trk px="<<alltracks_pf_TrkCut_pt05[j][trkindex].px()<<" py="<<alltracks_pf_TrkCut_pt05[j][trkindex].py()<<" pz="<<alltracks_pf_TrkCut_pt05[j][trkindex].pz()<<" pt="<<alltracks_pf_TrkCut_pt05[j][trkindex].pt()<<endl;
+    }
+*/
   }
 
   Float_t Spherocity_TrkCut_pt1, Thrust_TrkCut_pt1, Broaden_TrkCut_pt1;
@@ -1099,12 +1246,14 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
   nBranches_->Instanton_N_Trk_total = N_Trk_total;
   nBranches_->Instanton_N_Trk_Displaced_total = N_Trk_Displaced_total;
   nBranches_->Instanton_N_Trk_goodDisplaced_total = N_Trk_goodDisplaced_total;
-  nBranches_->Instanton_N_TrackJet_total = N_Jet_total;
-  nBranches_->Instanton_N_TrackJet_TrkCut_total = N_Jet_TrkCut_total;
-  nBranches_->Instanton_N_TrackJet_TrkCut_pt05_total = N_Jet_TrkCut_pt05_total;
-  nBranches_->Instanton_N_TrackJet_TrkCut_pt1_total = N_Jet_TrkCut_pt1_total; 
+//  nBranches_->Instanton_N_TrackJet_total = N_Jet_total;
+//  nBranches_->Instanton_N_TrackJet_TrkCut_total = N_Jet_TrkCut_total;
+ // nBranches_->Instanton_N_TrackJet_TrkCut_pt05_total = N_Jet_TrkCut_pt05_total;
+//  nBranches_->Instanton_N_TrackJet_TrkCut_pt1_total = N_Jet_TrkCut_pt1_total; 
   nBranches_->PV_N_good_hasgoodMuon = PV_N_good_hasgoodMuon;
   nBranches_->PV_N_good_hasgoodPFMuon = PV_N_good_hasgoodPFMuon;
+
+cout<<"Event processed. Begin to write the file "<<endl;
   for( size_t jj = 0; jj < vertices_->size(); ++jj ){
     nBranches_->Instanton_N_Trk.push_back(N_Trk[jj]);
     nBranches_->Instanton_N_Trk_highPurity.push_back(N_Trk_highPurity[jj]);
@@ -1151,14 +1300,16 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
 //    nBranches_->Instanton_N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt05.push_back(N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt05[jj]);
 //    nBranches_->Instanton_N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt08.push_back(N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt08[jj]);
 //    nBranches_->Instanton_N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt1.push_back(N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt1[jj]);
-    nBranches_->Instanton_N_SV_sig2.push_back(N_SV_sig2[jj]);
-    nBranches_->Instanton_N_SV_sig3.push_back(N_SV_sig3[jj]);
-    nBranches_->Instanton_N_SV_sig5.push_back(N_SV_sig5[jj]);
-    nBranches_->Instanton_N_Trk_formSV_sig2.push_back(N_Trk_formSV_sig2[jj]);
-    nBranches_->Instanton_N_Trk_formSV_sig3.push_back(N_Trk_formSV_sig3[jj]);
-    nBranches_->Instanton_N_Trk_formSV_sig5.push_back(N_Trk_formSV_sig5[jj]);
-    nBranches_->Instanton_N_Trk_DisplaceVp002.push_back(N_Trk_DisplaceVp002[jj]);
-    nBranches_->Instanton_N_Trk_DisplaceVp002_SVsig2.push_back(N_Trk_DisplaceVp002_SVsig2[jj]);
+    nBranches_->Instanton_N_SV_sig2_pt05.push_back(N_SV_sig2_pt05[jj]);
+    nBranches_->Instanton_N_SV_sig3_pt05.push_back(N_SV_sig3_pt05[jj]);
+    nBranches_->Instanton_N_SV_sig5_pt05.push_back(N_SV_sig5_pt05[jj]);
+    nBranches_->Instanton_N_Trk_formSV_sig2_pt05.push_back(N_Trk_formSV_sig2_pt05[jj]);
+    nBranches_->Instanton_N_Trk_formSV_sig3_pt05.push_back(N_Trk_formSV_sig3_pt05[jj]);
+    nBranches_->Instanton_N_Trk_formSV_sig5_pt05.push_back(N_Trk_formSV_sig5_pt05[jj]);
+    nBranches_->Instanton_N_Trk_formSV_dxyp02_pt05.push_back(N_Trk_formSV_dxyp02_pt05[jj]);
+    nBranches_->Instanton_N_Trk_PVAQLeq4_formSV_dxyp02_pt05.push_back(N_Trk_PVAQLeq4_formSV_dxyp02_pt05[jj]);
+    nBranches_->Instanton_N_Trk_DisplaceVp02_pt05.push_back(N_Trk_DisplaceVp02_pt05[jj]);
+    nBranches_->Instanton_N_Trk_formSV_dxyp02_sig2_pt05.push_back(N_Trk_formSV_dxyp02_sig2_pt05[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced.push_back(N_Trk_goodDisplaced[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced_highPurity.push_back(N_Trk_goodDisplaced_highPurity[jj]);
     nBranches_->Instanton_N_Trk_goodDisplaced_highPurity_pt05.push_back(N_Trk_goodDisplaced_highPurity_pt05[jj]);
@@ -1178,16 +1329,20 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
     nBranches_->Instanton_Trk_TrkCut_mass.push_back(Trk_TrkCut_mass[jj]);
     nBranches_->Instanton_Trk_TrkCut_pt05_mass.push_back(Trk_TrkCut_pt05_mass[jj]);
     nBranches_->Instanton_Trk_TrkCut_pt1_mass.push_back(Trk_TrkCut_pt1_mass[jj]);
+    nBranches_->Instanton_Trk_Purity_pt05_mass.push_back(Trk_Purity_pt05_mass[jj]);
     nBranches_->Instanton_Trk_TrkCut_pt.push_back(Trk_TrkCut_pt[jj]);
     nBranches_->Instanton_Trk_TrkCut_pt05_pt.push_back(Trk_TrkCut_pt05_pt[jj]);
     nBranches_->Instanton_Trk_TrkCut_pt1_pt.push_back(Trk_TrkCut_pt1_pt[jj]);
+    nBranches_->Instanton_Trk_Purity_pt05_pt.push_back(Trk_Purity_pt05_pt[jj]);
     nBranches_->Instanton_Trk_TrkCut_ptmiss.push_back(Trk_TrkCut_ptmiss[jj]);
     nBranches_->Instanton_Trk_TrkCut_pt05_ptmiss.push_back(Trk_TrkCut_pt05_ptmiss[jj]);
     nBranches_->Instanton_Trk_TrkCut_pt1_ptmiss.push_back(Trk_TrkCut_pt1_ptmiss[jj]);
-    nBranches_->Instanton_N_TrackJet.push_back(N_Jet[jj]);
-    nBranches_->Instanton_N_TrackJet_TrkCut.push_back(N_Jet_TrkCut[jj]);
-    nBranches_->Instanton_N_TrackJet_TrkCut_pt05.push_back(N_Jet_TrkCut_pt05[jj]);
-    nBranches_->Instanton_N_TrackJet_TrkCut_pt1.push_back(N_Jet_TrkCut_pt1[jj]);
+    nBranches_->Instanton_Trk_Purity_pt05_ptmiss.push_back(Trk_Purity_pt05_ptmiss[jj]);
+//    nBranches_->Instanton_N_TrackJet.push_back(N_Jet[jj]);
+//    nBranches_->Instanton_N_TrackJet_TrkCut.push_back(N_Jet_TrkCut[jj]);
+//    nBranches_->Instanton_N_TrackJet_TrkCut_pt05.push_back(N_Jet_TrkCut_pt05[jj]);
+//    nBranches_->Instanton_N_TrackJet_TrkCut_pt05_tjpt10.push_back(N_Jet_TrkCut_pt05_tjpt10[jj]);
+//    nBranches_->Instanton_N_TrackJet_TrkCut_pt1.push_back(N_Jet_TrkCut_pt1[jj]);
     nBranches_->Instanton_vtx_N_goodMuon.push_back(vtx_N_goodMuon[jj]);
     nBranches_->Instanton_vtx_N_goodPFMuon.push_back(vtx_N_goodPFMuon[jj]);
     nBranches_->Instanton_vtx_isBPHtrigger_fromMuon.push_back(vtx_isBPHtrigger_fromMuon[jj]);
@@ -1216,5 +1371,6 @@ bool InstantonNtuplizer::fillBranches( edm::Event const & event, const edm::Even
       nBranches_->Trk_charge.push_back(Trk_charge[jj]);
     }
   }
+  cout<<"finish this event"<<endl;
   return true;
 }

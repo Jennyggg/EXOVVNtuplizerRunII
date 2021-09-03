@@ -70,6 +70,9 @@ bool VerticesNtuplizer::fillBranches( edm::Event const & event, const edm::Event
     nBranches_->PV_x.push_back(vtx->position().X());
     nBranches_->PV_y.push_back(vtx->position().Y());
     nBranches_->PV_z.push_back(vtx->position().Z()); 
+    nBranches_->PV_xError.push_back(vtx->xError());
+    nBranches_->PV_yError.push_back(vtx->yError());
+    nBranches_->PV_zError.push_back(vtx->zError());
 //      break;
     
     

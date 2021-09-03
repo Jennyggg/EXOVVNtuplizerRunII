@@ -400,11 +400,11 @@ Ntuplizer::~Ntuplizer()
 ///////////////////////////////////////////////////////////////////////////////////
 void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 
-  //  std::cout << "check1" << std::endl;
+//    std::cout << "check1" << std::endl;
   
   nBranches_->reset();
 
-  //  std::cout << "check2" << std::endl;
+//    std::cout << "check2" << std::endl;
 
   edm::Handle<reco::VertexCollection> vertices;
   iEvent.getByToken(vtxToken_, vertices);
@@ -426,10 +426,11 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if(!isSave) break;
   }
 
-//    std::cout << "isSave =  " << isSave << std::endl;
+//   std::cout << "isSave =  " << isSave << std::endl;
   if(isSave){
-  //      std::cout << "-------------- save -----------" << std::endl;
+//        std::cout << "-------------- save -----------" << std::endl;
     nBranches_->fillTree();
+//    std::cout<<"---------------fillTree--------------"<<std::endl;
     nevents++;
   }
   

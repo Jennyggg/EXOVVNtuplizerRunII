@@ -909,15 +909,16 @@ public:
 //  std::vector<int>                  Instanton_N_Trk_goodDisplaced_fromPV2_highPurity_sig3_pt1;
   int                               Instanton_N_SV_default;
 
-  std::vector<int>                  Instanton_N_SV_sig2;
-  std::vector<int>                  Instanton_N_SV_sig3;
-  std::vector<int>                  Instanton_N_SV_sig5;
-  std::vector<int>                  Instanton_N_Trk_formSV_sig2;
-  std::vector<int>                  Instanton_N_Trk_formSV_sig3;
-  std::vector<int>                  Instanton_N_Trk_formSV_sig5;
-
-  std::vector<int>                  Instanton_N_Trk_DisplaceVp002;
-  std::vector<int>                  Instanton_N_Trk_DisplaceVp002_SVsig2;
+  std::vector<int>                  Instanton_N_SV_sig2_pt05;
+  std::vector<int>                  Instanton_N_SV_sig3_pt05;
+  std::vector<int>                  Instanton_N_SV_sig5_pt05;
+  std::vector<int>                  Instanton_N_Trk_formSV_sig2_pt05;
+  std::vector<int>                  Instanton_N_Trk_formSV_sig3_pt05;
+  std::vector<int>                  Instanton_N_Trk_formSV_sig5_pt05;
+  std::vector<int>                  Instanton_N_Trk_formSV_dxyp02_pt05;
+  std::vector<int>                  Instanton_N_Trk_PVAQLeq4_formSV_dxyp02_pt05;
+  std::vector<int>                  Instanton_N_Trk_DisplaceVp02_pt05;
+  std::vector<int>                  Instanton_N_Trk_formSV_dxyp02_sig2_pt05;
 
   int                               Instanton_N_Trk_goodDisplaced_total; //with d0/errord0 > 5, d0>0.02
   std::vector<int>                  Instanton_N_Trk_goodDisplaced;
@@ -935,15 +936,20 @@ public:
   std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt05;
   std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt08;
   std::vector<int>                  Instanton_N_Trk_goodDisplaced_PVAssociationQualityLeq4_highPurity_pt1;
-  int                               Instanton_N_PFJet_total;
+//  int                               Instanton_N_PFAK4Jet_total;
+  int                               Instanton_N_PFAK4Jet_pt20_total;
+  int                               Instanton_N_PFAK4Jet_pt20_PUMVA05_total;
   std::vector<int>                  Instanton_N_TrackJet;
   int                               Instanton_N_TrackJet_total;
   std::vector<int>                  Instanton_N_TrackJet_TrkCut;//Cut on tracks with high purity and PVAssociationQuality >=4
   int                               Instanton_N_TrackJet_TrkCut_total;
   std::vector<int>                  Instanton_N_TrackJet_TrkCut_pt05;
+  std::vector<int>                  Instanton_N_TrackJet_TrkCut_pt05_tjpt10;
   int                               Instanton_N_TrackJet_TrkCut_pt05_total;
   std::vector<int>                  Instanton_N_TrackJet_TrkCut_pt1;
   int                               Instanton_N_TrackJet_TrkCut_pt1_total;
+  std::vector<int>                  Instanton_N_TrackJet_Purity_pt05;
+  std::vector<int>                  Instanton_N_TrackJet_Purity_pt05_tjpt10;
 
 //  std::vector<bool>                 Jet_isPFJet;
 //  std::vector<bool>                 Jet_isCaloJet;
@@ -959,23 +965,26 @@ public:
   std::vector<float>                Instanton_Trk_TrkCut_ptmiss; //amplitude of vector sum of the track pt
   std::vector<float>                Instanton_Trk_TrkCut_pt05_ptmiss;// pt>0.5 GeV cut for tracks
   std::vector<float>                Instanton_Trk_TrkCut_pt1_ptmiss;// pt>1 GeV cut for tracks
+  std::vector<float>                Instanton_Trk_Purity_pt05_mass;
+  std::vector<float>                Instanton_Trk_Purity_pt05_pt;
+  std::vector<float>                Instanton_Trk_Purity_pt05_ptmiss;
 //  std::vector<std::vector<TLorentzVector>>                TrackJet_P4;
 //  std::vector<std::vector<TLorentzVector>>                TrackJet_TrkCut_P4;
-  std::vector<float>                Instanton_TrackJet_TrkCut_E; //sum up the 4-momentum of trackjets, take the E
-  std::vector<float>                Instanton_TrackJet_TrkCut_pt; //scalar sum of trackjets
-  std::vector<float>                Instanton_TrackJet_TrkCut_px;
-  std::vector<float>                Instanton_TrackJet_TrkCut_py;
-  std::vector<float>                Instanton_TrackJet_TrkCut_pz;
-  std::vector<float>                Instanton_TrackJet_TrkCut_pt05_E;
-  std::vector<float>                Instanton_TrackJet_TrkCut_pt05_pt;
-  std::vector<float>                Instanton_TrackJet_TrkCut_pt05_px;
-  std::vector<float>                Instanton_TrackJet_TrkCut_pt05_py;
-  std::vector<float>                Instanton_TrackJet_TrkCut_pt05_pz;
-  std::vector<float>                Instanton_TrackJet_TrkCut_pt1_E;
-  std::vector<float>                Instanton_TrackJet_TrkCut_pt1_pt;
-  std::vector<float>                Instanton_TrackJet_TrkCut_pt1_px;
-  std::vector<float>                Instanton_TrackJet_TrkCut_pt1_py;
-  std::vector<float>                Instanton_TrackJet_TrkCut_pt1_pz;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_E; //sum up the 4-momentum of trackjets, take the E
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pt; //scalar sum of trackjets
+//  std::vector<float>                Instanton_TrackJet_TrkCut_px;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_py;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pz;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pt05_E;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pt05_pt;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pt05_px;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pt05_py;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pt05_pz;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pt1_E;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pt1_pt;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pt1_px;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pt1_py;
+//  std::vector<float>                Instanton_TrackJet_TrkCut_pt1_pz;
   std::vector<float>                Instanton_Trk_spherocity;
   std::vector<float>                Instanton_Trk_broaden;
   std::vector<float>                Instanton_Trk_thrust;
@@ -1565,6 +1574,9 @@ public:
   std::vector<float>                PV_x             ;
   std::vector<float>                PV_y             ;
   std::vector<float>                PV_z             ;
+  std::vector<float>                PV_xError        ;
+  std::vector<float>                PV_yError        ;
+  std::vector<float>                PV_zError        ;
   std::vector<float>                BeamSpot_x0;
   std::vector<float>                BeamSpot_y0;
   std::vector<float>                BeamSpot_z0;
