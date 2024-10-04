@@ -1,9 +1,8 @@
-#cmsRun  config_generic_opt_skimmed_crab.py  RunPeriod="Fall17" # for MC from 2017
-#cmsRun  config_generic_opt_skimmed_crab.py  RunPeriod="Run2017B" # for Data
-#cmsRun  config_generic_opt_skimmed_crab.py  RunPeriod="Autumn18" # for MC from 2018
+#cmsRun  config_generic_opt_skimmed_crab_test.py  RunPeriod="Fall17" # for MC
+#cmsRun  config_generic_opt_skimmed_crab_test.py  RunPeriod="Run2017B" # for Data
+#cmsRun  config_generic_opt_skimmed_crab_test.py  RunPeriod="Autumn18" # for MC from 2018
 
 import glob
-import re
 ###### Process initialization ##########
 
 import FWCore.ParameterSet.Config as cms
@@ -13,12 +12,8 @@ process = cms.Process("Ntuple")
 process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('Configuration.Geometry.GeometryRecoDB_cff')
 
-#process.TFileService = cms.Service("TFileService",
-#                                    fileName = cms.string('OUTPUTFILE')
-#                                   )
 process.TFileService = cms.Service("TFileService",
-                                    fileName = cms.string('/pnfs/psi.ch/cms/trivcat/store/user/jinw/flatTuple_v8/flatTuple_instanton_M10_4f_noInstanton_externalb_CP1nonDiff.root')
-                                    #fileName = cms.string('CP1_minbias_noMPI_noBR.root'9
+                                    fileName = cms.string('flatTuple_MB_trk_noPU_new_EPOS_test.root')
                                    )
 
 #from EXOVVNtuplizerRunII.Ntuplizer.ntuplizerOptions_data_cfi import config
@@ -35,7 +30,9 @@ from EXOVVNtuplizerRunII.Ntuplizer.ntuplizerOptions_generic_cfi import config
 #config["VPROBCUT"] = 0.1
 #config["DNNCUT"] = 0.1443
 #config["JSONFILE"] = 'JSON/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'
-#config["DOGENEVENT"] = False				   
+config["DOGENPARTICLES"] = True
+config["DOGENEVENT"] = False
+config["DOPILEUP"]= True			   
 ####### Config parser ##########
 
 import FWCore.ParameterSet.VarParsing as VarParsing
@@ -61,10 +58,6 @@ options.register( 'runUpToEarlyF',
 options.maxEvents = -1
 
 #data file
-#samplefile="samples/CP1_E.txt"
-
-#with open(samplefile,'r') as fsample:
-#  inputlist = [line.rstrip('\n') for line in fsample]
      
 #options.inputFiles ='file:/work/pmatorra/JpsiAnalysis/2018/CMSSW_10_2_10/src/EXOVVNtuplizerRunII/Ntuplizer/miniAOD_99.root'
 #options.inputFiles = '/store/user/cgalloni/BJpsiX_MuMu_230819/Autumn18_10_2_9_miniAOD/190823_131752/0000/miniAOD_57.root'
@@ -88,45 +81,20 @@ options.maxEvents = -1
 #options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/3ACE2624-450D-5F47-8540-6F1DD22AC1F3.root'
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/sherpa_4f_wMPI_noPU/*.root")]
 #inputlist = ["file://"+f for f in glob.glob("/work/sleontsi/forWeijie/*.root")]
-
-#with open("files_2018C_LowPU.txt") as file:
-#    lines = [line.rstrip() for line in file]
-#inputlist = lines[:6]
-
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018_lowPU_ext1/*.root")]
-
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/sherpa_4f_sHatOverN_wMPI_noPU.no_duplicates/*.root")]
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_EPOS_pp_splitD/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_mixAndMatch_noPU_splitA/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_mixAndMatch_noPU_splitG/*.root")]
+#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_EPOS_pp/*.root")]
+#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_mixAndMatch_noPU/*.root")]
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP2_mixAndMatch_noPU/*.root")]
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP4_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1plusEvtShape_mixAndMatch_noPU/*.root")]
+inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_EPOS_pp_v2/*.root")]
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1plusNCh_mixAndMatch_noPU/*.root")]
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_TuneUp_mixAndMatch_noPU/*.root")]
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/h7_4f_dipoleShower_wMPI_CT10//*.root")]
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/h7_4f_dipoleShower_wMPI_CT10_noPU/*.root")]
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/AODs/sherpa_4f_sHatOverN_wMPI_flatPU0to10/*.root")]
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/sherpa_4f_sHatOverN_wMPI_flatPU0to10/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/CP5_minBias_PoissonOnePu_splitA/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/work/kcormier/instantons/hepmc/privateGenProds/run/minBias_A3P_mixAndMatch_noPU/output_999999/step_4.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP5_2FIXPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_A14CTEQL1_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_A14HERAPDF1p5LO_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_A14MSTW2008LO_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_inel_A3P_diffractive_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_A3P_inel_mixAndMatch_noPU_splitC/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_Monash_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CUEP8M1_inel_mixAndMatch_noPU_splitA/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_A14_inel_mixAndMatch_noPU_splitB/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_A14var1down_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP5CR2_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_mixAndMatch_inel_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CUEP8M2T4_RopeHadStringShove_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_MonashRopeShovingOnly_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_mixAndMatch_inel_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_mixAndMatch_noPU_splitG/*.root")]
+#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_mixAndMatch_noPU/*.root")]
 #inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/sherpa_4f_sHatOverN_noMPI_noPU/*.root")]
 #inputlist = ["file:///pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/sherpa_4f_noPU/instanton_sherpa_4f_noPU_miniAOD_7.root"]
 #inputlist = ["file:///pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/sherpa_4f_sHatOverN_wMPI/instanton_sherpa_4f_sHatOverN_wMPI_miniAOD_3.root"]
@@ -140,95 +108,8 @@ options.maxEvents = -1
 #"/store/mc/RunIIAutumn18MiniAOD/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v2/270000/AADC4195-E370-F84E-88A6-4A5C8A960AD8.root",
 #"/store/mc/RunIIAutumn18MiniAOD/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v2/270000/F4CF1E05-E0BE-DB44-ADD8-7D1FE3EAC4EC.root",
 #"/store/mc/RunIIAutumn18MiniAOD/MinBias_NoFilter_SoftQCDnonD_TuneCP5_13TeV-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v2/270000/F69132D4-BAE7-8B49-BA36-E4AD11670FD0.root"]
-#inputlist = ["file:///work/kcormier/instantons/hepmc/privateGenProds/run/CP5_minBias_PoissonOnePu/output_999995/step_3.root"]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instantons_RabmoCP1_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instantonsM10p7_RabmoCP1_mixAndMatch_noPU_splitA/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/CP5_minBias_PoissonOnePu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_H7_mixAndMatch_noPU_splitA/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CUEP8M1pdfFix_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CUEP8M2T4_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CUEP8M2T4_RopeHadStringShove_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP2_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP5alphaSFSRdown_inel_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_inel_beamFix_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_inel_minPions40_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_inel_minPionsKaonsPs40_noPU_splitA/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_inel_minPionsKaonsPs40_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_inel_mixAndMatch_noPU_splitB/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_mixAndMatch_noPU_splitA/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_inel_minPionsKaonsPs40_noPU_splitA/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_inel_minPionsKaons40_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_inel_beamFixBetaFix_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP5_inel_PoissonTwoPFivePu//*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M10_4f_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M3_flat_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M10_4f_flat_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_CP1_nonDiffractive_mixAndMatch_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M6_3f_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M7p5_3f_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M12_3f_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M6_3f_A3P_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M9_3f_DoubleInst_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M3_3f_TenInst_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M4p5_3f_OttoInst_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M6_3f_OttoInst_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M20_3f_RegulatedP6_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M20_4f_RegulatedP6_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M4p5_RegulatedP6_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M6_3f_SixInst_RegulatedP6_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M9_3f_pTMatch1bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M9_3f_Avgb_pTMatch1bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M7_3f_pTMatch1bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M20_3f_Avgb_pTMatch1bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M15_ggToqq_Rambo_noPu//*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M9_ggToqq_pTMatch1bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M20_3f_minBiasb_pTMatch1bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M20_3f_wMPIVetoHook_minBiasb_pTMatch1bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M6_3f_propMPIVetoHook_minBiasb_pTMatch1bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M15_3f_DoubleInst_propMPIVetoHook_minBiasb_pTMatch1bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M9_3f_propVetoTest_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M9_3f_minBiasbTest_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_Fake_fixFac_test_Rambo_noPU//*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M20_3f_avgVeto1_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M30_3f_DoubleInst_propVeto2_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M30_3f_as118_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M9_3f_propVeto4_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M35_3f_DoubleInst_propVeto6_Rambo_noPu/*.root")]
-inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M10_4f_noInstanton_externalb_CP1nonDiff/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/epos4_noPU/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M35_3f_propVeto3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M15_3f_wMPIVetoHook_minBiasb_pTMatch1bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M4_3f_pTMatch1bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M12_3f_QuintInst_RegulatedP6_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M20_3f_DoubleInst_RegulatedP6_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M20_4f_RegulatedP6_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M7p5_3f_QuadInst_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M6_3f_bSelScale3_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M6_3f_QuintInst_Rambo_noPu/*.root")]
-#inputlist = ["file://"+f for f in glob.glob("/pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/instanton_M3_3f_noMPI_Rambo_noPu/*.root")]
-
-#options.inputFiles = "file:///pnfs/psi.ch/cms/trivcat/store/data/Run2018C/ZeroBias/MINIAOD/12Nov2019_UL2018_LowPU-v1/00000/F75F0337-CCDB-8840-94AC-DB0F5E3A518D.root"
-#options.inputFiles = "file:///pnfs/psi.ch/cms/trivcat/store/data/Run2018C/ZeroBias/MINIAOD/12Nov2019_UL2018_LowPU-v1/FOLDER/FILENAME"
-def atoi(text):
-    return int(text) if text.isdigit() else text
-def natural_keys(text):
-    return [ atoi(c) for c in re.split(r'(\d+)', text) ]
-inputlist.sort(key=natural_keys)
 options.inputFiles = inputlist
-#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBias/MinBias_TuneCP5_13TeV-pythia8_normalPU.root'
-#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/MinBias/MinBias_TuneCP5_13TeV-pythia8_noPU_1.root'
-#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018_lowPU_ext1/02AB8D6A-C703-DE4A-ADD9-908F5C43C669.root'
-#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018_lowPU_ext1/279DF05C-9EE6-8149-AEC6-2DEAB48DD73C.root'
-#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018_lowPU_ext1/28CCEB8A-B026-6246-A38E-6C6737C8D2D2.root'
-#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018_lowPU_ext1/3B8C0382-B1A4-7C43-938E-E505D634AC38.root'
-#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018_lowPU_ext1/421CE546-DC03-334F-9B09-2B8A183E1A1F.root'
-#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018_lowPU_ext1/F75F0337-CCDB-8840-94AC-DB0F5E3A518D.root'
-#options.inputFiles = 'file:///work/kcormier/instantons/hepmc/privateGenProds/run/minBias_CP1_inel_minPions40_noPU/output_999999/step_4.root'
-#options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/minBias_H7_mixAndMatch_noPU/instanton_minBias_H7_mixAndMatch_noPU_miniAOD_1.root'
-#options.inputFiles = 'file:///work/kcormier/instantons/hepmc/privateGenProds/run/minBias_CP1_inel_noMPI_mixAndMatch_noPu/output_999998/step_4.root'
 #options.inputFiles = 'file:///pnfs/psi.ch/cms/trivcat/store/user/kcormier/instantons/instantons/miniAODs/h7_4f_dipoleShower_wMPI_CT10_noPU.no_duplicates/instanton_h7_4f_dipoleShower_wMPI_CT10_noPU.no_duplicates_miniAOD_22.root'
-#options.inputFiles = 'file:///work/kcormier/instantons/hepmc/privateGenProds/run/minBias_CP1_inel_noMPI_noRemnants_mixAndMatch_noPu/output_999985/step_4.root'
 #options.inputFiles = '/store/data/Run2018A/ZeroBias/MINIAOD/17Sep2018-v1/00000/184836FF-0596-0744-9C8D-A1C79A1C7F29.root'
 #'file:///work/kcormier/instantons/miniAODs/h7_rand3_4f/'
 
@@ -442,44 +323,16 @@ else : #Data
    print "jec JEC_runDependent_suffix %s ,  prefix %s " %(JEC_runDependent_suffix,JECprefix)
 
 #print "jec prefix ", JECprefix
-GT='106X_dataRun2_v11'
+
 print "doing corrections  to met on the fly %s" ,config["CORRMETONTHEFLY"]
+
 print "*************************************** GLOBAL TAG *************************************************" 
 print GT
 print "****************************************************************************************************" 
 process.GlobalTag = GlobalTag(process.GlobalTag, GT)
-'''
-###   # this is an example how to load optical functions from a DB tag (and override those from GT)
-from CondCore.CondDB.CondDB_cfi import *
-process.CondDBOptics = CondDB.clone( connect = 'frontier://FrontierProd/CMS_CONDITIONS' )
-process.PoolDBESSourceOptics = cms.ESSource("PoolDBESSource",
-    process.CondDBOptics,
-    DumpStat = cms.untracked.bool(False),
-    toGet = cms.VPSet(cms.PSet(
-    record = cms.string('CTPPSOpticsRcd'),
-    tag = cms.string("PPSOpticalFunctions_offline_v2")
-    )),
-   )
-  
-process.esPreferDBFileOptics = cms.ESPrefer("PoolDBESSource", "PoolDBESSourceOptics")
 
-###   # this is an example how to load alignment from SQLite file (and override the one from GT)
-from CondCore.CondDB.CondDB_cfi import *
-process.CondDBAlignment = CondDB.clone(connect='sqlite_file:/afs/cern.ch/user/c/cmora/public/CTPPSDB/AlignmentSQlite/CTPPSRPRealAlignment_table_v26Apr.db')
-process.PoolDBESSourceAlignment = cms.ESSource("PoolDBESSource",
-    process.CondDBAlignment,
-    #timetype = cms.untracked.string('runnumber'),
-    toGet = cms.VPSet(cms.PSet(
-        record = cms.string('RPRealAlignmentRecord'),
-        tag = cms.string('CTPPSRPAlignment_real_table_v26A19')
-    ))
-)
-process.esPreferDBFileAlignment = cms.ESPrefer("PoolDBESSource", "PoolDBESSourceAlignment")
 
-# local RP reconstruction chain with standard settings
-#process.load("RecoCTPPS.Configuration.recoCTPPS_cff")
 
-'''
 
 if config["CORRMETONTHEFLY"]:  
    if config["RUNONMC"]:
@@ -522,8 +375,6 @@ process.ntuplizer = cms.EDAnalyzer("Ntuplizer",
     doGenHist         = cms.bool(config["DOGENHIST"]),
     doInstanton       = cms.bool(config["DOINSTANTON"]),
     doTrack           = cms.bool(config["DOTRACK"]),
-    doTrackJet           = cms.bool(config["DOTRACKJET"]),
-    doForwardProton   = cms.bool(config["DOFORWARDPROTON"]),
     TrackRandomDrop   = cms.bool(config["TRACKRANDOMDROP"]),
     verbose           = cms.bool(config["VERBOSE"]),
     dzcut             = cms.double(config['DZCUT']),
@@ -542,7 +393,7 @@ process.ntuplizer = cms.EDAnalyzer("Ntuplizer",
     muons = cms.InputTag("slimmedMuons"),
     electrons = cms.InputTag("slimmedElectrons"),
     ebRecHits = cms.InputTag("reducedEgamma","reducedEBRecHits"),
-    run = cms.string(options.RunPeriod),
+
 #    eleHEEPId51Map = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV51"),
 #    eleHEEPIdMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV60"),
 #    eleVetoIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-veto"),
@@ -626,8 +477,6 @@ process.ntuplizer = cms.EDAnalyzer("Ntuplizer",
     noiseFilterSelection_metFilters = cms.string('Flag_METFilters'),
 
     packedpfcandidates = cms.InputTag('packedPFCandidates'),
-    ctppsproton_single_rp = cms.InputTag("ctppsProtons","singleRP"),
-    ctppsproton_multi_rp = cms.InputTag("ctppsProtons","multiRP"),
     SecondaryVertices = cms.InputTag('slimmedSecondaryVertices')
 #    losttrack = cms.InputTag('lostTracks')
 )
@@ -661,6 +510,8 @@ process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter(
 process.TransientTrackBuilderESProducer = cms.ESProducer("TransientTrackBuilderESProducer",
     ComponentName = cms.string('TransientTrackBuilder')
 )
+
+
 ####### Final path ##########
 process.p = cms.Path()
 

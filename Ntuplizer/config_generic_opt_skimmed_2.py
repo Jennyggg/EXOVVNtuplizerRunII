@@ -38,8 +38,8 @@ process.TFileService = cms.Service("TFileService",
 #                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/flatTuple_run316569_v4.root')
 #                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/debug.root')
 #                                    fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_run316569_v4.root')
-                                   fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_run316199_v4.root')
-#                                   fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_run316187_v4.root')
+#                                   fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_run316199_v4_6.root')
+                                   fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/flatTuple_run316187_v4.root')
 #                                   fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/flatTuple_run316187_v4.root')
 #                                   fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/flatTuple_run316199_v4.root')
 #                                   fileName = cms.string('file:///pnfs/psi.ch/cms/trivcat/store/user/jinw/ZeroBias2018/flatTuple_run316569_v4.root')
@@ -63,7 +63,7 @@ from EXOVVNtuplizerRunII.Ntuplizer.ntuplizerOptions_generic_cfi import config
 #config["VPROBCUT"] = 0.1
 #config["DNNCUT"] = 0.2
 #config["RUNONMC"]=False
-config["JSONFILE"] = 'JSON/Cert_2018_Run316199.txt' 
+config["JSONFILE"] = 'JSON/Cert_2018_Run316187.txt' 
 
 ####### Config parser ##########
 
@@ -89,21 +89,20 @@ options.maxEvents = -1
 
 #data file
 
-run = 316199
+run = 316187
 dataset = "/ParkingBPH1/Run2018A-22Mar2019-v1/MINIAOD"
 #dataset = "/ZeroBias/Run2018A-17Sep2018-v1/MINIAOD"
 options.inputFiles =  getFileListDAS(dataset=dataset,instance="prod/global",run=run)
+#run 316187
 #options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260001/47AA6828-28A2-0847-9517-0C6380E26955.root")
-#options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260001/154C6E03-3DBC-6448-A283-F0EF98CDEB57.root")
-#options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260003/82C84DAF-2110-064A-8836-913078E19ED2.root")
-
+options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260003/82C84DAF-2110-064A-8836-913078E19ED2.root")
+options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260002/4C27DF3C-EA6D-6F4F-80C7-57F15D43A195.root")
+options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260003/D69DC0EF-0076-A64A-8699-96B5AEFEA417.root")
 #run316199
-options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260003/DF7860D4-73C5-5A4B-BD9D-4A40D280C4AD.root")
-options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260001/47AA6828-28A2-0847-9517-0C6380E26955.root")
-options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260001/79CBADC0-17DF-524D-AC56-3D2056E1015C.root")
-options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260008/B16F5902-5EA0-B747-8B1C-41DF454674CF.root")
-options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260001/74A43A83-041F-EC4B-9D85-DAF8FD428013.root")
-options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260008/9BD531B8-4318-5946-B24D-3D7AB5563C05.root")
+#options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260003/DF7860D4-73C5-5A4B-BD9D-4A40D280C4AD.root")
+#options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260001/47AA6828-28A2-0847-9517-0C6380E26955.root")
+#options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260001/79CBADC0-17DF-524D-AC56-3D2056E1015C.root")
+#options.inputFiles.remove("/store/data/Run2018A/ParkingBPH1/MINIAOD/22Mar2019-v1/260008/B16F5902-5EA0-B747-8B1C-41DF454674CF.root")
 #options.inputFiles = '/store/mc/RunIIAutumn18MiniAOD/BcToJPsiTauNu_TuneCP5_13TeV-bcvegpy2-pythia8-evtgen/MINIAODSIM/102X_upgrade2018_realistic_v15-v4/230000/322CC3C2-921E-7448-902A-8FCB1F0A2F72.root'
 #options.inputFiles = '/store/user/manzoni/BcToJpsiX_TuneCP5_13TeV-pythia8/RunIISummer19UL18_MINIAODSIM_v1/201112_133556/0000/RJpsi-BcToXToJpsiMuMuSelected-RunIISummer19UL18MiniAOD_7.root'
 
@@ -540,7 +539,7 @@ if config["RUNONMC"]:
 else:                    
   process.source = cms.Source("PoolSource",
                               fileNames = cms.untracked.vstring(options.inputFiles),
- #                             skipEvents=cms.untracked.uint32(10000000)
+                       #       skipEvents=cms.untracked.uint32(10000000)
                               ) 
 
 print " process source filenames %s" %(process.source) 
@@ -787,14 +786,12 @@ process.ntuplizer = cms.EDAnalyzer("Ntuplizer",
     doMissingEt       = cms.bool(config["DOMISSINGET"]),
     doGenHist         = cms.bool(config["DOGENHIST"]),
     doInstanton       = cms.bool(config["DOINSTANTON"]),
-    doTrack           = cms.bool(config["DOTRACK"]),
     verbose           = cms.bool(config["VERBOSE"]),
     dzcut             = cms.double(config['DZCUT']),
     fsigcut           = cms.double(config['FSIGCUT']),
     vprobcut          = cms.double(config['VPROBCUT']),
     dnncut            = cms.double(config['DNNCUT']),
     tau_charge        = cms.uint32(config['TAU_CHARGE']),
-    lumifile          = cms.string(config['LUMIFILE']),
     dnnfile_old       = cms.string(config['DNNFILE_OLD']),                        
     dnnfile_perPF     = cms.string(config['DNNFILE_PERPF']),                        
     dnnfile_perEVT    = cms.string(config['DNNFILE_PEREVT']),                        

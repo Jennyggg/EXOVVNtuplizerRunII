@@ -11,8 +11,18 @@
 #include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 
-
+#include "DataFormats/CTPPSDetId/interface/CTPPSDetId.h"
+#include "DataFormats/CTPPSReco/interface/CTPPSLocalTrackLite.h"
+#include "DataFormats/ProtonReco/interface/ForwardProton.h"
+#include "DataFormats/ProtonReco/interface/ForwardProtonFwd.h"
+#include "DataFormats/CTPPSReco/interface/CTPPSLocalTrackLiteFwd.h"
 #include "JetMETCorrections/Modules/interface/JetResolution.h"
+#include "RecoPPS/ProtonReconstruction/interface/ProtonReconstructionAlgorithm.h"
+#include "CondFormats/DataRecord/interface/CTPPSInterpolatedOpticsRcd.h"
+#include "CondFormats/PPSObjects/interface/LHCInterpolatedOpticalFunctionsSetCollection.h"
+
+#include "Geometry/Records/interface/VeryForwardRealGeometryRecord.h"
+#include "Geometry/VeryForwardGeometryBuilder/interface/CTPPSGeometry.h"
 //#include <CondFormats/JetMETObjects/interface/JetResolutionObject.h>
 
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
@@ -106,6 +116,8 @@
 #include <stdlib.h>
 #include <vector>
 #include <map>
+ 
+//#include "Healpix_3.82/include/chealpix.h"
 
 //#include "Hammer/Hammer.hh"
 //#include "Hammer/Process.hh"

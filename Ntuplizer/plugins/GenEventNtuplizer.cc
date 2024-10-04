@@ -33,7 +33,7 @@ bool GenEventNtuplizer::fillBranches( edm::Event const & event, const edm::Event
 //    if(rflag==false) return;
   event.getByToken(geneventToken_, geneventInfo_);  
   nBranches_->genWeight=geneventInfo_->weight();
-
+/*
   nBranches_->qScale=geneventInfo_->qScale();
   nBranches_->PDF_x.push_back((geneventInfo_->pdf()->x).first);
   nBranches_->PDF_x.push_back((geneventInfo_->pdf()->x).second);
@@ -41,7 +41,7 @@ bool GenEventNtuplizer::fillBranches( edm::Event const & event, const edm::Event
   nBranches_->PDF_xPDF.push_back((geneventInfo_->pdf()->xPDF).second);
   nBranches_->PDF_id.push_back((geneventInfo_->pdf()->id).first);
   nBranches_->PDF_id.push_back((geneventInfo_->pdf()->id).second);
-
+*/
 
   //gen Parton HT
   //taken from https://github.com/IHEP-CMS/BSMFramework/blob/CMSSW_805p1/BSM3G_TNT_Maker/src/EventInfoSelector.cc#L63-L80
@@ -49,7 +49,7 @@ bool GenEventNtuplizer::fillBranches( edm::Event const & event, const edm::Event
   //Zaixing has a somehow different, but likely equivalent implementation
   //https://github.com/zaixingmao/FSA/blob/miniAOD_dev_7_4_14/DataFormats/src/PATFinalStateEvent.cc#L153
 
-
+/*
   event.getByToken(lheEventProductToken_, lheEventProduct_);
   float lheHt_ = 0.;
   int nLeptons = 0;
@@ -146,6 +146,6 @@ bool GenEventNtuplizer::fillBranches( edm::Event const & event, const edm::Event
   nBranches_->genFacRenWeightUp = weightFacRenUp;
   nBranches_->genFacRenWeightDown = weightFacRenDown;
   nBranches_->PDF_rms = 1. + pdfRMS;
-
+*/
   return true;
 }

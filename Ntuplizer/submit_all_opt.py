@@ -72,18 +72,28 @@ def main():
     config.section_("JobType")
     config.JobType.pluginName = 'Analysis'
     config.JobType.psetName = options.config
-
+    config.JobType.numCores = 1
     config.JobType.allowUndistributedCMSSW = True
     config.JobType.sendExternalFolder = True
     # config.JobType.pyCfgParams = ['DataProcessing=MC25ns_MiniAODv2','lheLabel=externalLHEProducer']
     #config.JobType.pyCfgParams = ['RunPeriod']
     config.JobType.inputFiles = [
-        './JSON/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt',
-        './JSON/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_FromEarlyF.txt',
-        './JSON/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_UpToEarlyF.txt',
-        './JSON/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt',
+    #    './JSON/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt',
+    #    './JSON/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt'
+    #    './JSON/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_FromEarlyF.txt',
+    #    './JSON/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_UpToEarlyF.txt',
+    ##    './JSON/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt',
+    #    './JSON/pileup_latest.txt',
+    #    './JSON/pileup17_latest.txt',
+    #    './JSON/Cert_2018_Run316199.txt',
+    #    './JSON/Cert_2018_Run316569.txt',
+    #    './JSON/Cert_2018_Run316187.txt',
+    #    './JSON/Cert_2018_Run316187_smallpart.txt',
+    #    './JSON/Cert_2018_Run316187_smallpart2.txt',
+        './JSON/Cert_318939-319488_13TeV_PromptReco_SpecialCollisions18_JSON_LOWPU_eraC.txt',
+        './JSON/Cert_318939-319488_13TeV_PromptReco_SpecialCollisions18_JSON_LOWPU_eraB.txt'
         ]
-
+    #config.JobType.inputFiles = ['JSON']
     config.section_("Data")
     config.Data.inputDataset = None
     config.Data.allowNonValidInputDataset = True if ( not options.isData) else False #To allow to run on non valid dataset
@@ -101,11 +111,20 @@ def main():
 
     config.Data.publication = False
     #config.Data.outLFNDirBase = '/store/user/cgalloni/Ntuple_2017_94v2_preliminary'
-    config.Data.outLFNDirBase = '/store/user/wvetens/Ntuple_BPH_v9'
+    #config.Data.outLFNDirBase = '/store/user/wvetens/Ntuple_BPH_v9'
     #config.Data.outLFNDirBase = '/pnfs/psi.ch/cms/trivcat/store/t3groups/uniz-higgs/Fall17'
-
+    #config.Data.outLFNDirBase = '/pnfs/psi.ch/cms/trivcat/store/user/jinw/BPH/CRAB'
+#    config.Data.outLFNDirBase = '/store/user/jinw/MinBiasMC/CRAB'
+    #config.Data.outLFNDirBase = '/store/user/jinw/lowPU/CRAB/'
+    #config.Data.outLFNDirBase = '/store/user/jinw/DY1JetsToLL/CRAB/'
+#    config.Data.outLFNDirBase = '/store/user/jinw/ZeroBias2018/CRAB/ZeroBias/ZeroBiasrun316187_v3/'
+#    config.Data.outLFNDirBase = '/store/user/jinw/ZeroBias2018/CRAB/ZeroBias/ZeroBiasrun316187_track_v3/'
+#    config.Data.outLFNDirBase = '/store/user/jinw/flatTuple_ZeroBias2018C_lowPU/'
+    config.Data.outLFNDirBase = '/store/user/jinw/flatTuple_ZeroBias2018B_lowPU/'
+#    config.Data.outLFNDirBase = '/store/user/jinw/BPH/CRAB/ParkingBPH1/ParkingBPH1run316187v2'
     config.section_("Site")
-    config.Site.storageSite = 'T2_CH_CSCS' 
+#    config.Site.storageSite = 'T2_CH_CSCS' 
+    config.Site.storageSite = 'T3_CH_PSI'
     config.Data.ignoreLocality = True
     #config.Site.storageSite = 'T3_CH_PSI'
     #config.Site.blacklist=['T1_US_FNAL','T2_US_Wisconsin','T2_FR_IPHC','T2_EE_Estonia','T2_DE_RWTH','T2_KR_KNU','T2_KR_KISTI','T2_BR_SPRACE']
@@ -139,7 +158,6 @@ def main():
         ptbin = job.split('/')[1]
         cond = job.split('/')[2]
         outputDatasetTag=""
-
         #config.General.requestName=  ptbin + (("_"+cond)if options.isData else "")  + options.string_to_add
         requestName_string =  ptbin + (("_"+cond)if options.isData else "")  + options.string_to_add
         if "RunIIFall17MiniAOD" in requestName_string : requestName_string=requestName_string.replace("RunIIFall17MiniAOD","")
@@ -155,8 +173,11 @@ def main():
         #    config.Data.lumimask='./JSON/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_UpToEarlyF.txt'    
         #elif ("Run2016" in job  and options.isData and not options.runUpToEarlyF) :
         #    config.Data.lumimask='./JSON/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_FromEarlyF.txt'
-          
-
+#        config.Data.lumiMask='./JSON/Cert_2018_Run316187.txt'
+#        config.Data.lumiMask='./JSON/Cert_2018_Run316569.txt'
+#        config.Data.lumiMask='./JSON/Cert_2018_Run316199.txt'
+#        config.Data.lumiMask = './JSON/Cert_318939-319488_13TeV_PromptReco_SpecialCollisions18_JSON_LOWPU_eraC.txt'
+        config.Data.lumiMask = './JSON/Cert_318939-319488_13TeV_PromptReco_SpecialCollisions18_JSON_LOWPU_eraB.txt'
         config.JobType.pyCfgParams = ["RunPeriod="+job , "runUpToEarlyF=true" if options.runUpToEarlyF else "runUpToEarlyF=false" ]  
         
         outputDatasetTag = ptbin  + (("_"+cond)if options.isData else "" ) +  options.string_to_add 
@@ -177,7 +198,7 @@ def main():
             p = Process(target=submit, args=(config,))
             p.start() ## comment this out just to print the configuration that will be sent to crab
             #p.join()
-            ## submit(config)
+    ##        submit(config)
         except :
             print 'Not submitted.'
 

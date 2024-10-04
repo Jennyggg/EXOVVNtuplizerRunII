@@ -40,6 +40,9 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
 //  gentauToken_     	    (consumes<std::vector<reco::GenJet>>(iConfig.getParameter<edm::InputTag>("gentaus"))),
 
 	muonToken_	      	    (consumes<pat::MuonCollection>(iConfig.getParameter<edm::InputTag>("muons"))),
+        CaloTowerCollection_        (consumes<edm::SortedCollection<CaloTower>>(edm::InputTag("towerMaker"))),
+        ctppsProton_single_rpToken_ (consumes<reco::ForwardProtonCollection>(iConfig.getParameter<edm::InputTag>("ctppsproton_single_rp"))),
+        ctppsProton_multi_rpToken_ (consumes<reco::ForwardProtonCollection>(iConfig.getParameter<edm::InputTag>("ctppsproton_multi_rp"))),
 //	electronToken_	      	    (consumes<pat::ElectronCollection>(iConfig.getParameter<edm::InputTag>("electrons"))),
 
 	//mvaValuesMapToken_          (consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("mvaValuesMap"))),
@@ -79,6 +82,7 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
   //std::map< std::string, bool > runFlags;
   runFlags["runOnMC"] = iConfig.getParameter<bool>("runOnMC");
   runFlags["runOnMCPU"] = iConfig.getParameter<bool>("runOnMCPU");
+  runFlags["runOnZeroBias"] = iConfig.getParameter<bool>("runOnZeroBias");
   runFlags["runOnHerwigInstanton"] = iConfig.getParameter<bool>("runOnHerwigInstanton");
   runFlags["runOnSherpaInstanton"] = iConfig.getParameter<bool>("runOnSherpaInstanton");
   runFlags["runOnMCTest"] = iConfig.getParameter<bool>("runOnMCTest");
@@ -93,6 +97,9 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
   runFlags["doJpsiTau"] = iConfig.getParameter<bool>("doJpsiTau");
   runFlags["doInstanton"] = iConfig.getParameter<bool>("doInstanton");
   runFlags["doTrack"] = iConfig.getParameter<bool>("doTrack");
+  runFlags["doTrackJet"] = iConfig.getParameter<bool>("doTrackJet");
+  runFlags["doForwardProton"] = iConfig.getParameter<bool>("doForwardProton");
+  runFlags["TrackRandomDrop"] = iConfig.getParameter<bool>("TrackRandomDrop");
   //  runFlags["doBsTauTau"] = iConfig.getParameter<bool>("doBsTauTau");
   //  runFlags["doBsTauTauFH"] = iConfig.getParameter<bool>("doBsTauTauFH");
   //  runFlags["doBsTauTauFH_mr"] = iConfig.getParameter<bool>("doBsTauTauFH_mr");
@@ -105,7 +112,7 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
   runValues["dnncut"] = iConfig.getParameter<double>("dnncut");
   runValues["tau_charge"] = iConfig.getParameter<unsigned int>("tau_charge");
   runStrings["lumifile"] =iConfig.getParameter<std::string>("lumifile");
-
+  runStrings["run"] =iConfig.getParameter<std::string>("run");
   runStrings["dnnfile_old"] = iConfig.getParameter<std::string>("dnnfile_old");  
   runStrings["dnnfile_perPF"] = iConfig.getParameter<std::string>("dnnfile_perPF");  
   runStrings["dnnfile_perEVT"] = iConfig.getParameter<std::string>("dnnfile_perEVT");  
@@ -270,6 +277,7 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
     }
     else cout<<"file open failed"<<endl;
 //    cout<<instan_lumi<<endl;
+    cout<<"TrackRandomDrop "<<runFlags["TrackRandomDrop"]<<endl;
     nTuplizers_["Instanton"] = new InstantonNtuplizer( muonToken_   ,
                                                    vtxToken_   ,
                                                    beamToken_ ,
@@ -280,6 +288,9 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig):
                                                    packedgenparticleToken_,
                                                    jetInputToken_,
                                                    svToken_,
+                                                   CaloTowerCollection_,
+                                                   ctppsProton_single_rpToken_,
+                                                   ctppsProton_multi_rpToken_,
                                                    runFlags,
                                                    runValues,
                                                    runStrings,

@@ -10,7 +10,7 @@
 //#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include <algorithm>
 #include <vector>
-
+using namespace std;
 
 class GenParticlesNtuplizer : public CandidateNtuplizer {
 

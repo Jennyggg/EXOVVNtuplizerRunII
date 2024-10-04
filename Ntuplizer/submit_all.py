@@ -96,8 +96,9 @@ def main():
     #config.JobType.pyCfgParams = ['RunPeriod']
     config.JobType.inputFiles = [
 #        'RecoTauTag_MVAs_2018Mar15.db',
-        './JSON/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt',
-        './data/DNN/tau_10_small.root'
+#        './JSON/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt',
+#        './data/DNN/tau_10_small.root'
+         './JSON/Cert_2018_Run316187.txt'
         ]
 
     config.section_("Data")

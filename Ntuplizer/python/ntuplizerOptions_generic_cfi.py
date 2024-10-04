@@ -7,17 +7,20 @@ config = dict()
 
 #--------- Set Just one to true ----------#
 config["RUNONMC"] = True
-config["RUNONHERWIGINSTANTON"] = True
+config["RUNONHERWIGINSTANTON"] = False
 config["RUNONSHERPAINSTANTON"] = False
 config["RUNONMCTEST"] = False
-config["RUNONMCPU"] = True
+config["RUNONMCPU"] = False
+config["TRACKRANDOMDROP"]=False
 #-----------------------------------------#
+config["RUNONZEROBIAS"] = False
+
 #config["USEHAMMER"] = (True and config["RUNONMC"])
 config["USEHAMMER"] = False
 config["VERBOSE"] = False
 
 #--------- For taus ----------#
-config["USEDNN"] = True
+config["USEDNN"] = False #True
 config["DZCUT"] = 0.12 # this is fixed !!
 config["FSIGCUT"] = 3
 config["VPROBCUT"] = 0.1
@@ -29,6 +32,8 @@ config["DNNCUT"] = -1
 config["TAU_CHARGE"] = 1
 
 config["USEJSON"] = not (config["RUNONMC"])
+
+
 #config["USEJSON"] = False
 #config["JSONFILE"] = "JSON/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt" #data 2017
 #config["JSONFILE"] = "JSON/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt" # data 2016
@@ -36,7 +41,13 @@ config["USEJSON"] = not (config["RUNONMC"])
 #config["JSONFILE"] = "JSON/Cert_306896-307082_13TeV_PromptReco_Collisions17_JSON_LowPU.txt" # data 2017LowPU
 #config["JSONFILE"] = "JSON/Cert_2018_Run316199.txt"
 #config["JSONFILE"] = "JSON/Cert_2018_Run316569.txt" #choose a specific run in BParking 2018
-config["JSONFILE"] = "JSON/Cert_2018_Run316187.txt"
+#config["JSONFILE"] = "JSON/Cert_2018_Run316187.txt"
+
+
+
+#config["JSONFILE"] = "JSON/Cert_318939-319488_13TeV_PromptReco_SpecialCollisions18_JSON_LOWPU_eraB.txt"
+config["JSONFILE"] = "JSON/Cert_318939-319488_13TeV_PromptReco_SpecialCollisions18_JSON_LOWPU_eraC.txt"
+
 #config["JSONFILE"] = "JSON/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt" # data 2018
 #config["JSONFILE"] = "JSON/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"
 #config["JSONFILE"] = "JSON/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt"
@@ -62,8 +73,10 @@ config["DOBSTAUTAU"] = False
 config["DOBSTAUTAUFH"] = False
 config["DOBSTAUTAUFH_mr"] = False # mass regression
 config["DOBSDSTARTAUNU"] = False
-config["DOTRACK"] = False
-config["DOGENHIST"] = (True and config["RUNONMC"]);
+config["DOTRACK"] = True
+config["DOTRACKJET"] = True
+config["DOFORWARDPROTON"] = True
+config["DOGENHIST"] = False #(True and config["RUNONMC"]);
 
 config["DNNFILE_OLD"] = "data/DNN/BcJPsi/DUMMY"
 config["DNNFILE_PERPF"] = "data/DNN/BcJPsi/TAU/DUMMY"

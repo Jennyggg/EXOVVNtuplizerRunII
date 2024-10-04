@@ -16,9 +16,23 @@
 #include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"
 #include "DataFormats/PatCandidates/interface/PackedTriggerPrescales.h"
 #include "../interface/NtupleBranches.h"
+#include "DataFormats/CTPPSDetId/interface/CTPPSDetId.h"
+#include "DataFormats/CTPPSReco/interface/CTPPSLocalTrackLite.h"
+#include "DataFormats/ProtonReco/interface/ForwardProton.h"
+#include "DataFormats/ProtonReco/interface/ForwardProtonFwd.h"
+#include "DataFormats/CTPPSReco/interface/CTPPSLocalTrackLiteFwd.h"
+#include "JetMETCorrections/Modules/interface/JetResolution.h"
+#include "RecoPPS/ProtonReconstruction/interface/ProtonReconstructionAlgorithm.h"
+#include "CondFormats/DataRecord/interface/CTPPSInterpolatedOpticsRcd.h"
+#include "CondFormats/PPSObjects/interface/LHCInterpolatedOpticalFunctionsSetCollection.h"
 
+#include "Geometry/Records/interface/VeryForwardRealGeometryRecord.h"
+#include "Geometry/VeryForwardGeometryBuilder/interface/CTPPSGeometry.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenRunInfoProduct.h"
+#include "FWCore/Framework/interface/Run.h"
+#include "CondFormats/RunInfo/interface/LHCInfo.h"
+#include "CondFormats/DataRecord/interface/LHCInfoRcd.h"
 #include "FWCore/Framework/interface/ConsumesCollector.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHERunInfoProduct.h"
@@ -78,6 +92,9 @@ private:
   //  edm::EDGetTokenT<std::vector<reco::GenJet>>               gentauToken_   ;
  
   edm::EDGetTokenT<pat::MuonCollection>     		    muonToken_  	;	
+  edm::EDGetTokenT<edm::SortedCollection<CaloTower>>    CaloTowerCollection_;
+  edm::EDGetTokenT<reco::ForwardProtonCollection> ctppsProton_single_rpToken_;
+  edm::EDGetTokenT<reco::ForwardProtonCollection> ctppsProton_multi_rpToken_;
   edm::EDGetTokenT<pat::ElectronCollection>     		    electronToken_  	;	
   //  edm::EDGetTokenT<edm::View<pat::Electron> >		    electronToken_	;
   /* edm::EDGetTokenT<edm::ValueMap<bool> >                    eleVetoIdMapToken_  ; */

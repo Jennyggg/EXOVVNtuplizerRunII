@@ -6,7 +6,7 @@
 #define JpsiMuNtuplizer_H
 
 #include <TRandom3.h>
-
+using namespace std;
 class JpsiMuNtuplizer : public CandidateNtuplizer {
 
 
